@@ -1,4 +1,4 @@
-export interface MetalData {
+export interface CurrencyData {
     price: number;
     change_percent: number;
     details?: {
@@ -7,6 +7,12 @@ export interface MetalData {
         price_gram_21k: number;
         price_gram_18k: number;
     };
+}
+
+export interface MetalData {
+    USD: CurrencyData;
+    INR: CurrencyData;
+    EUR: CurrencyData;
 }
 
 export interface HistoryItem {
@@ -21,6 +27,10 @@ export interface PricesResponse {
     data: {
         gold: MetalData;
         silver: MetalData;
-        history: HistoryItem[];
+        history: {
+            USD: HistoryItem[];
+            INR: HistoryItem[];
+            EUR: HistoryItem[];
+        };
     };
 }

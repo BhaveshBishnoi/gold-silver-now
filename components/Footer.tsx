@@ -7,7 +7,7 @@ export default function Footer() {
         <Box component="footer" sx={{ bgcolor: 'secondary.main', color: 'secondary.contrastText', py: 6, mt: 'auto' }}>
             <Container maxWidth="lg">
                 <Grid container spacing={4} justifyContent="space-between" alignItems="center">
-                    <Grid item xs={12} md={6}>
+                    <Grid size={{ xs: 12, md: 6 }}>
                         <Typography variant="h6" fontWeight={700} gutterBottom>
                             Gold<Box component="span" sx={{ color: 'primary.light' }}>Silver</Box>Now
                         </Typography>
@@ -15,13 +15,18 @@ export default function Footer() {
                             Tracking precious metals since 2026.
                         </Typography>
                     </Grid>
-                    <Grid item xs={12} md={6} sx={{ display: 'flex', gap: 3, justifyContent: { xs: 'center', md: 'flex-end' }, flexWrap: 'wrap' }}>
+                    <Grid size={{ xs: 12, md: 6 }} sx={{ display: 'flex', gap: 3, justifyContent: { xs: 'center', md: 'flex-end' }, flexWrap: 'wrap' }}>
                         {['Privacy Policy', 'Disclaimer', 'Contact Us'].map((text) => (
-                            <Link key={text} href={`/${text.toLowerCase().replace(' ', '-')}`} passHref legacyBehavior>
-                                <MuiLink color="inherit" underline="hover" sx={{ cursor: 'pointer', fontSize: '0.875rem', fontWeight: 500 }}>
-                                    {text}
-                                </MuiLink>
-                            </Link>
+                            <MuiLink
+                                key={text}
+                                component={Link}
+                                href={`/${text.toLowerCase().replace(' ', '-')}`}
+                                color="inherit"
+                                underline="hover"
+                                sx={{ cursor: 'pointer', fontSize: '0.875rem', fontWeight: 500 }}
+                            >
+                                {text}
+                            </MuiLink>
                         ))}
                     </Grid>
                 </Grid>
