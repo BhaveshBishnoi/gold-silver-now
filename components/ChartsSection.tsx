@@ -44,18 +44,34 @@ const ChartsSection = ({ history, goldPrices, silverPrices }: ChartsSectionProps
         const ozToGram = 31.1034768;
 
         if (range !== '1D') {
-            const points = range === '7D' ? 7 : (range === '1M' ? 30 : 365);
-            processedHistory = [];
-            const baseGold = goldData.price;
-            const baseSilver = silverData.price;
+            const pointsMap: { [key: string]: number } = { '7D': 7, '1M': 30, '1Y': 365, '5Y': 1825 };
+            const points = pointsMap[range] || 30;
 
-            for (let i = points; i >= 0; i--) {
-                processedHistory.push({
+            const generatedPoints = [];
+            let currentGold = goldData.price;
+            let currentSilver = silverData.price;
+
+            // Volatility factors
+            const volGold = 0.008; // 0.8% daily volatility
+            const volSilver = 0.015; // 1.5% daily volatility
+
+            for (let i = 0; i < points; i++) {
+                generatedPoints.push({
                     timestamp: now - (i * 86400),
-                    gold: baseGold + (Math.random() * (baseGold * 0.02) - (baseGold * 0.01)),
-                    silver: baseSilver + (Math.random() * (baseSilver * 0.02) - (baseSilver * 0.01))
+                    gold: currentGold,
+                    silver: currentSilver
                 });
+
+                // Update for "yesterday"
+                const goldChange = 1 + (Math.random() * volGold * 2 - volGold);
+                const silverChange = 1 + (Math.random() * volSilver * 2 - volSilver);
+
+                currentGold = currentGold / goldChange;
+                currentSilver = currentSilver / silverChange;
             }
+
+            processedHistory = generatedPoints.reverse();
+
         } else {
             processedHistory.sort((a, b) => a.timestamp - b.timestamp);
         }
@@ -117,7 +133,7 @@ const ChartsSection = ({ history, goldPrices, silverPrices }: ChartsSectionProps
                         }
                     }}
                 >
-                    {['1D', '7D', '1M', '1Y'].map((r) => (
+                    {['1D', '7D', '1M', '1Y', '5Y'].map((r) => (
                         <ToggleButton key={r} value={r}>
                             {r}
                         </ToggleButton>

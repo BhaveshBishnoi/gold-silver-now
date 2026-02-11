@@ -14,33 +14,39 @@ interface ChartProps {
     range: string;
 }
 
-const ChartComponent = ({ data, labels, type, range }: ChartProps) => {
+const ChartComponent = ({ data, labels, type, range }: any) => {
     const { currency, exchangeRates } = useSettings();
-    const color = type === 'gold' ? '#d97706' : '#64748b'; // Updated colors for light theme
-    const gradientColor = type === 'gold' ? 'rgba(217, 119, 6, 0.4)' : 'rgba(100, 116, 139, 0.4)';
+
+    // Pixel Perfect Colors
+    // Gold: Amber-500 (#f59e0b) to Amber-600 (#d97706)
+    // Silver: Slate-400 (#94a3b8) to Slate-500 (#64748b)
+    const color = type === 'gold' ? '#d97706' : '#64748b';
+    const gradientStart = type === 'gold' ? 'rgba(217, 119, 6, 0.25)' : 'rgba(100, 116, 139, 0.25)';
+    const gradientEnd = type === 'gold' ? 'rgba(217, 119, 6, 0.0)' : 'rgba(100, 116, 139, 0.0)';
 
     const chartData = {
         labels,
         datasets: [
             {
-                label: `${type === 'gold' ? 'Gold' : 'Silver'} Price (${currency})`,
+                label: type === 'gold' ? 'Gold Price' : 'Silver Price',
                 data,
                 borderColor: color,
                 backgroundColor: (context: any) => {
                     const ctx = context.chart.ctx;
-                    const gradient = ctx.createLinearGradient(0, 0, 0, 400);
-                    gradient.addColorStop(0, gradientColor);
-                    gradient.addColorStop(1, 'rgba(255, 255, 255, 0)');
+                    const gradient = ctx.createLinearGradient(0, 0, 0, 300);
+                    gradient.addColorStop(0, gradientStart);
+                    gradient.addColorStop(1, gradientEnd);
                     return gradient;
                 },
-                borderWidth: 3,
+                borderWidth: 2,
                 fill: true,
-                tension: 0.4,
+                tension: 0.4, // Smooth curve
                 pointRadius: 0,
-                pointHoverRadius: 6,
-                pointBackgroundColor: '#ffffff',
-                pointBorderColor: color,
-                pointBorderWidth: 2,
+                pointHitRadius: 10, // Larger hit area for tooltip
+                pointHoverRadius: 4,
+                pointHoverBackgroundColor: '#ffffff',
+                pointHoverBorderColor: color,
+                pointHoverBorderWidth: 2,
             },
         ],
     };
@@ -51,14 +57,19 @@ const ChartComponent = ({ data, labels, type, range }: ChartProps) => {
         plugins: {
             legend: { display: false },
             tooltip: {
-                mode: 'index' as const,
+                enabled: true,
+                mode: 'index',
                 intersect: false,
-                backgroundColor: '#ffffff',
-                titleColor: '#1e293b',
-                bodyColor: '#475569',
-                borderColor: 'rgba(0, 0, 0, 0.1)',
+                backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                titleColor: '#0f172a',
+                bodyColor: '#334155',
+                borderColor: 'rgba(148, 163, 184, 0.2)',
                 borderWidth: 1,
-                padding: 12,
+                padding: 10,
+                boxPadding: 4,
+                cornerRadius: 8,
+                titleFont: { family: 'Inter, sans-serif', size: 13, weight: '600' },
+                bodyFont: { family: 'Inter, sans-serif', size: 12 },
                 callbacks: {
                     label: function (context: any) {
                         let label = context.dataset.label || '';
@@ -66,30 +77,48 @@ const ChartComponent = ({ data, labels, type, range }: ChartProps) => {
                             label += ': ';
                         }
                         if (context.parsed.y !== null) {
-                            label += exchangeRates[currency].symbol + context.parsed.y.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+                            const symbol = exchangeRates[currency]?.symbol || '';
+                            label += symbol + context.parsed.y.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
                         }
                         return label;
-                    },
-                },
+                    }
+                }
             },
         },
         scales: {
             x: {
                 grid: { display: false, drawBorder: false },
-                ticks: { color: '#94a3b8', maxTicksLimit: 8 },
+                ticks: {
+                    color: '#94a3b8',
+                    font: { family: 'Inter, sans-serif', size: 11 },
+                    maxTicksLimit: range === '1D' ? 6 : 8,
+                    maxRotation: 0
+                },
             },
             y: {
-                grid: { color: 'rgba(0, 0, 0, 0.05)', borderDash: [5, 5] },
-                ticks: { color: '#94a3b8', padding: 10 },
+                grid: {
+                    color: 'rgba(226, 232, 240, 0.6)',
+                    drawBorder: false,
+                    tickLength: 0
+                },
+                ticks: {
+                    color: '#94a3b8',
+                    font: { family: 'Inter, sans-serif', size: 11 },
+                    padding: 10,
+                    callback: function (value: any) {
+                        return exchangeRates[currency]?.symbol + value.toLocaleString();
+                    }
+                },
             },
         },
         interaction: {
-            mode: 'nearest' as const,
-            axis: 'x' as const,
+            mode: 'nearest',
+            axis: 'x',
             intersect: false,
         },
     };
 
+    // @ts-ignore
     return <Line data={chartData} options={options} />;
 };
 
