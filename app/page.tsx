@@ -65,8 +65,8 @@ export default function Home() {
                             <RateTable data={data} />
                             <ChartsSection
                                 history={data.history}
-                                goldPrice={data.gold.price}
-                                silverPrice={data.silver.price}
+                                goldPrices={data.gold}
+                                silverPrices={data.silver}
                             />
                         </Box>
                     </Fade>

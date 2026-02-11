@@ -3,7 +3,7 @@
 import { useState, useMemo } from 'react';
 import ChartComponent from './Charts';
 import { useSettings } from '@/context/SettingsContext';
-import { HistoryItem } from '@/types';
+
 import {
     Box,
     Card,
@@ -14,13 +14,16 @@ import {
     Stack
 } from '@mui/material';
 
+import { MetalData, HistoryItem } from '@/types';
+// ... imports
+
 interface ChartsSectionProps {
-    history: HistoryItem[];
-    goldPrice: number;
-    silverPrice: number;
+    history: { [key: string]: HistoryItem[] };
+    goldPrices: MetalData;
+    silverPrices: MetalData;
 }
 
-const ChartsSection = ({ history, goldPrice, silverPrice }: ChartsSectionProps) => {
+const ChartsSection = ({ history, goldPrices, silverPrices }: ChartsSectionProps) => {
     const [range, setRange] = useState('1D');
     const { unit, exchangeRates, currency } = useSettings();
 
@@ -31,24 +34,44 @@ const ChartsSection = ({ history, goldPrice, silverPrice }: ChartsSectionProps) 
     };
 
     const processData = useMemo(() => {
-        let processedHistory = [...history];
+        const historyData = history[currency] || [];
+        const goldData = goldPrices[currency];
+        const silverData = silverPrices[currency];
+
+        let processedHistory = [...historyData];
         const now = Date.now() / 1000;
-        const rate = exchangeRates[currency].rate;
+        // const rate = exchangeRates[currency].rate; // Removed
         const ozToGram = 31.1034768;
 
         if (range !== '1D') {
-            const points = range === '7D' ? 7 : (range === '1M' ? 30 : 365);
-            processedHistory = [];
-            const baseGold = goldPrice;
-            const baseSilver = silverPrice;
+            const pointsMap: { [key: string]: number } = { '7D': 7, '1M': 30, '1Y': 365, '5Y': 1825 };
+            const points = pointsMap[range] || 30;
 
-            for (let i = points; i >= 0; i--) {
-                processedHistory.push({
+            const generatedPoints = [];
+            let currentGold = goldData.price;
+            let currentSilver = silverData.price;
+
+            // Volatility factors
+            const volGold = 0.008; // 0.8% daily volatility
+            const volSilver = 0.015; // 1.5% daily volatility
+
+            for (let i = 0; i < points; i++) {
+                generatedPoints.push({
                     timestamp: now - (i * 86400),
-                    gold: baseGold + (Math.random() * 50 - 25),
-                    silver: baseSilver + (Math.random() * 2 - 1)
+                    gold: currentGold,
+                    silver: currentSilver
                 });
+
+                // Update for "yesterday"
+                const goldChange = 1 + (Math.random() * volGold * 2 - volGold);
+                const silverChange = 1 + (Math.random() * volSilver * 2 - volSilver);
+
+                currentGold = currentGold / goldChange;
+                currentSilver = currentSilver / silverChange;
             }
+
+            processedHistory = generatedPoints.reverse();
+
         } else {
             processedHistory.sort((a, b) => a.timestamp - b.timestamp);
         }
@@ -60,13 +83,14 @@ const ChartsSection = ({ history, goldPrice, silverPrice }: ChartsSectionProps) 
                 : d.toLocaleDateString([], { month: 'short', day: 'numeric' });
         });
 
-        const convert = (val: number) => (val / ozToGram) * unit * rate;
+        // Convert function just handles unit scaling now (oz -> unit), no currency rate
+        const convert = (val: number) => (val / ozToGram) * unit;
 
-        const goldData = processedHistory.map(h => convert(h.gold));
-        const silverData = processedHistory.map(h => convert(h.silver));
+        const goldChartData = processedHistory.map(h => convert(h.gold));
+        const silverChartData = processedHistory.map(h => convert(h.silver));
 
-        return { labels, goldData, silverData };
-    }, [history, range, unit, currency, exchangeRates, goldPrice, silverPrice]);
+        return { labels, goldData: goldChartData, silverData: silverChartData };
+    }, [history, range, unit, currency, goldPrices, silverPrices]);
 
     const ChartCard = ({ title, data, labels, type }: any) => (
         <Card sx={{ p: 3, height: '100%', borderRadius: 2 }}>
@@ -109,7 +133,7 @@ const ChartsSection = ({ history, goldPrice, silverPrice }: ChartsSectionProps) 
                         }
                     }}
                 >
-                    {['1D', '7D', '1M', '1Y'].map((r) => (
+                    {['1D', '7D', '1M', '1Y', '5Y'].map((r) => (
                         <ToggleButton key={r} value={r}>
                             {r}
                         </ToggleButton>
@@ -118,10 +142,10 @@ const ChartsSection = ({ history, goldPrice, silverPrice }: ChartsSectionProps) 
             </Stack>
 
             <Grid container spacing={3}>
-                <Grid item xs={12} lg={6}>
+                <Grid size={{ xs: 12, lg: 6 }}>
                     <ChartCard title="Gold Price Trend" data={processData.goldData} labels={processData.labels} type="gold" />
                 </Grid>
-                <Grid item xs={12} lg={6}>
+                <Grid size={{ xs: 12, lg: 6 }}>
                     <ChartCard title="Silver Price Trend" data={processData.silverData} labels={processData.labels} type="silver" />
                 </Grid>
             </Grid>

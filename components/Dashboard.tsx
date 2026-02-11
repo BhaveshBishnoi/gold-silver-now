@@ -11,7 +11,7 @@ interface DashboardProps {
     data: {
         gold: MetalData;
         silver: MetalData;
-        history: HistoryItem[];
+        history: { [key: string]: HistoryItem[] };
     } | null;
     loading: boolean;
 }
@@ -39,31 +39,37 @@ const Dashboard = ({ data, loading }: DashboardProps) => {
     if (loading || !data) {
         return (
             <Grid container spacing={3} sx={{ mt: 2 }}>
-                <Grid item xs={12} md={6}><StatCardSkeleton /></Grid>
-                <Grid item xs={12} md={6}><StatCardSkeleton /></Grid>
+                <Grid size={{ xs: 12, md: 6 }}><StatCardSkeleton /></Grid>
+                <Grid size={{ xs: 12, md: 6 }}><StatCardSkeleton /></Grid>
             </Grid>
         );
     }
 
     const { gold, silver, history } = data;
     const currencySym = exchangeRates[currency].symbol;
-    const rate = exchangeRates[currency].rate;
+    // const rate = exchangeRates[currency].rate; // No longer needed
 
-    const convert = (price: number) => price * rate;
+    // const convert = (price: number) => price * rate; // No longer needed
     const format = (price: number) => `${currencySym}${price.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 
     const ozToGram = 31.1034768;
-    const goldGramBase = gold.price / ozToGram;
-    const silverGramBase = silver.price / ozToGram;
 
-    const goldDisplayPrice = convert(goldGramBase * unit);
-    const silverDisplayPrice = convert(silverGramBase * unit);
+    // Get Currency Specific Data
+    const goldData = gold[currency];
+    const silverData = silver[currency];
+    const historyData = history[currency];
 
-    const goldChange = gold.change_percent;
-    const silverChange = silver.change_percent;
+    const goldGramBase = goldData.price / ozToGram;
+    const silverGramBase = silverData.price / ozToGram;
 
-    const goldSparkData = history.map(h => convert((h.gold / ozToGram) * unit));
-    const silverSparkData = history.map(h => convert((h.silver / ozToGram) * unit));
+    const goldDisplayPrice = goldGramBase * unit;
+    const silverDisplayPrice = silverGramBase * unit;
+
+    const goldChange = goldData.change_percent;
+    const silverChange = silverData.change_percent;
+
+    const goldSparkData = historyData.map(h => (h.gold / ozToGram) * unit);
+    const silverSparkData = historyData.map(h => (h.silver / ozToGram) * unit);
 
     const unitLabel = unit === 1000 ? '1kg' : (unit === 1 ? '1g' : `${unit}g`);
 
@@ -115,7 +121,7 @@ const Dashboard = ({ data, loading }: DashboardProps) => {
 
     return (
         <Grid container spacing={3} sx={{ mt: 2 }}>
-            <Grid item xs={12} md={6}>
+            <Grid size={{ xs: 12, md: 6 }}>
                 <StatCard
                     title="Gold"
                     price={goldDisplayPrice}
@@ -125,7 +131,7 @@ const Dashboard = ({ data, loading }: DashboardProps) => {
                     type="gold"
                 />
             </Grid>
-            <Grid item xs={12} md={6}>
+            <Grid size={{ xs: 12, md: 6 }}>
                 <StatCard
                     title="Silver"
                     price={silverDisplayPrice}
