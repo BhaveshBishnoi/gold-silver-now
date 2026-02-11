@@ -21,7 +21,7 @@ export default function ContactPage() {
             </Box>
 
             <Grid container spacing={6}>
-                <Grid item xs={12} md={5}>
+                <Grid size={{ xs: 12, md: 5 }}>
                     <Box sx={{ height: '100%', display: 'flex', flexDirection: 'column', gap: 4 }}>
                         <Paper elevation={0} sx={{ p: 4, borderRadius: 3, border: '1px solid', borderColor: 'divider' }}>
                             <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
@@ -50,28 +50,28 @@ export default function ContactPage() {
                     </Box>
                 </Grid>
 
-                <Grid item xs={12} md={7}>
+                <Grid size={{ xs: 12, md: 7 }}>
                     <Paper elevation={0} sx={{ p: 4, borderRadius: 3, bgcolor: 'background.paper', boxShadow: '0 4px 20px rgba(0,0,0,0.05)' }}>
                         <Typography variant="h5" gutterBottom fontWeight={700} sx={{ mb: 3 }}>
                             Send us a Message
                         </Typography>
                         <Grid container spacing={3}>
-                            <Grid item xs={12} sm={6}>
+                            <Grid size={{ xs: 12, sm: 6 }}>
                                 <TextField fullWidth label="First Name" variant="outlined" />
                             </Grid>
-                            <Grid item xs={12} sm={6}>
+                            <Grid size={{ xs: 12, sm: 6 }}>
                                 <TextField fullWidth label="Last Name" variant="outlined" />
                             </Grid>
-                            <Grid item xs={12}>
+                            <Grid size={{ xs: 12 }}>
                                 <TextField fullWidth label="Email Address" type="email" variant="outlined" />
                             </Grid>
-                            <Grid item xs={12}>
+                            <Grid size={{ xs: 12 }}>
                                 <TextField fullWidth label="Subject" variant="outlined" />
                             </Grid>
-                            <Grid item xs={12}>
+                            <Grid size={{ xs: 12 }}>
                                 <TextField fullWidth label="Message" multiline rows={4} variant="outlined" />
                             </Grid>
-                            <Grid item xs={12}>
+                            <Grid size={{ xs: 12 }}>
                                 <Button variant="contained" size="large" fullWidth sx={{ py: 1.5, fontWeight: 700 }}>
                                     Send Message
                                 </Button>

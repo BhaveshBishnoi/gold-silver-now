@@ -19,7 +19,7 @@ export default function AboutPage() {
             </Box>
 
             <Grid container spacing={4} sx={{ mb: 8 }}>
-                <Grid item xs={12} md={6}>
+                <Grid size={{ xs: 12, md: 6 }}>
                     <Box sx={{ position: 'relative', height: '100%', minHeight: 300, bgcolor: 'secondary.main', borderRadius: 4, overflow: 'hidden' }}>
                         {/* Placeholder for an image if needed, or just a styled box */}
                         <Box sx={{
@@ -38,7 +38,7 @@ export default function AboutPage() {
                         </Box>
                     </Box>
                 </Grid>
-                <Grid item xs={12} md={6}>
+                <Grid size={{ xs: 12, md: 6 }}>
                     <Paper elevation={0} sx={{ p: 4, height: '100%', borderRadius: 4, bgcolor: 'background.paper', border: '1px solid', borderColor: 'divider' }}>
                         <Typography variant="h5" gutterBottom fontWeight={600} color="primary.main">
                             Why Choose Us?
