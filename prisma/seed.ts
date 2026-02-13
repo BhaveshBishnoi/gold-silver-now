@@ -3,8 +3,8 @@ import { prisma } from '../lib/prisma'
 import bcrypt from 'bcryptjs'
 
 async function main() {
-    const email = 'admin@example.com'
-    const password = 'password' // Change this to a secure password
+    const email = 'admin@bhaveshbishnoi.com'
+    const password = 'Gold@123' // Change this to a secure password
     const hashedPassword = await bcrypt.hash(password, 10)
 
     // Using upsert to avoid error if user exists
