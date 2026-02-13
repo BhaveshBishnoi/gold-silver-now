@@ -1,19 +1,27 @@
 
-
-
 import { prisma } from "@/lib/prisma";
 import { type Post } from "@prisma/client";
-
-
 import { auth } from "@/lib/auth";
-import { Container, Box, Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button, Chip, IconButton } from "@mui/material";
-import Link from 'next/link';
+import {
+    Container,
+    Box,
+    Typography,
+    Table,
+    TableBody,
+    TableCell,
+    TableContainer,
+    TableHead,
+    TableRow,
+    Paper,
+    Chip,
+    IconButton
+} from "@mui/material";
+import { NextLinkButton, NextLinkIconButton } from '@/components/NextLink';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import AddIcon from '@mui/icons-material/Add';
 import { revalidatePath } from 'next/cache';
-import { redirect } from 'next/navigation';
 
 export default async function AdminBlogsPage() {
     const session = await auth();
@@ -35,15 +43,14 @@ export default async function AdminBlogsPage() {
                 <Typography variant="h4" gutterBottom>
                     All Blogs
                 </Typography>
-                <Button
+                <NextLinkButton
                     variant="contained"
                     color="primary"
                     startIcon={<AddIcon />}
-                    component={Link}
                     href="/admin/blogs/create"
                 >
                     Create New
-                </Button>
+                </NextLinkButton>
             </Box>
 
             <TableContainer component={Paper}>
@@ -74,12 +81,12 @@ export default async function AdminBlogsPage() {
                                     />
                                 </TableCell>
                                 <TableCell align="right">
-                                    <IconButton component={Link} href={`/admin/blogs/${post.id}/edit`} color="primary">
+                                    <NextLinkIconButton href={`/admin/blogs/${post.id}/edit`} color="primary">
                                         <EditIcon />
-                                    </IconButton>
-                                    <IconButton component={Link} href={`/blogs/${post.slug}`} target="_blank" color="default">
+                                    </NextLinkIconButton>
+                                    <NextLinkIconButton href={`/blogs/${post.slug}`} target="_blank" color="default">
                                         <VisibilityIcon />
-                                    </IconButton>
+                                    </NextLinkIconButton>
                                     <form action={deletePost.bind(null, post.id)} style={{ display: 'inline' }}>
                                         <IconButton type="submit" color="error">
                                             <DeleteIcon />
