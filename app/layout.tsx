@@ -2,8 +2,6 @@ import type { Metadata } from 'next';
 import { Inter, Outfit } from 'next/font/google';
 import ThemeRegistry from '@/theme/ThemeRegistry';
 import { SettingsProvider } from '@/context/SettingsContext';
-import Header from '@/components/layout/Header';
-import Footer from '@/components/layout/Footer';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter', display: 'swap' });
 const outfit = Outfit({ subsets: ['latin'], variable: '--font-outfit', display: 'swap' });
@@ -19,18 +17,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning={true}>
       <head>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
       </head>
-      <body className={`${inter.variable} ${outfit.variable}`}>
+      <body className={`${inter.variable} ${outfit.variable}`} suppressHydrationWarning={true} >
         <ThemeRegistry>
           <SettingsProvider>
-            <Header />
-            <main style={{ minHeight: '80vh', paddingBottom: '2rem' }}>
-              {children}
-            </main>
-            <Footer />
+            {children}
           </SettingsProvider>
         </ThemeRegistry>
       </body>
