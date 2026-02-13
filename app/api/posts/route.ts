@@ -11,7 +11,7 @@ export async function POST(req: Request) {
 
     try {
         const body = await req.json();
-        const { title, slug, content, excerpt, coverImage, published } = body;
+        const { title, slug, content, excerpt, coverImage, published, metaTitle, metaDescription, keywords } = body;
 
         let slugValue = slug || title.toLowerCase().replace(/ /g, '-').replace(/[^\w-]+/g, '');
         if (!slugValue) slugValue = `post-${Date.now()}`;
@@ -33,6 +33,9 @@ export async function POST(req: Request) {
                 excerpt,
                 coverImage,
                 published,
+                metaTitle,
+                metaDescription,
+                keywords,
                 // author: { connect: { email: session.user?.email! } } 
                 // Omitting author connection for now if user doesn't exist in DB to avoid FK constraint error on first try without seed
             }

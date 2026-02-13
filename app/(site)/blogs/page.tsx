@@ -1,6 +1,7 @@
 import { prisma } from '@/lib/prisma';
-import { Container, Typography, Grid, Card, CardContent, CardActionArea, Box, Alert } from '@mui/material';
+import { Container, Typography, Grid, Card, CardContent, CardMedia, CardActionArea, Box, Alert } from '@mui/material';
 import Link from 'next/link';
+import { NextLinkCardActionArea } from '@/components/NextLink';
 
 export const metadata = {
     title: 'Blogs - Gold Silver Now',
@@ -49,20 +50,36 @@ export default async function BlogsPage() {
                 <Grid container spacing={4}>
                     {posts.map((post: any) => (
                         <Grid size={{ xs: 12, md: 4 }} key={post.id}>
-                            <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column', transition: '0.3s', '&:hover': { transform: 'translateY(-5px)', boxShadow: 6 } }}>
-                                <CardActionArea component={Link} href={`/blogs/${post.slug}`} sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
-                                    <CardContent>
-                                        <Typography gutterBottom variant="h5" component="div" sx={{ fontWeight: 'bold' }}>
+                            <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column', transition: '0.3s', '&:hover': { transform: 'translateY(-5px)', boxShadow: 6 }, borderRadius: 3, overflow: 'hidden' }}>
+                                <NextLinkCardActionArea href={`/blogs/${post.slug}`} sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column', alignItems: 'stretch' }}>
+                                    {post.coverImage && (
+                                        <CardMedia
+                                            component="img"
+                                            height="200"
+                                            image={post.coverImage}
+                                            alt={post.title}
+                                            sx={{ objectFit: 'cover' }}
+                                        />
+                                    )}
+                                    <CardContent sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column', p: 3 }}>
+                                        <Typography gutterBottom variant="h5" component="div" sx={{ fontWeight: 'bold', fontSize: '1.25rem', lineHeight: 1.3, mb: 1 }}>
                                             {post.title}
                                         </Typography>
-                                        <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-                                            {new Date(post.createdAt).toLocaleDateString()}
+                                        <Typography variant="caption" color="text.secondary" sx={{ mb: 2, display: 'block' }}>
+                                            {new Date(post.createdAt).toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' })}
                                         </Typography>
-                                        <Typography variant="body2" color="text.secondary">
-                                            {post.excerpt || (post.content ? post.content.substring(0, 150) + '...' : '')}
+                                        <Typography variant="body2" color="text.secondary" sx={{
+                                            overflow: 'hidden',
+                                            textOverflow: 'ellipsis',
+                                            display: '-webkit-box',
+                                            WebkitLineClamp: 3,
+                                            WebkitBoxOrient: 'vertical',
+                                            lineHeight: 1.6
+                                        }}>
+                                            {post.excerpt || (post.content ? post.content.replace(/<[^>]*>?/gm, '').substring(0, 120) + '...' : '')}
                                         </Typography>
                                     </CardContent>
-                                </CardActionArea>
+                                </NextLinkCardActionArea>
                             </Card>
                         </Grid>
                     ))}

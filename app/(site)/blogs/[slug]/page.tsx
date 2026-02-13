@@ -2,6 +2,7 @@ import { prisma } from '@/lib/prisma';
 import { Container, Typography, Box, Button, Alert } from '@mui/material';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
+import { NextLinkButton } from '@/components/NextLink';
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
     const { slug } = await params;
@@ -36,9 +37,9 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
         return (
             <Container maxWidth="md" sx={{ py: 8 }}>
                 <Alert severity="error">{error}</Alert>
-                <Button component={Link} href="/blogs" sx={{ mt: 2 }}>
+                <NextLinkButton href="/blogs" sx={{ mt: 2 }}>
                     Back to Blogs
-                </Button>
+                </NextLinkButton>
             </Container>
         );
     }
@@ -49,9 +50,9 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
 
     return (
         <Container maxWidth="md" sx={{ py: 8 }}>
-            <Button component={Link} href="/blogs" sx={{ mb: 4 }} variant="text">
+            <NextLinkButton href="/blogs" sx={{ mb: 4 }} variant="text">
                 &larr; Back to Blogs
-            </Button>
+            </NextLinkButton>
 
             <Typography variant="h2" component="h1" gutterBottom sx={{ fontWeight: 800 }}>
                 {post.title}
@@ -65,13 +66,25 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
                 <Box component="img" src={post.coverImage} alt={post.title} sx={{ width: '100%', height: 'auto', borderRadius: 2, mb: 4 }} />
             )}
 
-            <Box sx={{ typography: 'body1', lineHeight: 1.8 }}>
-                {post.content.split('\n').map((paragraph: any, index: any) => (
-                    <Typography key={index} paragraph component="div">
-                        {paragraph}
-                    </Typography>
-                ))}
-            </Box>
+            <Box
+                sx={{
+                    typography: 'body1',
+                    lineHeight: 1.8,
+                    '& img': {
+                        maxWidth: '100%',
+                        height: 'auto',
+                        borderRadius: 2,
+                        my: 2
+                    },
+                    '& h2': { mt: 4, mb: 2, fontWeight: 700 },
+                    '& h3': { mt: 3, mb: 1, fontWeight: 600 },
+                    '& p': { mb: 2 },
+                    '& ul, & ol': { mb: 2, pl: 4 },
+                    '& li': { mb: 1 },
+                    '& a': { color: 'primary.main', textDecoration: 'underline' }
+                }}
+                dangerouslySetInnerHTML={{ __html: post.content }}
+            />
         </Container>
     );
 }

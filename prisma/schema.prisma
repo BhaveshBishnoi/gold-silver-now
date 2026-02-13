@@ -20,6 +20,9 @@ model Post {
   updatedAt DateTime @updatedAt
   author    User?    @relation(fields: [authorId], references: [id])
   authorId  String?
+  metaTitle       String?
+  metaDescription String?  @db.Text
+  keywords        String?  @db.Text
 }
 
 // NextAuth Schema
