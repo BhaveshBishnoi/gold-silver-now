@@ -8,7 +8,7 @@ async function main() {
     const hashedPassword = await bcrypt.hash(password, 10)
 
     // Using upsert to avoid error if user exists
-    const user = await prisma.user.upsert({
+    const user = await (prisma as any).user.upsert({
         where: { email },
         update: {},
         create: {
