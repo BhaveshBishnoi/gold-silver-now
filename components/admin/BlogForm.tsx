@@ -109,6 +109,7 @@ export default function BlogForm({ post }: { post?: any }) {
             }),
         ],
         content: post?.content || '<p>Start writing your amazing blog post here...</p>',
+        immediatelyRender: false,
         onUpdate: ({ editor }) => {
             // Handle content update if needed for auto-save, etc.
         }
