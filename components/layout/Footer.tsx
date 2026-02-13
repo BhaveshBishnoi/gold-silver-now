@@ -16,7 +16,7 @@ export default function Footer() {
                         </Typography>
                     </Grid>
                     <Grid size={{ xs: 12, md: 6 }} sx={{ display: 'flex', gap: 3, justifyContent: { xs: 'center', md: 'flex-end' }, flexWrap: 'wrap' }}>
-                        {['Privacy Policy', 'Disclaimer', 'Contact Us'].map((text) => (
+                        {['Blogs', 'Privacy Policy', 'Disclaimer', 'Contact Us'].map((text) => (
                             <MuiLink
                                 key={text}
                                 component={Link}

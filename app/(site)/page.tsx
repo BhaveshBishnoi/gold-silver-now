@@ -5,10 +5,12 @@ import Dashboard from '@/components/Dashboard';
 import RateTable from '@/components/RateTable';
 import ChartsSection from '@/components/ChartsSection';
 import InfoSection from '@/components/InfoSection';
+import LatestBlogs from '@/components/LatestBlogs';
 import { Container, Box, Typography, Fade } from '@mui/material';
 
 export default function Home() {
     const [data, setData] = useState<any>(null);
+    const [blogData, setBlogData] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
 
     const fetchPrices = async () => {
@@ -25,8 +27,21 @@ export default function Home() {
         }
     };
 
+    const fetchBlogs = async () => {
+        try {
+            const res = await fetch('/api/blogs/latest');
+            const result = await res.json();
+            if (result.status === 'success') {
+                setBlogData(result.data);
+            }
+        } catch (error) {
+            console.error('Failed to fetch blogs', error);
+        }
+    };
+
     useEffect(() => {
         fetchPrices();
+        fetchBlogs();
         const interval = setInterval(fetchPrices, 60000); // 1 minute
         return () => clearInterval(interval);
     }, []);
@@ -68,6 +83,10 @@ export default function Home() {
                                 goldPrices={data.gold}
                                 silverPrices={data.silver}
                             />
+
+                            <Box sx={{ mt: 8 }}>
+                                <LatestBlogs blogs={blogData} />
+                            </Box>
                         </Box>
                     </Fade>
                 )}
