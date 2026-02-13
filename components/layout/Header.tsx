@@ -22,7 +22,7 @@ import {
 import MenuIcon from '@mui/icons-material/Menu';
 import CloseIcon from '@mui/icons-material/Close';
 
-const Nav = () => {
+const Header = () => {
     const { currency, setCurrency, exchangeRates } = useSettings();
     const [mobileOpen, setMobileOpen] = useState(false);
     const pathname = usePathname();
@@ -150,4 +150,4 @@ const Nav = () => {
     );
 };
 
-export default Nav;
+export default Header;
