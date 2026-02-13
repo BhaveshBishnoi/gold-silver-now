@@ -13,7 +13,7 @@ export async function PUT(req: Request, { params }: { params: Promise<{ id: stri
 
     try {
         const body = await req.json();
-        const { title, slug, content, excerpt, coverImage, published } = body;
+        const { title, slug, content, excerpt, coverImage, published, metaTitle, metaDescription, keywords } = body;
 
         const post = await prisma.post.update({
             where: { id },
@@ -24,6 +24,9 @@ export async function PUT(req: Request, { params }: { params: Promise<{ id: stri
                 excerpt,
                 coverImage,
                 published,
+                metaTitle,
+                metaDescription,
+                keywords,
             }
         });
         return NextResponse.json(post);

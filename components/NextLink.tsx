@@ -20,3 +20,13 @@ export function NextLinkIconButton(props: NextLinkIconButtonProps) {
     // @ts-ignore
     return <IconButton component={Link} href={href} {...other} />;
 }
+
+import { CardActionArea, CardActionAreaProps } from '@mui/material';
+
+type NextLinkCardActionAreaProps = CardActionAreaProps & ComponentProps<typeof Link> & { href: string; target?: string };
+
+export function NextLinkCardActionArea(props: NextLinkCardActionAreaProps) {
+    const { href, ...other } = props;
+    // @ts-ignore
+    return <CardActionArea component={Link} href={href} {...other} />;
+}

@@ -1,13 +1,14 @@
-
 'use client';
 
 import { useEditor, EditorContent } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
-import Image from '@tiptap/extension-image';
+import ImageExtension from '@tiptap/extension-image';
 import Link from '@tiptap/extension-link';
-import { Box, Button, TextField, FormControlLabel, Checkbox, Container, Typography } from '@mui/material';
+import { Box, Button, TextField, FormControlLabel, Checkbox, Container, Typography, Tabs, Tab, Paper, Grid, Divider } from '@mui/material';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+// import CloudinaryUpload from './CloudinaryUpload'; // Component doesn't exist yet in file system, so I will define it inline or assume it exists. Actually I just created it.
+import CloudinaryUpload from '@/components/admin/CloudinaryUpload';
 
 const MenuBar = ({ editor }: { editor: any }) => {
     if (!editor) {
@@ -91,19 +92,54 @@ const MenuBar = ({ editor }: { editor: any }) => {
     );
 };
 
+interface TabPanelProps {
+    children?: React.ReactNode;
+    index: number;
+    value: number;
+}
+
+function CustomTabPanel(props: TabPanelProps) {
+    const { children, value, index, ...other } = props;
+
+    return (
+        <div
+            role="tabpanel"
+            hidden={value !== index}
+            id={`simple-tabpanel-${index}`}
+            aria-labelledby={`simple-tab-${index}`}
+            {...other}
+        >
+            {value === index && (
+                <Box sx={{ py: 3 }}>
+                    {children}
+                </Box>
+            )}
+        </div>
+    );
+}
+
 export default function BlogForm({ post }: { post?: any }) {
     const router = useRouter();
+    const [tabValue, setTabValue] = useState(0);
+
+    // Content Fields
     const [title, setTitle] = useState(post?.title || '');
     const [slug, setSlug] = useState(post?.slug || '');
     const [excerpt, setExcerpt] = useState(post?.excerpt || '');
     const [coverImage, setCoverImage] = useState(post?.coverImage || '');
     const [published, setPublished] = useState(post?.published || false);
+
+    // SEO Fields
+    const [metaTitle, setMetaTitle] = useState(post?.metaTitle || '');
+    const [metaDescription, setMetaDescription] = useState(post?.metaDescription || '');
+    const [keywords, setKeywords] = useState(post?.keywords || ''); // comma separated
+
     const [loading, setLoading] = useState(false);
 
     const editor = useEditor({
         extensions: [
             StarterKit,
-            Image,
+            ImageExtension,
             Link.configure({
                 openOnClick: false,
             }),
@@ -114,6 +150,10 @@ export default function BlogForm({ post }: { post?: any }) {
             // Handle content update if needed for auto-save, etc.
         }
     });
+
+    const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
+        setTabValue(newValue);
+    };
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -135,7 +175,10 @@ export default function BlogForm({ post }: { post?: any }) {
                 excerpt,
                 coverImage,
                 published,
-                content
+                content,
+                metaTitle,
+                metaDescription,
+                keywords
             };
 
             const url = post ? `/api/posts/${post.id}` : '/api/posts';
@@ -165,79 +208,178 @@ export default function BlogForm({ post }: { post?: any }) {
     };
 
     return (
-        <Container maxWidth="md" sx={{ mt: 4, mb: 8 }}>
-            <Typography variant="h4" gutterBottom>
-                {post ? 'Edit Post' : 'Create New Post'}
-            </Typography>
+        <Container maxWidth="lg" sx={{ mt: 4, mb: 8 }}>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
+                <Typography variant="h4" fontWeight={700}>
+                    {post ? 'Edit Post' : 'Create New Post'}
+                </Typography>
+                <Button
+                    onClick={handleSubmit}
+                    variant="contained"
+                    size="large"
+                    disabled={loading}
+                >
+                    {loading ? 'Saving...' : (post ? 'Update Post' : 'Create Post')}
+                </Button>
+            </Box>
+
             <form onSubmit={handleSubmit}>
-                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
-                    <TextField
-                        label="Title"
-                        variant="outlined"
-                        fullWidth
-                        required
-                        value={title}
-                        onChange={(e) => setTitle(e.target.value)}
-                    />
+                <Grid container spacing={4}>
+                    <Grid size={{ xs: 12, md: 8 }}>
+                        <Paper sx={{ p: 0, borderRadius: 2, overflow: 'hidden', boxShadow: '0 4px 20px rgba(0,0,0,0.05)' }}>
+                            <Box sx={{ borderBottom: 1, borderColor: 'divider', bgcolor: 'background.default' }}>
+                                <Tabs value={tabValue} onChange={handleTabChange} aria-label="blog form tabs">
+                                    <Tab label="Content" />
+                                    <Tab label="SEO Settings" />
+                                </Tabs>
+                            </Box>
 
-                    <TextField
-                        label="Slug (URL Friendly)"
-                        variant="outlined"
-                        fullWidth
-                        required
-                        value={slug}
-                        onChange={(e) => setSlug(e.target.value)}
-                        helperText="Example: my-first-blog-post"
-                    />
+                            <Box sx={{ p: 4 }}>
+                                <CustomTabPanel value={tabValue} index={0}>
+                                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+                                        <TextField
+                                            label="Post Title"
+                                            variant="outlined"
+                                            fullWidth
+                                            required
+                                            value={title}
+                                            onChange={(e) => setTitle(e.target.value)}
+                                            placeholder="Enter an engaging title"
+                                        />
 
-                    <TextField
-                        label="Excerpt"
-                        variant="outlined"
-                        fullWidth
-                        multiline
-                        rows={3}
-                        value={excerpt}
-                        onChange={(e) => setExcerpt(e.target.value)}
-                    />
+                                        <TextField
+                                            label="Slug (URL)"
+                                            variant="outlined"
+                                            fullWidth
+                                            required
+                                            value={slug}
+                                            onChange={(e) => setSlug(e.target.value)}
+                                            helperText="Example: my-first-blog-post (Clean URL)"
+                                            InputProps={{
+                                                startAdornment: <Typography color="text.secondary" sx={{ mr: 1, fontSize: '0.9rem' }}>/blogs/</Typography>
+                                            }}
+                                        />
 
-                    <TextField
-                        label="Cover Image URL"
-                        variant="outlined"
-                        fullWidth
-                        value={coverImage}
-                        onChange={(e) => setCoverImage(e.target.value)}
-                        helperText="Paste a direct link to an image"
-                    />
+                                        <TextField
+                                            label="Excerpt / Summary"
+                                            variant="outlined"
+                                            fullWidth
+                                            multiline
+                                            rows={3}
+                                            value={excerpt}
+                                            onChange={(e) => setExcerpt(e.target.value)}
+                                            placeholder="Brief summary for list view and social sharing"
+                                        />
 
-                    <FormControlLabel
-                        control={
-                            <Checkbox
-                                checked={published}
-                                onChange={(e) => setPublished(e.target.checked)}
-                                color="primary"
-                            />
-                        }
-                        label="Publish immediately"
-                    />
+                                        <Box sx={{ border: '1px solid #ddd', borderRadius: 2, overflow: 'hidden' }}>
+                                            <Box sx={{ p: 2, bgcolor: 'background.default', borderBottom: '1px solid #ddd' }}>
+                                                <Typography variant="subtitle2" fontWeight={600}>
+                                                    Editor
+                                                </Typography>
+                                            </Box>
+                                            <Box sx={{ p: 2 }}>
+                                                <MenuBar editor={editor} />
+                                                <EditorContent editor={editor} style={{ minHeight: '400px', outline: 'none' }} className="prose max-w-none" />
+                                            </Box>
+                                        </Box>
+                                    </Box>
+                                </CustomTabPanel>
 
-                    <Box sx={{ border: '1px solid #ccc', borderRadius: 1, p: 2, minHeight: '300px' }}>
-                        <Typography variant="subtitle2" color="text.secondary" gutterBottom>
-                            Body Content
-                        </Typography>
-                        <MenuBar editor={editor} />
-                        <EditorContent editor={editor} style={{ minHeight: '250px', outline: 'none' }} />
-                    </Box>
+                                <CustomTabPanel value={tabValue} index={1}>
+                                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+                                        <Typography variant="h6" gutterBottom>
+                                            Search Engine Optimization
+                                        </Typography>
+                                        <Typography variant="body2" color="text.secondary" paragraph>
+                                            Optimize your post for search engines. If left empty, title and excerpt will be used.
+                                        </Typography>
 
-                    <Button
-                        type="submit"
-                        variant="contained"
-                        size="large"
-                        disabled={loading}
-                        sx={{ alignSelf: 'flex-start' }}
-                    >
-                        {loading ? 'Saving...' : (post ? 'Update Post' : 'Create Post')}
-                    </Button>
-                </Box>
+                                        <TextField
+                                            label="Meta Title"
+                                            fullWidth
+                                            value={metaTitle}
+                                            onChange={(e) => setMetaTitle(e.target.value)}
+                                            helperText="Title tag for search engines (50-60 chars recommended)"
+                                        />
+
+                                        <TextField
+                                            label="Meta Description"
+                                            fullWidth
+                                            multiline
+                                            rows={3}
+                                            value={metaDescription}
+                                            onChange={(e) => setMetaDescription(e.target.value)}
+                                            helperText="Description for search results (150-160 chars recommended)"
+                                        />
+
+                                        <TextField
+                                            label="Keywords"
+                                            fullWidth
+                                            value={keywords}
+                                            onChange={(e) => setKeywords(e.target.value)}
+                                            helperText="Comma separated keywords (e.g. gold, silver, market trends)"
+                                        />
+                                    </Box>
+                                </CustomTabPanel>
+                            </Box>
+                        </Paper>
+                    </Grid>
+
+                    <Grid size={{ xs: 12, md: 4 }}>
+                        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+                            <Paper sx={{ p: 3, borderRadius: 2 }}>
+                                <Typography variant="h6" gutterBottom fontWeight={600}>
+                                    Publishing
+                                </Typography>
+                                <FormControlLabel
+                                    control={
+                                        <Checkbox
+                                            checked={published}
+                                            onChange={(e) => setPublished(e.target.checked)}
+                                            color="primary"
+                                        />
+                                    }
+                                    label="Publish immediately"
+                                />
+                                <Box sx={{ mt: 2, display: 'flex', gap: 1 }}>
+                                    <Button fullWidth variant="outlined" disabled={loading}>
+                                        Save Draft
+                                    </Button>
+                                    <Button fullWidth variant="contained" onClick={handleSubmit} disabled={loading}>
+                                        Publish
+                                    </Button>
+                                </Box>
+                            </Paper>
+
+                            <Paper sx={{ p: 3, borderRadius: 2 }}>
+                                <Typography variant="h6" gutterBottom fontWeight={600}>
+                                    Cover Image
+                                </Typography>
+                                {process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET ? (
+                                    /* @ts-ignore */
+                                    <CloudinaryUpload
+                                        onUpload={(url) => setCoverImage(url)}
+                                        currentImage={coverImage}
+                                    />
+                                ) : (
+                                    <Box>
+                                        <TextField
+                                            label="Image URL"
+                                            fullWidth
+                                            size="small"
+                                            value={coverImage}
+                                            onChange={(e) => setCoverImage(e.target.value)}
+                                            sx={{ mb: 2 }}
+                                        />
+                                        <Typography variant="caption" color="error">
+                                            Configure Cloudinary in .env to enable uploads
+                                        </Typography>
+                                    </Box>
+                                )}
+                            </Paper>
+                        </Box>
+                    </Grid>
+                </Grid>
             </form>
         </Container>
     );
