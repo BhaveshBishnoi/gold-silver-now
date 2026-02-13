@@ -1,7 +1,9 @@
 
 
+
 import { prisma } from "@/lib/prisma";
 import { type Post } from "@prisma/client";
+
 
 import { auth } from "@/lib/auth";
 import { Container, Box, Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button, Chip, IconButton } from "@mui/material";
@@ -55,7 +57,7 @@ export default async function AdminBlogsPage() {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {posts.map((post: any) => (
+                        {posts.map((post: Post) => (
                             <TableRow
                                 key={post.id}
                                 sx={{ '&:last-child td, &:last-child th': { border: 0 } }}

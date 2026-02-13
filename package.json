@@ -43,12 +43,9 @@
     "babel-plugin-react-compiler": "^1.0.0",
     "eslint": "^10.0.0",
     "eslint-config-next": "^16.1.6",
-    "prisma": "^6.19.2",
+    "prisma": "^7.4.0",
     "tailwindcss": "^4.1.18",
     "tsx": "^4.21.0",
     "typescript": "^5.9.3"
-  },
-  "prisma": {
-    "seed": "tsx prisma/seed.ts"
   }
 }
