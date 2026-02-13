@@ -15,7 +15,7 @@ export default async function AdminLayout({
     const session = await auth();
 
     if (!session?.user) {
-        redirect("/api/auth/signin");
+        redirect("/admin/login");
     }
 
     const drawerWidth = 240;
