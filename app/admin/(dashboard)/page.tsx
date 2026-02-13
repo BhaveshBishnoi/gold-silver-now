@@ -1,52 +1,62 @@
 
+
 import { prisma } from "@/lib/prisma";
 import { auth } from "@/lib/auth";
-import { Container, Grid, Paper, Typography, Box } from "@mui/material";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { FileText, CheckCircle, File } from 'lucide-react';
 
 export const dynamic = 'force-dynamic';
 
 export default async function AdminDashboard() {
     const session = await auth();
-    if (!session) return <Typography>Access Denied</Typography>;
+    if (!session) return <div className="p-8 text-center text-muted-foreground">Access Denied</div>;
 
     const totalPosts = await prisma.post.count();
     const publishedPosts = await prisma.post.count({ where: { published: true } });
     const draftPosts = totalPosts - publishedPosts;
 
     const stats = [
-        { title: "Total Posts", value: totalPosts, color: "#1976d2" },
-        { title: "Published", value: publishedPosts, color: "#2e7d32" },
-        { title: "Drafts", value: draftPosts, color: "#ed6c02" },
+        {
+            title: "Total Posts",
+            value: totalPosts,
+            color: "bg-blue-600",
+            icon: FileText
+        },
+        {
+            title: "Published",
+            value: publishedPosts,
+            color: "bg-green-600",
+            icon: CheckCircle
+        },
+        {
+            title: "Drafts",
+            value: draftPosts,
+            color: "bg-amber-600",
+            icon: File
+        },
     ];
 
     return (
-        <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-            <Typography variant="h4" gutterBottom>
-                Dashboard
-            </Typography>
-            <Grid container spacing={3}>
-                {stats.map((stat) => (
-                    <Grid size={{ xs: 12, md: 4 }} key={stat.title}>
-                        <Paper
-                            sx={{
-                                p: 2,
-                                display: 'flex',
-                                flexDirection: 'column',
-                                height: 140,
-                                bgcolor: stat.color,
-                                color: 'white'
-                            }}
-                        >
-                            <Typography component="h2" variant="h6" gutterBottom>
-                                {stat.title}
-                            </Typography>
-                            <Typography component="p" variant="h3">
-                                {stat.value}
-                            </Typography>
-                        </Paper>
-                    </Grid>
-                ))}
-            </Grid>
-        </Container>
+        <div className="container mx-auto py-10">
+            <h1 className="text-3xl font-bold tracking-tight mb-8">Dashboard</h1>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                {stats.map((stat) => {
+                    const Icon = stat.icon;
+                    return (
+                        <Card key={stat.title} className={`${stat.color} text-white border-none shadow-lg h-[140px]`}>
+                            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                                <CardTitle className="text-sm font-medium">
+                                    {stat.title}
+                                </CardTitle>
+                                <Icon className="h-4 w-4 text-white/80" />
+                            </CardHeader>
+                            <CardContent>
+                                <div className="text-4xl font-bold">{stat.value}</div>
+                            </CardContent>
+                        </Card>
+                    );
+                })}
+            </div>
+        </div>
     )
 }

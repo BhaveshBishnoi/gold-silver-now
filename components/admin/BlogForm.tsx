@@ -4,123 +4,148 @@ import { useEditor, EditorContent } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import ImageExtension from '@tiptap/extension-image';
 import Link from '@tiptap/extension-link';
-import { Box, Button, TextField, FormControlLabel, Checkbox, Container, Typography, Tabs, Tab, Paper, Grid, Divider } from '@mui/material';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-// import CloudinaryUpload from './CloudinaryUpload'; // Component doesn't exist yet in file system, so I will define it inline or assume it exists. Actually I just created it.
 import CloudinaryUpload from '@/components/admin/CloudinaryUpload';
+
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
+import { Checkbox } from '@/components/ui/checkbox';
+import {
+    Card,
+    CardContent,
+    CardDescription,
+    CardHeader,
+    CardTitle,
+} from '@/components/ui/card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Separator } from '@/components/ui/separator';
+import {
+    Bold,
+    Italic,
+    Code,
+    Pilcrow,
+    Heading1,
+    Heading2,
+    List,
+    ListOrdered,
+    Image as ImageIcon,
+    Loader2
+} from 'lucide-react';
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+
 
 const MenuBar = ({ editor }: { editor: any }) => {
     if (!editor) {
         return null;
     }
 
+    // ToggleGroup works for exclusive options, but here we have multiple separate commands.
+    // So we'll use individual Buttons or separate groups.
+    // Let's use simple icon buttons.
+
+    const TextButton = ({ onClick, disabled, isActive, children, title }: any) => (
+        <Button
+            type="button"
+            variant={isActive ? "secondary" : "ghost"}
+            size="sm"
+            onClick={onClick}
+            disabled={disabled}
+            className="h-8 w-8 p-0"
+            title={title}
+        >
+            {children}
+        </Button>
+    )
+
     return (
-        <Box sx={{ display: 'flex', gap: 1, mb: 2, flexWrap: 'wrap', borderBottom: '1px solid #ddd', pb: 1 }}>
-            <Button
+        <div className="flex flex-wrap gap-1 p-2 border-b bg-muted/20">
+            <TextButton
                 onClick={() => editor.chain().focus().toggleBold().run()}
                 disabled={!editor.can().chain().focus().toggleBold().run()}
-                variant={editor.isActive('bold') ? 'contained' : 'outlined'}
-                size="small"
+                isActive={editor.isActive('bold')}
+                title="Bold"
             >
-                Bold
-            </Button>
-            <Button
+                <Bold className="h-4 w-4" />
+            </TextButton>
+            <TextButton
                 onClick={() => editor.chain().focus().toggleItalic().run()}
                 disabled={!editor.can().chain().focus().toggleItalic().run()}
-                variant={editor.isActive('italic') ? 'contained' : 'outlined'}
-                size="small"
+                isActive={editor.isActive('italic')}
+                title="Italic"
             >
-                Italic
-            </Button>
-            <Button
+                <Italic className="h-4 w-4" />
+            </TextButton>
+            <TextButton
                 onClick={() => editor.chain().focus().toggleCode().run()}
                 disabled={!editor.can().chain().focus().toggleCode().run()}
-                variant={editor.isActive('code') ? 'contained' : 'outlined'}
-                size="small"
+                isActive={editor.isActive('code')}
+                title="Code"
             >
-                Code
-            </Button>
-            <Button
+                <Code className="h-4 w-4" />
+            </TextButton>
+            <Separator orientation="vertical" className="h-8 mx-1" />
+            <TextButton
                 onClick={() => editor.chain().focus().setParagraph().run()}
-                variant={editor.isActive('paragraph') ? 'contained' : 'outlined'}
-                size="small"
+                isActive={editor.isActive('paragraph')}
+                title="Paragraph"
             >
-                P
-            </Button>
-            <Button
+                <Pilcrow className="h-4 w-4" />
+            </TextButton>
+            <TextButton
                 onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
-                variant={editor.isActive('heading', { level: 1 }) ? 'contained' : 'outlined'}
-                size="small"
+                isActive={editor.isActive('heading', { level: 1 })}
+                title="Heading 1"
             >
-                H1
-            </Button>
-            <Button
+                <Heading1 className="h-4 w-4" />
+            </TextButton>
+            <TextButton
                 onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
-                variant={editor.isActive('heading', { level: 2 }) ? 'contained' : 'outlined'}
-                size="small"
+                isActive={editor.isActive('heading', { level: 2 })}
+                title="Heading 2"
             >
-                H2
-            </Button>
-            <Button
+                <Heading2 className="h-4 w-4" />
+            </TextButton>
+            <Separator orientation="vertical" className="h-8 mx-1" />
+            <TextButton
                 onClick={() => editor.chain().focus().toggleBulletList().run()}
-                variant={editor.isActive('bulletList') ? 'contained' : 'outlined'}
-                size="small"
+                isActive={editor.isActive('bulletList')}
+                title="Bullet List"
             >
-                Bullet List
-            </Button>
-            <Button
+                <List className="h-4 w-4" />
+            </TextButton>
+            <TextButton
                 onClick={() => editor.chain().focus().toggleOrderedList().run()}
-                variant={editor.isActive('orderedList') ? 'contained' : 'outlined'}
-                size="small"
+                isActive={editor.isActive('orderedList')}
+                title="Ordered List"
             >
-                Numbered List
-            </Button>
+                <ListOrdered className="h-4 w-4" />
+            </TextButton>
+            <Separator orientation="vertical" className="h-8 mx-1" />
             <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                className="h-8 w-8 p-0"
                 onClick={() => {
                     const url = window.prompt("Enter image URL");
                     if (url) {
                         editor.chain().focus().setImage({ src: url }).run();
                     }
                 }}
-                variant="outlined"
-                size="small"
+                title="Insert Image"
             >
-                Image
+                <ImageIcon className="h-4 w-4" />
             </Button>
-        </Box>
+        </div>
     );
 };
 
-interface TabPanelProps {
-    children?: React.ReactNode;
-    index: number;
-    value: number;
-}
-
-function CustomTabPanel(props: TabPanelProps) {
-    const { children, value, index, ...other } = props;
-
-    return (
-        <div
-            role="tabpanel"
-            hidden={value !== index}
-            id={`simple-tabpanel-${index}`}
-            aria-labelledby={`simple-tab-${index}`}
-            {...other}
-        >
-            {value === index && (
-                <Box sx={{ py: 3 }}>
-                    {children}
-                </Box>
-            )}
-        </div>
-    );
-}
 
 export default function BlogForm({ post }: { post?: any }) {
     const router = useRouter();
-    const [tabValue, setTabValue] = useState(0);
 
     // Content Fields
     const [title, setTitle] = useState(post?.title || '');
@@ -146,14 +171,12 @@ export default function BlogForm({ post }: { post?: any }) {
         ],
         content: post?.content || '<p>Start writing your amazing blog post here...</p>',
         immediatelyRender: false,
-        onUpdate: ({ editor }) => {
-            // Handle content update if needed for auto-save, etc.
-        }
+        editorProps: {
+            attributes: {
+                class: 'prose prose-sm sm:prose-base lg:prose-lg xl:prose-2xl m-5 focus:outline-none min-h-[300px]',
+            },
+        },
     });
-
-    const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
-        setTabValue(newValue);
-    };
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -208,179 +231,184 @@ export default function BlogForm({ post }: { post?: any }) {
     };
 
     return (
-        <Container maxWidth="lg" sx={{ mt: 4, mb: 8 }}>
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
-                <Typography variant="h4" fontWeight={700}>
+        <div className="mt-6 mb-12">
+            <div className="flex justify-between items-center mb-6">
+                <h1 className="text-3xl font-bold tracking-tight">
                     {post ? 'Edit Post' : 'Create New Post'}
-                </Typography>
+                </h1>
                 <Button
                     onClick={handleSubmit}
-                    variant="contained"
-                    size="large"
+                    size="lg"
                     disabled={loading}
                 >
+                    {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                     {loading ? 'Saving...' : (post ? 'Update Post' : 'Create Post')}
                 </Button>
-            </Box>
+            </div>
 
             <form onSubmit={handleSubmit}>
-                <Grid container spacing={4}>
-                    <Grid size={{ xs: 12, md: 8 }}>
-                        <Paper sx={{ p: 0, borderRadius: 2, overflow: 'hidden', boxShadow: '0 4px 20px rgba(0,0,0,0.05)' }}>
-                            <Box sx={{ borderBottom: 1, borderColor: 'divider', bgcolor: 'background.default' }}>
-                                <Tabs value={tabValue} onChange={handleTabChange} aria-label="blog form tabs">
-                                    <Tab label="Content" />
-                                    <Tab label="SEO Settings" />
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    {/* Main Content Area */}
+                    <div className="lg:col-span-2 space-y-6">
+                        <Card>
+                            <CardContent className="p-0">
+                                <Tabs defaultValue="content" className="w-full">
+                                    <div className="border-b px-6 py-2 bg-muted/10">
+                                        <TabsList className="grid w-full grid-cols-2 max-w-[400px]">
+                                            <TabsTrigger value="content">Content</TabsTrigger>
+                                            <TabsTrigger value="seo">SEO Settings</TabsTrigger>
+                                        </TabsList>
+                                    </div>
+
+                                    <div className="p-6">
+                                        <TabsContent value="content" className="mt-0 space-y-4">
+                                            <div className="space-y-2">
+                                                <Label htmlFor="title">Post Title</Label>
+                                                <Input
+                                                    id="title"
+                                                    value={title}
+                                                    onChange={(e) => setTitle(e.target.value)}
+                                                    placeholder="Enter an engaging title"
+                                                    required
+                                                />
+                                            </div>
+
+                                            <div className="space-y-2">
+                                                <Label htmlFor="slug">Slug (URL)</Label>
+                                                <div className="flex items-center space-x-2">
+                                                    <span className="text-sm text-muted-foreground whitespace-nowrap">/blogs/</span>
+                                                    <Input
+                                                        id="slug"
+                                                        value={slug}
+                                                        onChange={(e) => setSlug(e.target.value)}
+                                                        placeholder="my-first-blog-post"
+                                                        required
+                                                    />
+                                                </div>
+                                            </div>
+
+                                            <div className="space-y-2">
+                                                <Label htmlFor="excerpt">Excerpt / Summary</Label>
+                                                <Textarea
+                                                    id="excerpt"
+                                                    value={excerpt}
+                                                    onChange={(e) => setExcerpt(e.target.value)}
+                                                    placeholder="Brief summary for list view and social sharing"
+                                                    rows={3}
+                                                />
+                                            </div>
+
+                                            <div className="space-y-2">
+                                                <Label>Content Editor</Label>
+                                                <div className="border rounded-md shadow-sm bg-background overflow-hidden focus-within:ring-2 focus-within:ring-ring">
+                                                    <MenuBar editor={editor} />
+                                                    <EditorContent editor={editor} />
+                                                </div>
+                                            </div>
+                                        </TabsContent>
+
+                                        <TabsContent value="seo" className="mt-0 space-y-4">
+                                            <div className="mb-4">
+                                                <h3 className="text-lg font-medium">Search Engine Optimization</h3>
+                                                <p className="text-sm text-muted-foreground">
+                                                    Optimize your post for search engines. If left empty, title and excerpt will be used.
+                                                </p>
+                                            </div>
+
+                                            <div className="space-y-2">
+                                                <Label htmlFor="metaTitle">Meta Title</Label>
+                                                <Input
+                                                    id="metaTitle"
+                                                    value={metaTitle}
+                                                    onChange={(e) => setMetaTitle(e.target.value)}
+                                                    placeholder="Title tag for search engines (50-60 chars)"
+                                                />
+                                            </div>
+
+                                            <div className="space-y-2">
+                                                <Label htmlFor="metaDescription">Meta Description</Label>
+                                                <Textarea
+                                                    id="metaDescription"
+                                                    value={metaDescription}
+                                                    onChange={(e) => setMetaDescription(e.target.value)}
+                                                    placeholder="Description for search results (150-160 chars)"
+                                                    rows={3}
+                                                />
+                                            </div>
+
+                                            <div className="space-y-2">
+                                                <Label htmlFor="keywords">Keywords</Label>
+                                                <Input
+                                                    id="keywords"
+                                                    value={keywords}
+                                                    onChange={(e) => setKeywords(e.target.value)}
+                                                    placeholder="Comma separated keywords (e.g. gold, silver, market trends)"
+                                                />
+                                            </div>
+                                        </TabsContent>
+                                    </div>
                                 </Tabs>
-                            </Box>
+                            </CardContent>
+                        </Card>
+                    </div>
 
-                            <Box sx={{ p: 4 }}>
-                                <CustomTabPanel value={tabValue} index={0}>
-                                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
-                                        <TextField
-                                            label="Post Title"
-                                            variant="outlined"
-                                            fullWidth
-                                            required
-                                            value={title}
-                                            onChange={(e) => setTitle(e.target.value)}
-                                            placeholder="Enter an engaging title"
-                                        />
-
-                                        <TextField
-                                            label="Slug (URL)"
-                                            variant="outlined"
-                                            fullWidth
-                                            required
-                                            value={slug}
-                                            onChange={(e) => setSlug(e.target.value)}
-                                            helperText="Example: my-first-blog-post (Clean URL)"
-                                            InputProps={{
-                                                startAdornment: <Typography color="text.secondary" sx={{ mr: 1, fontSize: '0.9rem' }}>/blogs/</Typography>
-                                            }}
-                                        />
-
-                                        <TextField
-                                            label="Excerpt / Summary"
-                                            variant="outlined"
-                                            fullWidth
-                                            multiline
-                                            rows={3}
-                                            value={excerpt}
-                                            onChange={(e) => setExcerpt(e.target.value)}
-                                            placeholder="Brief summary for list view and social sharing"
-                                        />
-
-                                        <Box sx={{ border: '1px solid #ddd', borderRadius: 2, overflow: 'hidden' }}>
-                                            <Box sx={{ p: 2, bgcolor: 'background.default', borderBottom: '1px solid #ddd' }}>
-                                                <Typography variant="subtitle2" fontWeight={600}>
-                                                    Editor
-                                                </Typography>
-                                            </Box>
-                                            <Box sx={{ p: 2 }}>
-                                                <MenuBar editor={editor} />
-                                                <EditorContent editor={editor} style={{ minHeight: '400px', outline: 'none' }} className="prose max-w-none" />
-                                            </Box>
-                                        </Box>
-                                    </Box>
-                                </CustomTabPanel>
-
-                                <CustomTabPanel value={tabValue} index={1}>
-                                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
-                                        <Typography variant="h6" gutterBottom>
-                                            Search Engine Optimization
-                                        </Typography>
-                                        <Typography variant="body2" color="text.secondary" paragraph>
-                                            Optimize your post for search engines. If left empty, title and excerpt will be used.
-                                        </Typography>
-
-                                        <TextField
-                                            label="Meta Title"
-                                            fullWidth
-                                            value={metaTitle}
-                                            onChange={(e) => setMetaTitle(e.target.value)}
-                                            helperText="Title tag for search engines (50-60 chars recommended)"
-                                        />
-
-                                        <TextField
-                                            label="Meta Description"
-                                            fullWidth
-                                            multiline
-                                            rows={3}
-                                            value={metaDescription}
-                                            onChange={(e) => setMetaDescription(e.target.value)}
-                                            helperText="Description for search results (150-160 chars recommended)"
-                                        />
-
-                                        <TextField
-                                            label="Keywords"
-                                            fullWidth
-                                            value={keywords}
-                                            onChange={(e) => setKeywords(e.target.value)}
-                                            helperText="Comma separated keywords (e.g. gold, silver, market trends)"
-                                        />
-                                    </Box>
-                                </CustomTabPanel>
-                            </Box>
-                        </Paper>
-                    </Grid>
-
-                    <Grid size={{ xs: 12, md: 4 }}>
-                        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
-                            <Paper sx={{ p: 3, borderRadius: 2 }}>
-                                <Typography variant="h6" gutterBottom fontWeight={600}>
-                                    Publishing
-                                </Typography>
-                                <FormControlLabel
-                                    control={
-                                        <Checkbox
-                                            checked={published}
-                                            onChange={(e) => setPublished(e.target.checked)}
-                                            color="primary"
-                                        />
-                                    }
-                                    label="Publish immediately"
-                                />
-                                <Box sx={{ mt: 2, display: 'flex', gap: 1 }}>
-                                    <Button fullWidth variant="outlined" disabled={loading}>
+                    {/* Sidebar Area */}
+                    <div className="grid gap-6 auto-rows-min">
+                        <Card>
+                            <CardHeader>
+                                <CardTitle>Publishing</CardTitle>
+                            </CardHeader>
+                            <CardContent className="space-y-4">
+                                <div className="flex items-center space-x-2">
+                                    <Checkbox
+                                        id="published"
+                                        checked={published}
+                                        onCheckedChange={(checked) => setPublished(checked as boolean)}
+                                    />
+                                    <Label htmlFor="published" className="cursor-pointer">Publish immediately</Label>
+                                </div>
+                                <div className="grid gap-2">
+                                    <Button variant="outline" type="button" disabled={loading}>
                                         Save Draft
                                     </Button>
-                                    <Button fullWidth variant="contained" onClick={handleSubmit} disabled={loading}>
+                                    <Button onClick={handleSubmit} type="button" disabled={loading}>
                                         Publish
                                     </Button>
-                                </Box>
-                            </Paper>
+                                </div>
+                            </CardContent>
+                        </Card>
 
-                            <Paper sx={{ p: 3, borderRadius: 2 }}>
-                                <Typography variant="h6" gutterBottom fontWeight={600}>
-                                    Cover Image
-                                </Typography>
+                        <Card>
+                            <CardHeader>
+                                <CardTitle>Cover Image</CardTitle>
+                            </CardHeader>
+                            <CardContent>
                                 {process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET ? (
-                                    /* @ts-ignore */
                                     <CloudinaryUpload
                                         onUpload={(url) => setCoverImage(url)}
                                         currentImage={coverImage}
                                     />
                                 ) : (
-                                    <Box>
-                                        <TextField
-                                            label="Image URL"
-                                            fullWidth
-                                            size="small"
-                                            value={coverImage}
-                                            onChange={(e) => setCoverImage(e.target.value)}
-                                            sx={{ mb: 2 }}
-                                        />
-                                        <Typography variant="caption" color="error">
-                                            Configure Cloudinary in .env to enable uploads
-                                        </Typography>
-                                    </Box>
+                                    <div className="space-y-4">
+                                        <div className="space-y-2">
+                                            <Label htmlFor="imageUrl">Image URL</Label>
+                                            <Input
+                                                id="imageUrl"
+                                                value={coverImage}
+                                                onChange={(e) => setCoverImage(e.target.value)}
+                                                placeholder="https://example.com/image.jpg"
+                                            />
+                                        </div>
+                                        <p className="text-xs text-destructive font-medium">
+                                            Configure Cloudinary key in .env to enable uploads
+                                        </p>
+                                    </div>
                                 )}
-                            </Paper>
-                        </Box>
-                    </Grid>
-                </Grid>
+                            </CardContent>
+                        </Card>
+                    </div>
+                </div>
             </form>
-        </Container>
+        </div>
     );
 }

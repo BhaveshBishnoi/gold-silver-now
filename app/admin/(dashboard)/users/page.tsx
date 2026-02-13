@@ -1,27 +1,31 @@
 
 import { auth } from "@/lib/auth";
 import {
-    Container,
-    Box,
-    Typography,
-    Paper,
     Table,
     TableBody,
     TableCell,
-    TableContainer,
     TableHead,
+    TableHeader,
     TableRow,
-    Avatar,
-    Chip,
-    IconButton,
-    InputBase
-} from "@mui/material";
-import SearchIcon from '@mui/icons-material/Search';
-import MoreVertIcon from '@mui/icons-material/MoreVert';
+} from "@/components/ui/table";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Search, MoreHorizontal, User, Shield, Mail } from 'lucide-react';
 
 export default async function AdminUsersPage() {
     const session = await auth();
-    if (!session) return <Typography>Access Denied</Typography>;
+    if (!session) return <div className="p-8 text-center text-muted-foreground">Access Denied</div>;
 
     // Mock users data
     const users = [
@@ -32,90 +36,91 @@ export default async function AdminUsersPage() {
     ];
 
     return (
-        <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 4 }}>
-                <Box>
-                    <Typography variant="h4" fontWeight={700} gutterBottom>
-                        Users Management
-                    </Typography>
-                    <Typography variant="body1" color="text.secondary">
-                        Manage user access and roles.
-                    </Typography>
-                </Box>
+        <div className="container mx-auto py-10">
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
+                <div>
+                    <h1 className="text-3xl font-bold tracking-tight">Users Management</h1>
+                    <p className="text-muted-foreground">Manage user access and roles.</p>
+                </div>
+                <div className="relative w-full md:w-[300px]">
+                    <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+                    <Input placeholder="Search users..." className="pl-8" />
+                </div>
+            </div>
 
-                <Paper
-                    sx={{ p: '2px 4px', display: 'flex', alignItems: 'center', width: 300, borderRadius: 2, boxShadow: '0 4px 12px rgba(0,0,0,0.05)' }}
-                >
-                    <IconButton sx={{ p: '10px' }} aria-label="search">
-                        <SearchIcon />
-                    </IconButton>
-                    <InputBase
-                        sx={{ ml: 1, flex: 1 }}
-                        placeholder="Search users..."
-                    />
-                </Paper>
-            </Box>
-
-            <Paper sx={{ width: '100%', mb: 2, overflow: 'hidden', borderRadius: 4, boxShadow: '0 4px 20px rgba(0,0,0,0.05)' }}>
-                <TableContainer>
-                    <Table sx={{ minWidth: 650 }}>
-                        <TableHead sx={{ bgcolor: 'grey.50' }}>
+            <Card>
+                <CardContent className="p-0">
+                    <Table>
+                        <TableHeader>
                             <TableRow>
-                                <TableCell>User</TableCell>
-                                <TableCell>Role</TableCell>
-                                <TableCell>Status</TableCell>
-                                <TableCell>Last Active</TableCell>
-                                <TableCell align="right">Actions</TableCell>
+                                <TableHead>User</TableHead>
+                                <TableHead>Role</TableHead>
+                                <TableHead>Status</TableHead>
+                                <TableHead>Last Active</TableHead>
+                                <TableHead className="text-right">Actions</TableHead>
                             </TableRow>
-                        </TableHead>
+                        </TableHeader>
                         <TableBody>
-                            {users.map((row) => (
-                                <TableRow
-                                    key={row.id}
-                                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                                    hover
-                                >
-                                    <TableCell component="th" scope="row">
-                                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                                            <Avatar sx={{ bgcolor: 'primary.light', color: 'primary.main', fontWeight: 600 }}>{row.name[0]}</Avatar>
-                                            <Box>
-                                                <Typography variant="subtitle2" fontWeight={600}>{row.name}</Typography>
-                                                <Typography variant="caption" color="text.secondary">{row.email}</Typography>
-                                            </Box>
-                                        </Box>
+                            {users.map((user) => (
+                                <TableRow key={user.id}>
+                                    <TableCell>
+                                        <div className="flex items-center gap-3">
+                                            <Avatar className="h-9 w-9">
+                                                <AvatarImage src={`/avatars/${user.id}.png`} alt={user.name} />
+                                                <AvatarFallback className="bg-primary/10 text-primary font-medium">
+                                                    {user.name.charAt(0)}
+                                                </AvatarFallback>
+                                            </Avatar>
+                                            <div className="flex flex-col">
+                                                <span className="font-medium text-sm">{user.name}</span>
+                                                <span className="text-xs text-muted-foreground">{user.email}</span>
+                                            </div>
+                                        </div>
                                     </TableCell>
                                     <TableCell>
-                                        <Chip
-                                            label={row.role}
-                                            size="small"
-                                            variant="outlined"
-                                            color={row.role === 'Admin' ? 'primary' : 'default'}
-                                            sx={{ borderRadius: 1, fontWeight: 500 }}
-                                        />
+                                        <Badge variant="default" className="flex w-fit items-center gap-1 font-normal">
+                                            <Shield className="h-3 w-3" />
+                                            {user.role}
+                                        </Badge>
                                     </TableCell>
                                     <TableCell>
-                                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                                            <Box sx={{
-                                                width: 8,
-                                                height: 8,
-                                                borderRadius: '50%',
-                                                bgcolor: row.status === 'Active' ? 'success.main' : 'text.disabled'
-                                            }} />
-                                            <Typography variant="body2">{row.status}</Typography>
-                                        </Box>
+                                        <div className="flex items-center gap-2">
+                                            <span className={`h-2 w-2 rounded-full ${user.status === 'Active' ? 'bg-green-500' : 'bg-slate-300'}`} />
+                                            <span className="text-sm text-muted-foreground">{user.status}</span>
+                                        </div>
                                     </TableCell>
-                                    <TableCell sx={{ color: 'text.secondary' }}>{row.lastActive}</TableCell>
-                                    <TableCell align="right">
-                                        <IconButton size="small">
-                                            <MoreVertIcon fontSize="small" />
-                                        </IconButton>
+                                    <TableCell className="text-muted-foreground text-sm">
+                                        {user.lastActive}
+                                    </TableCell>
+                                    <TableCell className="text-right">
+                                        <DropdownMenu>
+                                            <DropdownMenuTrigger asChild>
+                                                <Button variant="default" className="h-8 w-8 p-0">
+                                                    <span className="sr-only">Open menu</span>
+                                                    <MoreHorizontal className="h-4 w-4" />
+                                                </Button>
+                                            </DropdownMenuTrigger>
+                                            <DropdownMenuContent align="end">
+                                                <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                                                <DropdownMenuItem>
+                                                    <User className="mr-2 h-4 w-4" /> View Profile
+                                                </DropdownMenuItem>
+                                                <DropdownMenuItem>
+                                                    <Mail className="mr-2 h-4 w-4" /> Email User
+                                                </DropdownMenuItem>
+                                                <DropdownMenuSeparator />
+                                                <DropdownMenuItem className="text-destructive focus:text-destructive">
+                                                    Delete User
+                                                </DropdownMenuItem>
+                                            </DropdownMenuContent>
+                                        </DropdownMenu>
                                     </TableCell>
                                 </TableRow>
                             ))}
                         </TableBody>
                     </Table>
-                </TableContainer>
-            </Paper>
-        </Container>
+                </CardContent>
+            </Card>
+        </div>
     );
 }

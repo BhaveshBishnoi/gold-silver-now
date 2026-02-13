@@ -1,90 +1,110 @@
-import { prisma } from '@/lib/prisma';
-import { Container, Typography, Grid, Card, CardContent, CardMedia, CardActionArea, Box, Alert } from '@mui/material';
-import Link from 'next/link';
-import { NextLinkCardActionArea } from '@/components/NextLink';
+import { prisma } from "@/lib/prisma"
+import Link from "next/link"
+import { Card, CardContent } from "@/components/ui/card"
+import { Alert, AlertDescription } from "@/components/ui/alert"
 
 export const metadata = {
-    title: 'Blogs - Gold Silver Now',
-    description: 'Latest updates and news about Gold and Silver markets.',
-};
+    title: "Blogs - Gold Silver Now",
+    description:
+        "Latest updates and news about Gold and Silver markets.",
+}
 
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic"
 
 export default async function BlogsPage() {
-    let posts: any[] = [];
-    let error = null;
+    let posts: any[] = []
+    let error: string | null = null
 
     try {
         posts = await prisma.post.findMany({
             where: { published: true },
-            orderBy: { createdAt: 'desc' },
-        });
+            orderBy: { createdAt: "desc" },
+        })
     } catch (e) {
-        console.error("Failed to fetch posts:", e);
-        error = "Unable to connect to the database. Please check your configuration.";
+        console.error("Failed to fetch posts:", e)
+        error =
+            "Unable to connect to the database. Please check your configuration."
     }
 
     return (
-        <Container maxWidth="lg" sx={{ py: 8 }}>
-            <Typography variant="h2" component="h1" gutterBottom sx={{
-                fontWeight: 800,
-                letterSpacing: '-0.025em',
-                background: 'linear-gradient(90deg, #d97706, #b45309)',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
-                mb: 6,
-                textAlign: 'center'
-            }}>
-                Latest Market Insights
-            </Typography>
+        <section className="py-20">
+            <div className="container max-w-6xl mx-auto px-4">
 
-            {error && (
-                <Alert severity="error" sx={{ mb: 4 }}>{error}</Alert>
-            )}
+                {/* Heading */}
+                <h1 className="text-4xl md:text-5xl font-extrabold text-center mb-16 bg-gradient-to-r from-amber-600 to-amber-800 bg-clip-text text-transparent tracking-tight">
+                    Latest Market Insights
+                </h1>
 
-            {!error && posts.length === 0 ? (
-                <Typography variant="h6" align="center" color="text.secondary">
-                    No blogs available at the moment. Please check back later.
-                </Typography>
-            ) : (
-                <Grid container spacing={4}>
-                    {posts.map((post: any) => (
-                        <Grid size={{ xs: 12, md: 4 }} key={post.id}>
-                            <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column', transition: '0.3s', '&:hover': { transform: 'translateY(-5px)', boxShadow: 6 }, borderRadius: 3, overflow: 'hidden' }}>
-                                <NextLinkCardActionArea href={`/blogs/${post.slug}`} sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column', alignItems: 'stretch' }}>
+                {/* Error State */}
+                {error && (
+                    <Alert variant="destructive" className="mb-8">
+                        <AlertDescription>{error}</AlertDescription>
+                    </Alert>
+                )}
+
+                {/* Empty State */}
+                {!error && posts.length === 0 && (
+                    <p className="text-center text-muted-foreground text-lg">
+                        No blogs available at the moment. Please check back later.
+                    </p>
+                )}
+
+                {/* Blog Grid */}
+                {!error && posts.length > 0 && (
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                        {posts.map((post: any) => (
+                            <Card
+                                key={post.id}
+                                className="group h-full flex flex-col overflow-hidden rounded-2xl border shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
+                            >
+                                <Link
+                                    href={`/blogs/${post.slug}`}
+                                    className="flex flex-col flex-grow"
+                                >
+                                    {/* Image */}
                                     {post.coverImage && (
-                                        <CardMedia
-                                            component="img"
-                                            height="200"
-                                            image={post.coverImage}
-                                            alt={post.title}
-                                            sx={{ objectFit: 'cover' }}
-                                        />
+                                        <div className="relative h-52 overflow-hidden">
+                                            <img
+                                                src={post.coverImage}
+                                                alt={post.title}
+                                                className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                                            />
+                                        </div>
                                     )}
-                                    <CardContent sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column', p: 3 }}>
-                                        <Typography gutterBottom variant="h5" component="div" sx={{ fontWeight: 'bold', fontSize: '1.25rem', lineHeight: 1.3, mb: 1 }}>
+
+                                    {/* Content */}
+                                    <CardContent className="flex flex-col flex-grow p-6">
+                                        <h2 className="text-xl font-bold leading-snug mb-2">
                                             {post.title}
-                                        </Typography>
-                                        <Typography variant="caption" color="text.secondary" sx={{ mb: 2, display: 'block' }}>
-                                            {new Date(post.createdAt).toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' })}
-                                        </Typography>
-                                        <Typography variant="body2" color="text.secondary" sx={{
-                                            overflow: 'hidden',
-                                            textOverflow: 'ellipsis',
-                                            display: '-webkit-box',
-                                            WebkitLineClamp: 3,
-                                            WebkitBoxOrient: 'vertical',
-                                            lineHeight: 1.6
-                                        }}>
-                                            {post.excerpt || (post.content ? post.content.replace(/<[^>]*>?/gm, '').substring(0, 120) + '...' : '')}
-                                        </Typography>
+                                        </h2>
+
+                                        <span className="text-xs text-muted-foreground mb-3">
+                                            {new Date(post.createdAt).toLocaleDateString(
+                                                undefined,
+                                                {
+                                                    year: "numeric",
+                                                    month: "long",
+                                                    day: "numeric",
+                                                }
+                                            )}
+                                        </span>
+
+                                        <p className="text-sm text-muted-foreground line-clamp-3 leading-6">
+                                            {post.excerpt ||
+                                                (post.content
+                                                    ? post.content
+                                                        .replace(/<[^>]*>?/gm, "")
+                                                        .substring(0, 120) + "..."
+                                                    : "")}
+                                        </p>
                                     </CardContent>
-                                </NextLinkCardActionArea>
+                                </Link>
                             </Card>
-                        </Grid>
-                    ))}
-                </Grid>
-            )}
-        </Container>
-    );
+                        ))}
+                    </div>
+                )}
+
+            </div>
+        </section>
+    )
 }

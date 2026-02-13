@@ -1,112 +1,68 @@
 'use client';
-import { usePathname } from 'next/navigation';
-import Link from 'next/link';
-import {
-    Drawer,
-    List,
-    ListItem,
-    ListItemButton,
-    ListItemIcon,
-    ListItemText,
-    Toolbar,
-    Box,
-    Typography,
-    Divider,
-    Avatar
-} from '@mui/material';
-import DashboardIcon from '@mui/icons-material/Dashboard';
-import ArticleIcon from '@mui/icons-material/Article';
-import PersonIcon from '@mui/icons-material/Person';
-import SettingsIcon from '@mui/icons-material/Settings';
-import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
-import LogoutIcon from '@mui/icons-material/Logout';
 
-const drawerWidth = 260;
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import { cn } from '@/lib/utils';
+import {
+    LayoutDashboard,
+    FileText,
+    Users,
+    Settings,
+    DollarSign,
+    LogOut
+} from 'lucide-react';
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 
 const menuItems = [
-    { text: 'Dashboard', icon: <DashboardIcon />, path: '/admin' },
-    { text: 'Blogs', icon: <ArticleIcon />, path: '/admin/blogs' },
-    { text: 'Users', icon: <PersonIcon />, path: '/admin/users' },
-    { text: 'Price Config', icon: <MonetizationOnIcon />, path: '/admin/pricing' },
-    { text: 'Settings', icon: <SettingsIcon />, path: '/admin/settings' },
+    { text: 'Dashboard', icon: LayoutDashboard, path: '/admin' },
+    { text: 'Blogs', icon: FileText, path: '/admin/blogs' },
+    { text: 'Users', icon: Users, path: '/admin/users' },
+    { text: 'Price Config', icon: DollarSign, path: '/admin/pricing' },
+    { text: 'Settings', icon: Settings, path: '/admin/settings' },
 ];
 
-export default function AdminSidebar() {
+export default function AdminSidebar({ className }: { className?: string }) {
     const pathname = usePathname();
 
     return (
-        <Drawer
-            variant="permanent"
-            sx={{
-                width: drawerWidth,
-                flexShrink: 0,
-                [`& .MuiDrawer-paper`]: {
-                    width: drawerWidth,
-                    boxSizing: 'border-box',
-                    borderRight: '1px solid rgba(0,0,0,0.08)',
-                    background: '#ffffff'
-                },
-            }}
-        >
-            <Toolbar sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', py: 2 }}>
-                <Typography variant="h6" fontWeight={800} sx={{ letterSpacing: '-0.025em' }}>
-                    GS<Box component="span" sx={{ color: 'primary.main' }}>Admin</Box>
-                </Typography>
-            </Toolbar>
-            <Divider sx={{ mb: 2 }} />
-            <Box sx={{ overflow: 'auto', px: 2 }}>
-                <List>
-                    {menuItems.map((item) => {
-                        const active = pathname === item.path || pathname.startsWith(`${item.path}/`);
-                        return (
-                            <ListItem key={item.text} disablePadding sx={{ mb: 1 }}>
-                                <ListItemButton
-                                    component={Link}
-                                    href={item.path}
-                                    selected={active}
-                                    sx={{
-                                        borderRadius: 2,
-                                        '&.Mui-selected': {
-                                            bgcolor: 'primary.light',
-                                            color: 'primary.main',
-                                            '&:hover': {
-                                                bgcolor: 'primary.light',
-                                            },
-                                            '& .MuiListItemIcon-root': {
-                                                color: 'primary.main',
-                                            }
-                                        },
-                                        '&:hover': {
-                                            bgcolor: 'rgba(0,0,0,0.03)',
-                                        }
-                                    }}
-                                >
-                                    <ListItemIcon sx={{ minWidth: 40, color: active ? 'inherit' : 'text.secondary' }}>
-                                        {item.icon}
-                                    </ListItemIcon>
-                                    <ListItemText
-                                        primary={item.text}
-                                        primaryTypographyProps={{
-                                            fontWeight: active ? 700 : 500,
-                                            fontSize: '0.9rem'
-                                        }}
-                                    />
-                                </ListItemButton>
-                            </ListItem>
-                        );
-                    })}
-                </List>
-            </Box>
+        <aside className={cn("hidden h-screen w-64 flex-col border-r bg-card px-4 py-6 md:flex", className)}>
+            <div className="flex h-14 items-center justify-center border-b px-2 mb-4">
+                <Link href="/admin" className="flex items-center gap-2 font-bold text-xl">
+                    <span className="text-primary">GS</span>Admin
+                </Link>
+            </div>
 
-            <Box sx={{ mt: 'auto', p: 2 }}>
-                <Box sx={{ p: 2, bgcolor: 'rgba(0,0,0,0.02)', borderRadius: 2, display: 'flex', alignItems: 'center', gap: 2 }}>
-                    <Avatar sx={{ width: 32, height: 32, bgcolor: 'primary.main', fontSize: '0.8rem' }}>AD</Avatar>
-                    <Box sx={{ overflow: 'hidden' }}>
-                        <Typography variant="subtitle2" noWrap fontWeight={700}>Admin User</Typography>
-                        <Typography variant="caption" color="text.secondary" noWrap>admin@example.com</Typography>
-                    </Box>
-                </Box>
-            </Box>
-        </Drawer>
+            <nav className="flex-1 space-y-1">
+                {menuItems.map((item) => {
+                    const active = pathname === item.path || pathname.startsWith(`${item.path}/`);
+                    return (
+                        <Link
+                            key={item.path}
+                            href={item.path}
+                            className={cn(
+                                "flex items-center justify-start gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground",
+                                active ? "bg-primary/10 text-primary hover:bg-primary/20" : "text-muted-foreground"
+                            )}
+                        >
+                            <item.icon className={cn("h-4 w-4", active && "text-primary")} />
+                            {item.text}
+                        </Link>
+                    );
+                })}
+            </nav>
+
+            <div className="mt-auto pt-4 border-t">
+                <div className="flex items-center gap-3 p-2 rounded-lg bg-muted/50">
+                    <Avatar className="h-8 w-8">
+                        <AvatarImage src="/avatars/01.png" alt="@admin" />
+                        <AvatarFallback>AD</AvatarFallback>
+                    </Avatar>
+                    <div className="flex flex-col overflow-hidden">
+                        <span className="text-sm font-medium truncate">Admin User</span>
+                        <span className="text-xs text-muted-foreground truncate">admin@example.com</span>
+                    </div>
+                </div>
+            </div>
+        </aside>
     );
 }

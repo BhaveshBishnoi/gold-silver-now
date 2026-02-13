@@ -1,154 +1,164 @@
-'use client';
-import React, { useState } from 'react';
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import { useSettings } from '@/context/SettingsContext';
+'use client'
+
+import { useState } from "react"
+import Link from "next/link"
+import { usePathname } from "next/navigation"
+import { useSettings } from "@/components/layout/SettingsContext"
+
+import { Button } from "@/components/ui/button"
 import {
-    AppBar,
-    Toolbar,
-    Typography,
-    Box,
     Select,
-    MenuItem,
-    FormControl,
-    IconButton,
-    Drawer,
-    List,
-    ListItem,
-    ListItemButton,
-    ListItemText,
-    Container,
-} from '@mui/material';
-import MenuIcon from '@mui/icons-material/Menu';
-import CloseIcon from '@mui/icons-material/Close';
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select"
+
+import {
+    Sheet,
+    SheetContent,
+    SheetTrigger,
+} from "@/components/ui/sheet"
+
+import { Menu, X } from "lucide-react"
 
 const Header = () => {
-    const { currency, setCurrency, exchangeRates } = useSettings();
-    const [mobileOpen, setMobileOpen] = useState(false);
-    const pathname = usePathname();
-
-    const handleDrawerToggle = () => {
-        setMobileOpen(!mobileOpen);
-    };
-
-    const isActive = (path: string) => pathname === path;
+    const { currency, setCurrency, exchangeRates } = useSettings()
+    const pathname = usePathname()
+    const [open, setOpen] = useState(false)
 
     const navItems = [
-        { name: 'Home', path: '/' },
-        { name: 'Blogs', path: '/blogs' },
-        { name: 'About', path: '/about' },
-        { name: 'Contact', path: '/contact' },
-    ];
+        { name: "Home", path: "/" },
+        { name: "Blogs", path: "/blogs" },
+        { name: "About", path: "/about" },
+        { name: "Contact", path: "/contact" },
+    ]
 
-    const drawer = (
-        <Box sx={{ width: 250, p: 2 }}>
-            <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-                <IconButton onClick={handleDrawerToggle}>
-                    <CloseIcon />
-                </IconButton>
-            </Box>
-            <List>
-                {navItems.map((item) => (
-                    <ListItem key={item.name} disablePadding>
-                        <ListItemButton component={Link} href={item.path} onClick={handleDrawerToggle}>
-                            <ListItemText
-                                primary={item.name}
-                                primaryTypographyProps={{
-                                    fontWeight: isActive(item.path) ? 700 : 400,
-                                    color: isActive(item.path) ? 'primary.main' : 'text.primary'
-                                }}
-                            />
-                        </ListItemButton>
-                    </ListItem>
-                ))}
-            </List>
-        </Box>
-    );
+    const isActive = (path: string) => pathname === path
 
     return (
-        <AppBar position="sticky" color="default" elevation={0} sx={{ borderBottom: '1px solid rgba(0,0,0,0.05)', backgroundColor: 'rgba(255,255,255,0.9)', backdropFilter: 'blur(10px)' }}>
-            <Container maxWidth="lg">
-                <Toolbar disableGutters sx={{ justifyContent: 'space-between' }}>
-                    <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                        <Typography
-                            variant="h6"
-                            component={Link}
-                            href="/"
-                            sx={{
-                                fontWeight: 800,
-                                color: 'text.primary',
-                                textDecoration: 'none',
-                                letterSpacing: '-0.025em',
-                                display: 'flex',
-                                fontSize: '1.5rem'
-                            }}
-                        >
-                            Gold<Box component="span" sx={{ color: 'primary.main' }}>Silver</Box>Now
-                        </Typography>
-                    </Box>
+        <header className="sticky top-0 z-50 border-b bg-white/80 backdrop-blur-md">
 
-                    <Box sx={{ display: { xs: 'none', md: 'flex' }, alignItems: 'center', gap: 3 }}>
+            <div className="container max-w-6xl mx-auto px-4">
+
+                <div className="flex h-16 items-center justify-between">
+
+                    {/* Logo */}
+                    <Link
+                        href="/"
+                        className="text-xl font-extrabold tracking-tight flex items-center"
+                    >
+                        Gold
+                        <span className="text-amber-600">Silver</span>
+                        Now
+                    </Link>
+
+                    {/* Desktop Nav */}
+                    <div className="hidden md:flex items-center gap-8">
+
                         {navItems.map((item) => (
-                            <Typography
+                            <Link
                                 key={item.name}
-                                component={Link}
                                 href={item.path}
-                                sx={{
-                                    color: isActive(item.path) ? 'primary.main' : 'text.secondary',
-                                    fontWeight: isActive(item.path) ? 700 : 500,
-                                    textDecoration: 'none',
-                                    '&:hover': { color: 'primary.main' },
-                                    cursor: 'pointer'
-                                }}
+                                className={`text-sm font-medium transition-colors ${isActive(item.path)
+                                    ? "text-amber-600 font-semibold"
+                                    : "text-muted-foreground hover:text-amber-600"
+                                    }`}
                             >
                                 {item.name}
-                            </Typography>
+                            </Link>
                         ))}
 
-                        <FormControl size="small" variant="outlined">
-                            <Select
-                                value={currency}
-                                onChange={(e) => setCurrency(e.target.value as any)}
-                                sx={{ borderRadius: 2, height: 36, fontWeight: 600, bgcolor: 'background.paper' }}
-                            >
+                        {/* Currency Select */}
+                        <Select
+                            value={currency}
+                            onValueChange={(val) => setCurrency(val as any)}
+                        >
+                            <SelectTrigger className="w-[120px] h-9 font-semibold">
+                                <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
                                 {Object.keys(exchangeRates).map((curr) => (
-                                    <MenuItem key={curr} value={curr}>
-                                        {curr} ({exchangeRates[curr as keyof typeof exchangeRates].symbol})
-                                    </MenuItem>
+                                    <SelectItem key={curr} value={curr}>
+                                        {curr} (
+                                        {
+                                            exchangeRates[
+                                                curr as keyof typeof exchangeRates
+                                            ].symbol
+                                        }
+                                        )
+                                    </SelectItem>
                                 ))}
-                            </Select>
-                        </FormControl>
-                    </Box>
+                            </SelectContent>
+                        </Select>
 
-                    <Box sx={{ display: { xs: 'flex', md: 'none' }, gap: 1 }}>
-                        <FormControl size="small" variant="outlined">
-                            <Select
-                                value={currency}
-                                onChange={(e) => setCurrency(e.target.value as any)}
-                                sx={{ borderRadius: 2, height: 36, fontWeight: 600, bgcolor: 'background.paper', mr: 1 }}
-                            >
+                    </div>
+
+                    {/* Mobile Nav */}
+                    <div className="flex md:hidden items-center gap-3">
+
+                        {/* Currency Select (Mobile) */}
+                        <Select
+                            value={currency}
+                            onValueChange={(val) => setCurrency(val as any)}
+                        >
+                            <SelectTrigger className="w-[90px] h-9 font-semibold">
+                                <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
                                 {Object.keys(exchangeRates).map((curr) => (
-                                    <MenuItem key={curr} value={curr}>{curr}</MenuItem>
+                                    <SelectItem key={curr} value={curr}>
+                                        {curr}
+                                    </SelectItem>
                                 ))}
-                            </Select>
-                        </FormControl>
-                        <IconButton edge="end" color="inherit" aria-label="menu" onClick={handleDrawerToggle}>
-                            <MenuIcon />
-                        </IconButton>
-                    </Box>
-                </Toolbar>
-            </Container>
-            <Drawer
-                anchor="right"
-                open={mobileOpen}
-                onClose={handleDrawerToggle}
-                ModalProps={{ keepMounted: true }}
-                sx={{ '& .MuiDrawer-paper': { width: 250, boxSizing: 'border-box' } }}
-            >
-                {drawer}
-            </Drawer>
-        </AppBar>
-    );
-};
+                            </SelectContent>
+                        </Select>
 
-export default Header;
+                        {/* Mobile Menu */}
+                        <Sheet open={open} onOpenChange={setOpen}>
+                            <SheetTrigger asChild>
+                                <Button variant="ghost" size="icon">
+                                    <Menu size={20} />
+                                </Button>
+                            </SheetTrigger>
+
+                            <SheetContent side="right" className="w-64">
+
+                                <div className="flex justify-end mb-6">
+                                    <Button
+                                        variant="ghost"
+                                        size="icon"
+                                        onClick={() => setOpen(false)}
+                                    >
+                                        <X size={20} />
+                                    </Button>
+                                </div>
+
+                                <nav className="flex flex-col gap-6">
+                                    {navItems.map((item) => (
+                                        <Link
+                                            key={item.name}
+                                            href={item.path}
+                                            onClick={() => setOpen(false)}
+                                            className={`text-base font-medium ${isActive(item.path)
+                                                ? "text-amber-600 font-semibold"
+                                                : "text-muted-foreground hover:text-amber-600"
+                                                }`}
+                                        >
+                                            {item.name}
+                                        </Link>
+                                    ))}
+                                </nav>
+
+                            </SheetContent>
+                        </Sheet>
+
+                    </div>
+
+                </div>
+            </div>
+        </header>
+    )
+}
+
+export default Header

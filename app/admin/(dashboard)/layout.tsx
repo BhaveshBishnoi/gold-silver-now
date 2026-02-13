@@ -1,6 +1,5 @@
 
 import { auth } from "@/lib/auth";
-import { Box } from "@mui/material";
 import { redirect } from 'next/navigation';
 import AdminSidebar from "@/components/admin/AdminSidebar";
 
@@ -21,14 +20,12 @@ export default async function AdminLayout({
         redirect("/admin/login");
     }
 
-    const drawerWidth = 240;
-
     return (
-        <Box sx={{ display: 'flex', minHeight: '100vh', bgcolor: '#f8fafc' }}>
+        <div className="flex min-h-screen bg-muted/40 text-foreground">
             <AdminSidebar />
-            <Box component="main" sx={{ flexGrow: 1, p: 4, ml: 0 }}>
+            <main className="flex-1 p-4 md:p-6 ml-0 md:ml-0 overflow-y-auto">
                 {children}
-            </Box>
-        </Box>
+            </main>
+        </div>
     );
 }

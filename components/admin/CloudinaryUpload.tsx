@@ -1,8 +1,7 @@
 'use client';
 
 import { CldUploadWidget } from 'next-cloudinary';
-import { Box, Button, Typography, Paper } from '@mui/material';
-import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import { CloudUpload } from 'lucide-react';
 import Image from 'next/image';
 
 interface CloudinaryUploadProps {
@@ -15,16 +14,14 @@ export default function CloudinaryUpload({ onUpload, currentImage }: CloudinaryU
 
     if (!uploadPreset) {
         return (
-            <Box sx={{ p: 2, border: '1px dashed error.main', borderRadius: 1 }}>
-                <Typography color="error">
-                    Missing NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET env var.
-                </Typography>
-            </Box>
+            <div className="p-4 border border-destructive/50 rounded-md bg-destructive/10 text-destructive text-sm">
+                Missing NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET env var.
+            </div>
         );
     }
 
     return (
-        <Box>
+        <div>
             <CldUploadWidget
                 uploadPreset={uploadPreset}
                 onSuccess={(result: any) => {
@@ -35,40 +32,32 @@ export default function CloudinaryUpload({ onUpload, currentImage }: CloudinaryU
             >
                 {({ open }) => {
                     return (
-                        <Box
-                            sx={{
-                                border: '2px dashed #ddd',
-                                borderRadius: 2,
-                                p: 3,
-                                textAlign: 'center',
-                                cursor: 'pointer',
-                                '&:hover': { borderColor: 'primary.main', bgcolor: 'rgba(0,0,0,0.02)' },
-                                transition: 'all 0.2s'
-                            }}
+                        <div
+                            className="border-2 border-dashed border-input hover:border-primary hover:bg-muted/50 transition-colors rounded-lg p-6 text-center cursor-pointer flex flex-col items-center justify-center gap-2"
                             onClick={() => open()}
                         >
                             {currentImage ? (
-                                <Box sx={{ position: 'relative', height: 200, width: '100%', mb: 2 }}>
+                                <div className="relative h-[200px] w-full mb-2 overflow-hidden rounded-md">
                                     <Image
                                         src={currentImage}
                                         alt="Cover Image"
                                         fill
                                         style={{ objectFit: 'contain' }}
                                     />
-                                </Box>
+                                </div>
                             ) : (
-                                <CloudUploadIcon sx={{ fontSize: 48, color: 'text.secondary', mb: 1 }} />
+                                <CloudUpload className="h-12 w-12 text-muted-foreground mb-1" />
                             )}
-                            <Typography variant="body1" fontWeight={500}>
+                            <div className="text-sm font-medium">
                                 {currentImage ? 'Click to Change Image' : 'Click to Upload Cover Image'}
-                            </Typography>
-                            <Typography variant="caption" color="text.secondary">
+                            </div>
+                            <div className="text-xs text-muted-foreground">
                                 Supports JPG, PNG, WEBP
-                            </Typography>
-                        </Box>
+                            </div>
+                        </div>
                     );
                 }}
             </CldUploadWidget>
-        </Box>
+        </div>
     );
 }

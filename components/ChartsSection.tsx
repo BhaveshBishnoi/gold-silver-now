@@ -2,20 +2,13 @@
 
 import { useState, useMemo } from 'react';
 import ChartComponent from './Charts';
-import { useSettings } from '@/context/SettingsContext';
+import { useSettings } from '@/components/layout/SettingsContext';
 
-import {
-    Box,
-    Card,
-    Grid,
-    Typography,
-    ToggleButton,
-    ToggleButtonGroup,
-    Stack
-} from '@mui/material';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+import { cn } from '@/lib/utils';
 
 import { MetalData, HistoryItem } from '@/types';
-// ... imports
 
 interface ChartsSectionProps {
     history: { [key: string]: HistoryItem[] };
@@ -27,9 +20,9 @@ const ChartsSection = ({ history, goldPrices, silverPrices }: ChartsSectionProps
     const [range, setRange] = useState('1D');
     const { unit, exchangeRates, currency } = useSettings();
 
-    const handleRangeChange = (event: React.MouseEvent<HTMLElement>, newRange: string | null) => {
-        if (newRange !== null) {
-            setRange(newRange);
+    const handleRangeChange = (value: string) => {
+        if (value) {
+            setRange(value);
         }
     };
 
@@ -40,7 +33,6 @@ const ChartsSection = ({ history, goldPrices, silverPrices }: ChartsSectionProps
 
         let processedHistory = [...historyData];
         const now = Date.now() / 1000;
-        // const rate = exchangeRates[currency].rate; // Removed
         const ozToGram = 31.1034768;
 
         if (range !== '1D') {
@@ -83,7 +75,6 @@ const ChartsSection = ({ history, goldPrices, silverPrices }: ChartsSectionProps
                 : d.toLocaleDateString([], { month: 'short', day: 'numeric' });
         });
 
-        // Convert function just handles unit scaling now (oz -> unit), no currency rate
         const convert = (val: number) => (val / ozToGram) * unit;
 
         const goldChartData = processedHistory.map(h => convert(h.gold));
@@ -93,63 +84,49 @@ const ChartsSection = ({ history, goldPrices, silverPrices }: ChartsSectionProps
     }, [history, range, unit, currency, goldPrices, silverPrices]);
 
     const ChartCard = ({ title, data, labels, type }: any) => (
-        <Card sx={{ p: 3, height: '100%', borderRadius: 2 }}>
-            <Typography variant="h6" fontWeight={600} gutterBottom sx={{ color: 'text.secondary' }}>
-                {title}
-            </Typography>
-            <Box sx={{ height: 300, position: 'relative' }}>
+        <Card className="h-full rounded-lg">
+            <CardHeader className="pb-2">
+                <CardTitle className="text-lg font-semibold text-muted-foreground">{title}</CardTitle>
+            </CardHeader>
+            <CardContent className="h-[300px] relative">
                 <ChartComponent
                     data={data}
                     labels={labels}
                     type={type}
                     range={range}
                 />
-            </Box>
+            </CardContent>
         </Card>
     );
 
     return (
-        <Box sx={{ mt: 6, mb: 4 }}>
-            <Stack direction={{ xs: 'column', sm: 'row' }} justifyContent="space-between" alignItems="center" spacing={2} sx={{ mb: 3 }}>
-                <Typography variant="h5" fontWeight={700}>Price History</Typography>
+        <div className="mt-12 mb-8">
+            <div className="flex flex-col sm:flex-row justify-between items-center sm:items-end gap-4 mb-6">
+                <h2 className="text-2xl font-bold tracking-tight">Price History</h2>
 
-                <ToggleButtonGroup
+                <ToggleGroup
+                    type="single"
                     value={range}
-                    exclusive
-                    onChange={handleRangeChange}
-                    size="small"
-                    sx={{
-                        bgcolor: 'background.paper',
-                        '& .MuiToggleButton-root': {
-                            fontWeight: 600,
-                            px: 2,
-                            textTransform: 'none',
-                            color: 'text.secondary',
-                            '&.Mui-selected': {
-                                color: 'primary.main',
-                                bgcolor: 'primary.light',
-                                '&:hover': { bgcolor: 'primary.light' }
-                            }
-                        }
-                    }}
+                    onValueChange={handleRangeChange}
+                    className="bg-muted p-1 rounded-lg"
                 >
                     {['1D', '7D', '1M', '1Y', '5Y'].map((r) => (
-                        <ToggleButton key={r} value={r}>
+                        <ToggleGroupItem
+                            key={r}
+                            value={r}
+                            className="px-3 py-1 text-sm font-medium data-[state=on]:bg-background data-[state=on]:text-primary data-[state=on]:shadow-sm transition-all rounded-md"
+                        >
                             {r}
-                        </ToggleButton>
+                        </ToggleGroupItem>
                     ))}
-                </ToggleButtonGroup>
-            </Stack>
+                </ToggleGroup>
+            </div>
 
-            <Grid container spacing={3}>
-                <Grid size={{ xs: 12, lg: 6 }}>
-                    <ChartCard title="Gold Price Trend" data={processData.goldData} labels={processData.labels} type="gold" />
-                </Grid>
-                <Grid size={{ xs: 12, lg: 6 }}>
-                    <ChartCard title="Silver Price Trend" data={processData.silverData} labels={processData.labels} type="silver" />
-                </Grid>
-            </Grid>
-        </Box>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <ChartCard title="Gold Price Trend" data={processData.goldData} labels={processData.labels} type="gold" />
+                <ChartCard title="Silver Price Trend" data={processData.silverData} labels={processData.labels} type="silver" />
+            </div>
+        </div>
     );
 };
 
