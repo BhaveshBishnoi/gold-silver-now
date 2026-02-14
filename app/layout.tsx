@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { Inter, Outfit } from 'next/font/google';
 import './globals.css';
 import { SettingsProvider } from '@/components/layout/SettingsContext';
+import { Toaster } from '@/components/ui/sonner';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter', display: 'swap' });
 const outfit = Outfit({ subsets: ['latin'], variable: '--font-outfit', display: 'swap' });
@@ -23,6 +24,7 @@ export default function RootLayout({
       <body className={`${inter.variable} ${outfit.variable} font-sans antialiased`} suppressHydrationWarning={true} >
         <SettingsProvider>
           {children}
+          <Toaster />
         </SettingsProvider>
       </body>
     </html>

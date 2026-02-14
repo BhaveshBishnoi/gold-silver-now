@@ -1,174 +1,99 @@
 import { NextResponse } from 'next/server';
-import fs from 'fs';
-import path from 'path';
+import { prisma } from '@/lib/prisma';
 
-const CACHE_FILE = path.join(process.cwd(), 'prices_cache.json');
-const CACHE_DURATION = 900; // 15 minutes
-const API_KEY = process.env.METALS_API_KEY || 'goldapi-402f6smlhyqjtm-io';
-
-interface CacheData {
-    timestamp: number;
-    data: any;
-}
-
-const getMockHistory = (basePrice: number) => {
-    const history = [];
-    const now = Math.floor(Date.now() / 1000);
-    const points = 24; // 24 Hours
-
-    for (let i = 0; i < points; i++) {
-        const time = now - ((points - 1 - i) * 3600);
-        // Sine wave fluctuation
-        const fluctuation = Math.sin(i * 0.5) * (basePrice * 0.005) + (Math.random() * (basePrice * 0.002));
-
-        history.push({
-            timestamp: time,
-            gold: basePrice + fluctuation, // This function is generic but we only use gold field here? No, let's make it return just value
-            value: basePrice + fluctuation
-        });
-    }
-    return history;
-};
-
-// Helper to generate history for gold and silver in a specific currency
-const generateHistory = (goldBase: number, silverBase: number) => {
-    const history = [];
-    const now = Math.floor(Date.now() / 1000);
-    const points = 24;
-
-    for (let i = 0; i < points; i++) {
-        const time = now - ((points - 1 - i) * 3600);
-        const goldFluc = Math.sin(i * 0.5) * (goldBase * 0.005) + (Math.random() * (goldBase * 0.002));
-        const silverFluc = Math.sin(i * 0.5) * (silverBase * 0.005) + (Math.random() * (silverBase * 0.002));
-
-        history.push({
-            timestamp: time,
-            gold: goldBase + goldFluc,
-            silver: silverBase + silverFluc
-        });
-    }
-    return history;
-};
+export const dynamic = 'force-dynamic';
 
 export async function GET() {
     try {
-        const CACHE_DURATION = 28800; // 8 hours
-        // Check Cache
-        if (fs.existsSync(CACHE_FILE)) {
-            const cacheRaw = fs.readFileSync(CACHE_FILE, 'utf-8');
-            const cache: CacheData = JSON.parse(cacheRaw);
+        // Fetch the latest price record
+        const latestRecord = await prisma.priceRecord.findFirst({
+            orderBy: { createdAt: 'desc' }
+        });
 
-            if (Date.now() / 1000 - cache.timestamp < CACHE_DURATION) {
-                return NextResponse.json(cache);
+        // Fetch history (last 24 records or appropriate amount)
+        const historyRecords = await prisma.priceRecord.findMany({
+            take: 24,
+            orderBy: { createdAt: 'desc' }
+        });
+
+        // Default / Fallback values if no DB data exists
+        const defaultRecord = {
+            goldPrice: 72000, // INR per 10g
+            silverPrice: 85000, // INR per 1kg
+            inrToUsd: 0.012,
+            inrToEur: 0.011,
+            createdAt: new Date()
+        };
+
+        const record = latestRecord || defaultRecord;
+
+        // Conversion Constants
+        const OZ_TO_GRAM = 31.1034768;
+
+        // Helper to convert Input (Per 10g Gold, Per 1kg Silver) to Per Ounce (Frontend Expectation)
+        const convertToOuncePrice = (price: number, type: 'gold' | 'silver') => {
+            if (type === 'gold') {
+                // Input is per 10g
+                const pricePerGram = price / 10;
+                return pricePerGram * OZ_TO_GRAM;
+            } else {
+                // Input is per 1kg
+                const pricePerGram = price / 1000;
+                return pricePerGram * OZ_TO_GRAM;
             }
+        };
+
+        const goldOunceINR = convertToOuncePrice(record.goldPrice, 'gold');
+        const silverOunceINR = convertToOuncePrice(record.silverPrice, 'silver');
+
+        // USD Calculation
+        const goldOunceUSD = goldOunceINR * record.inrToUsd;
+        const silverOunceUSD = silverOunceINR * record.inrToUsd;
+
+        // EUR Calculation
+        const goldOunceEUR = goldOunceINR * record.inrToEur;
+        const silverOunceEUR = silverOunceINR * record.inrToEur;
+
+        // Process History
+        // We need to reverse it to be chronological for the chart
+        const sortedHistory = [...historyRecords].reverse().map(rec => ({
+            timestamp: Math.floor(new Date(rec.createdAt).getTime() / 1000),
+            gold: convertToOuncePrice(rec.goldPrice, 'gold'),
+            silver: convertToOuncePrice(rec.silverPrice, 'silver')
+        }));
+
+        // If history is empty, generate single point or mock
+        if (sortedHistory.length === 0) {
+            sortedHistory.push({
+                timestamp: Math.floor(Date.now() / 1000),
+                gold: goldOunceINR,
+                silver: silverOunceINR
+            });
         }
 
-        const headers = { 'x-access-token': API_KEY, 'Content-Type': 'application/json' };
-
-        // Static Exchange Rates (fallback)
-        const RATES = {
-            USD: 1,
-            INR: 87.50, // Updated to more realistic current rate
-            EUR: 0.95
-        };
-
-        // Fetch prices for USD and INR directly to be accurate
-        const [goldResUSD, silverResUSD, goldResINR, silverResINR] = await Promise.all([
-            fetch('https://www.goldapi.io/api/XAU/USD', { headers }),
-            fetch('https://www.goldapi.io/api/XAG/USD', { headers }),
-            fetch('https://www.goldapi.io/api/XAU/INR', { headers }), // Fetch INR directly
-            fetch('https://www.goldapi.io/api/XAG/INR', { headers })  // Fetch INR directly
-        ]);
-
-        const goldJsonUSD = await goldResUSD.json();
-        const silverJsonUSD = await silverResUSD.json();
-        const goldJsonINR = await goldResINR.json();
-        const silverJsonINR = await silverResINR.json();
-
-        // Initializing structure
-        const goldData: any = {};
-        const silverData: any = {};
-        const historyData: any = {};
-
-        // Helper to convert and format data
-        const processMetalData = (apiData: any, rate: number, isGold: boolean, currency: string) => {
-            let price = 0;
-            let change_percent = 0;
-
-            if (apiData.error) {
-                // Fallback Mock
-                const mockBase = isGold ? 2650 : 31;
-                price = mockBase * rate;
-                change_percent = isGold ? 0.5 : -0.2;
-            } else {
-                price = apiData.price;
-                change_percent = apiData.chp;
-
-                // If the API returned USD but we want a different currency (and didn't fetch it directly), convert it
-                if (apiData.currency === 'USD' && currency !== 'USD') {
-                    price = price * rate;
-                }
-            }
-
-            // Apply Delhi Premium/Duty for INR if requested (assuming "api rates in india delhi" implies local market ref)
-            // But if user says "according to MY API rates", maybe they just mean what the API returns.
-            // However, usually international API is 'spot'. 
-            // I will add a small logic: if INR, ensure it includes estimated import duty if the API is pure spot.
-            // GoldAPI usually returns spot. 
-            // Import duty in India is approx 15%. GST 3%. Total ~18% over spot.
-            if (currency === 'INR') {
-                // Check if it looks like spot. Spot gold ~ 2700 USD/oz ~ 235,000 INR/oz.
-                // 10g 24k ~ 75,000 - 80,000 INR.
-                // 1 oz = 31.1g. 235000 / 3.11 = 75562.
-                // If the API returns ~235000 (spot), then we are good for spot.
-                // Retail Delhi rates are often Spot + 3% GST + Making Charges.
-                // The user asked for "India Delhi" rates. I'll add a 'retail' flag or just boost it slightly to match 'Delhi' retail if it's too low.
-                // For now, I'll stick to the API value to remain "according to my api rates" strictly.
-            }
-
-            return {
-                price: price,
-                change_percent: change_percent,
-                details: {
-                    price_gram_24k: (price / 31.1035),
-                    price_gram_22k: (price / 31.1035) * 0.916,
-                    price_gram_21k: (price / 31.1035) * 0.875,
-                    price_gram_18k: (price / 31.1035) * 0.750,
-                }
-            };
-        };
-
-        // USD
-        goldData['USD'] = processMetalData(goldJsonUSD, 1, true, 'USD');
-        silverData['USD'] = processMetalData(silverJsonUSD, 1, false, 'USD');
-        historyData['USD'] = generateHistory(goldData['USD'].price, silverData['USD'].price);
-
-        // INR - Use direct fetch
-        goldData['INR'] = processMetalData(goldJsonINR, 1, true, 'INR');
-        silverData['INR'] = processMetalData(silverJsonINR, 1, false, 'INR');
-        historyData['INR'] = generateHistory(goldData['INR'].price, silverData['INR'].price);
-
-        // EUR - Convert from USD (since we didn't fetch EUR directly to save calls, limited to INR/USD focus)
-        goldData['EUR'] = processMetalData(goldJsonUSD, RATES.EUR, true, 'EUR');
-        silverData['EUR'] = processMetalData(silverJsonUSD, RATES.EUR, false, 'EUR');
-        historyData['EUR'] = generateHistory(goldData['EUR'].price, silverData['EUR'].price);
-
         const responseData = {
-            gold: goldData,
-            silver: silverData,
-            history: historyData
+            gold: {
+                INR: { price: goldOunceINR, change_percent: 0 }, // We could calc change vs yesterday
+                USD: { price: goldOunceUSD, change_percent: 0 },
+                EUR: { price: goldOunceEUR, change_percent: 0 }
+            },
+            silver: {
+                INR: { price: silverOunceINR, change_percent: 0 },
+                USD: { price: silverOunceUSD, change_percent: 0 },
+                EUR: { price: silverOunceEUR, change_percent: 0 }
+            },
+            history: {
+                INR: sortedHistory,
+                USD: sortedHistory.map(h => ({ ...h, gold: h.gold * record.inrToUsd, silver: h.silver * record.inrToUsd })),
+                EUR: sortedHistory.map(h => ({ ...h, gold: h.gold * record.inrToEur, silver: h.silver * record.inrToEur }))
+            }
         };
 
-        const finalResponse = {
+        return NextResponse.json({
             status: 'success',
-            timestamp: Math.floor(Date.now() / 1000),
+            timestamp: Math.floor(new Date(record.createdAt).getTime() / 1000),
             data: responseData
-        };
-
-        // Write Cache
-        fs.writeFileSync(CACHE_FILE, JSON.stringify(finalResponse));
-
-        return NextResponse.json(finalResponse);
+        });
 
     } catch (error) {
         console.error('API Route Error:', error);
