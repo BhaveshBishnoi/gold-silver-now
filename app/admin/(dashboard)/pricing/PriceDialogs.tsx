@@ -14,7 +14,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { updatePriceRecord, deletePriceRecord } from "./priceActions";
-import { Edit, Trash2 } from "lucide-react";
+import { Edit, Trash2, AlertTriangle } from "lucide-react";
 import { toast } from "sonner";
 
 interface PriceRecord {
@@ -51,17 +51,17 @@ export function EditPriceDialog({ record }: { record: PriceRecord }) {
                     <Edit className="h-4 w-4" />
                 </Button>
             </DialogTrigger>
-            <DialogContent className="sm:max-w-[500px]">
+            <DialogContent className="sm:max-w-[500px] bg-white border-gray-200 shadow-xl">
                 <form onSubmit={handleSubmit}>
-                    <DialogHeader>
-                        <DialogTitle>Edit Price Record</DialogTitle>
-                        <DialogDescription>
+                    <DialogHeader className="border-b border-gray-100 pb-4">
+                        <DialogTitle className="text-xl font-bold text-[#050505]">Edit Price Record</DialogTitle>
+                        <DialogDescription className="text-[#65676B]">
                             Update the gold and silver prices for this record.
                         </DialogDescription>
                     </DialogHeader>
-                    <div className="grid gap-4 py-4">
+                    <div className="grid gap-5 py-6">
                         <div className="grid gap-2">
-                            <Label htmlFor="edit-goldPrice">Gold Price (10g) ₹</Label>
+                            <Label htmlFor="edit-goldPrice" className="text-sm font-semibold text-[#050505]">Gold Price (10g) ₹</Label>
                             <Input
                                 id="edit-goldPrice"
                                 name="goldPrice"
@@ -69,10 +69,11 @@ export function EditPriceDialog({ record }: { record: PriceRecord }) {
                                 step="0.01"
                                 defaultValue={record.goldPrice}
                                 required
+                                className="bg-[#f7f8fa] border-gray-200 focus:border-primary focus:ring-primary"
                             />
                         </div>
                         <div className="grid gap-2">
-                            <Label htmlFor="edit-silverPrice">Silver Price (1kg) ₹</Label>
+                            <Label htmlFor="edit-silverPrice" className="text-sm font-semibold text-[#050505]">Silver Price (1kg) ₹</Label>
                             <Input
                                 id="edit-silverPrice"
                                 name="silverPrice"
@@ -80,15 +81,16 @@ export function EditPriceDialog({ record }: { record: PriceRecord }) {
                                 step="0.01"
                                 defaultValue={record.silverPrice}
                                 required
+                                className="bg-[#f7f8fa] border-gray-200 focus:border-primary focus:ring-primary"
                             />
                         </div>
                     </div>
-                    <DialogFooter>
-                        <Button type="button" variant="outline" onClick={() => setOpen(false)}>
+                    <DialogFooter className="border-t border-gray-100 pt-4">
+                        <Button type="button" variant="outline" onClick={() => setOpen(false)} className="border-gray-200">
                             Cancel
                         </Button>
-                        <Button type="submit" disabled={loading}>
-                            {loading ? "Updating..." : "Update"}
+                        <Button type="submit" disabled={loading} className="bg-primary hover:bg-primary/90">
+                            {loading ? "Updating..." : "Update Price"}
                         </Button>
                     </DialogFooter>
                 </form>
@@ -121,23 +123,36 @@ export function DeletePriceDialog({ recordId }: { recordId: string }) {
                     <Trash2 className="h-4 w-4" />
                 </Button>
             </DialogTrigger>
-            <DialogContent>
-                <DialogHeader>
-                    <DialogTitle>Delete Price Record</DialogTitle>
-                    <DialogDescription>
-                        Are you sure you want to delete this price record? This action cannot be undone.
-                    </DialogDescription>
+            <DialogContent className="sm:max-w-[450px] bg-white border-gray-200 shadow-xl">
+                <DialogHeader className="border-b border-gray-100 pb-4">
+                    <div className="flex items-center gap-3">
+                        <div className="h-12 w-12 rounded-full bg-red-50 flex items-center justify-center">
+                            <AlertTriangle className="h-6 w-6 text-red-600" />
+                        </div>
+                        <div>
+                            <DialogTitle className="text-xl font-bold text-[#050505]">Delete Price Record</DialogTitle>
+                            <DialogDescription className="text-[#65676B] mt-1">
+                                This action cannot be undone
+                            </DialogDescription>
+                        </div>
+                    </div>
                 </DialogHeader>
-                <DialogFooter>
-                    <Button variant="outline" onClick={() => setOpen(false)}>
+                <div className="py-6">
+                    <p className="text-[#050505] leading-relaxed">
+                        Are you sure you want to delete this price record? This will permanently remove it from the system.
+                    </p>
+                </div>
+                <DialogFooter className="border-t border-gray-100 pt-4">
+                    <Button variant="outline" onClick={() => setOpen(false)} className="border-gray-200">
                         Cancel
                     </Button>
                     <Button
                         variant="destructive"
                         onClick={handleDelete}
                         disabled={loading}
+                        className="bg-red-600 hover:bg-red-700"
                     >
-                        {loading ? "Deleting..." : "Delete"}
+                        {loading ? "Deleting..." : "Delete Record"}
                     </Button>
                 </DialogFooter>
             </DialogContent>

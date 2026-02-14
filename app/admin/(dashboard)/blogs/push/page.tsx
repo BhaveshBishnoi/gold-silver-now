@@ -8,6 +8,8 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Loader2, Upload, Code, CheckCircle2, AlertCircle } from 'lucide-react';
 
+export const dynamic = 'force-dynamic';
+
 export default function PushBlogPage() {
     const router = useRouter();
     const [jsonData, setJsonData] = useState('');

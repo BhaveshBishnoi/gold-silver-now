@@ -18,6 +18,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";
 import { Save, Lock, User, Shield, Bell, Key } from 'lucide-react';
 
+export const dynamic = 'force-dynamic';
+
 export default async function AdminSettingsPage() {
     const session = await auth();
     if (!session) return <div className="p-8 text-center text-muted-foreground">Access Denied</div>;
