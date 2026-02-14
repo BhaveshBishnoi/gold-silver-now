@@ -1,37 +1,29 @@
 
-
-
 import { prisma } from "@/lib/prisma";
 import { auth } from "@/lib/auth";
 import Link from "next/link";
 import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardHeader,
-    CardTitle,
-} from "@/components/ui/card";
-import {
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableHeader,
-    TableRow,
-} from "@/components/ui/table";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import {
-    FileText,
-    CheckCircle,
-    File,
     Plus,
     Users,
     ArrowUpRight,
-    Search
+    LayoutDashboard,
+    FileText,
+    CheckCircle,
+    File
 } from 'lucide-react';
+import { formatDistanceToNow } from "date-fns";
 
 export const dynamic = 'force-dynamic';
+
+interface DashboardPost {
+    id: string;
+    title: string;
+    published: boolean;
+    createdAt: Date;
+    author: {
+        name: string | null;
+    } | null;
+}
 
 export default async function AdminDashboard() {
     const session = await auth();
@@ -64,7 +56,8 @@ export default async function AdminDashboard() {
             description: "All time blog posts",
             icon: FileText,
             color: "text-blue-600",
-            bg: "bg-blue-100 dark:bg-blue-900/20",
+            bg: "bg-blue-50",
+            borderColor: "border-blue-100"
         },
         {
             title: "Published",
@@ -72,7 +65,8 @@ export default async function AdminDashboard() {
             description: "Live on the site",
             icon: CheckCircle,
             color: "text-green-600",
-            bg: "bg-green-100 dark:bg-green-900/20",
+            bg: "bg-green-50",
+            borderColor: "border-green-100"
         },
         {
             title: "Drafts",
@@ -80,127 +74,162 @@ export default async function AdminDashboard() {
             description: "Work in progress",
             icon: File,
             color: "text-amber-600",
-            bg: "bg-amber-100 dark:bg-amber-900/20",
+            bg: "bg-amber-50",
+            borderColor: "border-amber-100"
         },
     ];
 
     return (
-        <div className="container mx-auto py-10 space-y-8">
-            <div className="flex items-center justify-between">
+        <div className="container mx-auto py-8 max-w-7xl space-y-8">
+            <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
                 <div>
-                    <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
-                    <p className="text-muted-foreground">Overview of your blog content and performance.</p>
+                    <h1 className="text-3xl font-bold text-[#050505] flex items-center gap-2">
+                        <LayoutDashboard className="w-8 h-8 text-primary" />
+                        Dashboard
+                    </h1>
+                    <p className="text-[#65676B] text-lg font-medium mt-1">
+                        Welcome back, {session.user?.name || 'Admin'}
+                    </p>
                 </div>
-                <div className="flex gap-2">
-                    <Button asChild>
-                        <Link href="/admin/blogs/create">
-                            <Plus className="mr-2 h-4 w-4" /> New Post
-                        </Link>
-                    </Button>
+                <div className="flex gap-3">
+                    <Link
+                        href="/admin/blogs/create"
+                        className="bg-primary hover:bg-primary/90 text-white px-4 py-2 rounded-md font-bold shadow-sm flex items-center gap-2 transition-all"
+                    >
+                        <Plus className="h-5 w-5" />
+                        Create Post
+                    </Link>
                 </div>
             </div>
 
             {/* Stats Grid */}
-            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
                 {stats.map((stat) => {
                     const Icon = stat.icon;
                     return (
-                        <Card key={stat.title} className="hover:shadow-lg transition-shadow">
-                            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                                <CardTitle className="text-sm font-medium">
+                        <div key={stat.title} className="bg-white rounded-xl p-6 shadow-[0_1px_2px_rgba(0,0,0,0.1)] border border-gray-100 transition-all hover:shadow-md">
+                            <div className="flex items-center justify-between mb-4">
+                                <h3 className="text-[#65676B] font-semibold text-sm uppercase tracking-wide">
                                     {stat.title}
-                                </CardTitle>
-                                <div className={`p-2 rounded-full ${stat.bg}`}>
-                                    <Icon className={`h-4 w-4 ${stat.color}`} />
+                                </h3>
+                                <div className={`p-2.5 rounded-full ${stat.bg} ${stat.borderColor} border`}>
+                                    <Icon className={`h-5 w-5 ${stat.color}`} />
                                 </div>
-                            </CardHeader>
-                            <CardContent>
-                                <div className="text-2xl font-bold">{stat.value}</div>
-                                <p className="text-xs text-muted-foreground mt-1">
-                                    {stat.description}
-                                </p>
-                            </CardContent>
-                        </Card>
+                            </div>
+                            <div className="flex items-baseline gap-2">
+                                <span className="text-3xl font-bold text-[#050505]">{stat.value}</span>
+                                <span className="text-sm text-[#65676B] font-medium">{stat.description}</span>
+                            </div>
+                        </div>
                     );
                 })}
             </div>
 
-            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
+            <div className="grid gap-6 md:grid-cols-1 lg:grid-cols-3">
                 {/* Recent Posts Table */}
-                <Card className="col-span-4 lg:col-span-5">
-                    <CardHeader>
-                        <CardTitle>Recent Posts</CardTitle>
-                        <CardDescription>
-                            Latest blog posts created in the system.
-                        </CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                        <Table>
-                            <TableHeader>
-                                <TableRow>
-                                    <TableHead>Title</TableHead>
-                                    <TableHead>Status</TableHead>
-                                    <TableHead className="text-right">Date</TableHead>
-                                </TableRow>
-                            </TableHeader>
-                            <TableBody>
+                <div className="lg:col-span-2 bg-white rounded-xl shadow-[0_1px_2px_rgba(0,0,0,0.1)] border border-gray-100 overflow-hidden flex flex-col">
+                    <div className="p-5 border-b border-gray-100 flex items-center justify-between">
+                        <h2 className="text-xl font-bold text-[#050505]">Recent Posts</h2>
+                        <Link href="/admin/blogs" className="text-primary hover:bg-primary/5 px-3 py-1 rounded-md text-sm font-semibold transition-colors">
+                            View All
+                        </Link>
+                    </div>
+
+                    <div className="overflow-x-auto flex-1">
+                        <table className="w-full text-left border-collapse">
+                            <thead>
+                                <tr className="bg-[#f7f8fa] text-[#65676B] text-xs uppercase tracking-wider font-semibold">
+                                    <th className="p-4 border-b border-gray-100 w-1/2">Title</th>
+                                    <th className="p-4 border-b border-gray-100">Status</th>
+                                    <th className="p-4 border-b border-gray-100 text-right">Published</th>
+                                </tr>
+                            </thead>
+                            <tbody className="divide-y divide-gray-50">
                                 {latestPosts.length === 0 ? (
-                                    <TableRow>
-                                        <TableCell colSpan={3} className="text-center h-24 text-muted-foreground">
-                                            No posts found.
-                                        </TableCell>
-                                    </TableRow>
+                                    <tr>
+                                        <td colSpan={3} className="p-8 text-center text-[#65676B] font-medium">
+                                            No posts found. Start writing!
+                                        </td>
+                                    </tr>
                                 ) : (
-                                    latestPosts.map((post) => (
-                                        <TableRow key={post.id}>
-                                            <TableCell className="font-medium">
+                                    latestPosts.map((post: DashboardPost) => (
+                                        <tr key={post.id} className="hover:bg-[#f0f2f5] transition-colors group">
+                                            <td className="p-4">
                                                 <div className="flex flex-col">
-                                                    <span>{post.title}</span>
-                                                    <span className="text-xs text-muted-foreground">by {post.author?.name || 'Unknown'}</span>
+                                                    <span className="font-semibold text-[#050505] line-clamp-1">{post.title}</span>
+                                                    <span className="text-xs text-[#65676B] group-hover:text-[#050505] transition-colors">
+                                                        by {post.author?.name || 'Unknown'}
+                                                    </span>
                                                 </div>
-                                            </TableCell>
-                                            <TableCell>
-                                                <Badge variant={post.published ? "default" : "secondary"} className={post.published ? "bg-green-600 hover:bg-green-700" : ""}>
+                                            </td>
+                                            <td className="p-4">
+                                                <span className={`px-2.5 py-1 rounded-full text-xs font-bold ${post.published
+                                                        ? "bg-green-100 text-green-700"
+                                                        : "bg-gray-100 text-gray-600 color-gray-500"
+                                                    }`}>
                                                     {post.published ? "Published" : "Draft"}
-                                                </Badge>
-                                            </TableCell>
-                                            <TableCell className="text-right text-muted-foreground text-xs">
-                                                {new Date(post.createdAt).toLocaleDateString()}
-                                            </TableCell>
-                                        </TableRow>
+                                                </span>
+                                            </td>
+                                            <td className="p-4 text-right text-[#65676B] text-sm font-medium">
+                                                {formatDistanceToNow(new Date(post.createdAt), { addSuffix: true })}
+                                            </td>
+                                        </tr>
                                     ))
                                 )}
-                            </TableBody>
-                        </Table>
-                    </CardContent>
-                </Card>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
 
                 {/* Quick Actions / Side Panel */}
-                <Card className="col-span-4 lg:col-span-2">
-                    <CardHeader>
-                        <CardTitle>Quick Actions</CardTitle>
-                        <CardDescription>
-                            Common tasks and shortcuts.
-                        </CardDescription>
-                    </CardHeader>
-                    <CardContent className="space-y-4">
-                        <Button variant="outline" className="w-full justify-start" asChild>
-                            <Link href="/admin/blogs/create">
-                                <Plus className="mr-2 h-4 w-4" /> Create New Post
+                <div className="lg:col-span-1 space-y-6">
+                    <div className="bg-white rounded-xl shadow-[0_1px_2px_rgba(0,0,0,0.1)] border border-gray-100 overflow-hidden">
+                        <div className="p-5 border-b border-gray-100">
+                            <h2 className="text-xl font-bold text-[#050505]">Quick Actions</h2>
+                        </div>
+                        <div className="p-4 space-y-3">
+                            <Link
+                                href="/admin/blogs/create"
+                                className="flex items-center gap-3 p-3 rounded-lg hover:bg-[#f0f2f5] transition-colors group"
+                            >
+                                <div className="h-10 w-10 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center group-hover:bg-blue-100 transition-colors">
+                                    <Plus className="h-5 w-5" />
+                                </div>
+                                <div>
+                                    <span className="block font-semibold text-[#050505]">Write New Post</span>
+                                    <span className="text-xs text-[#65676B]">Add content to your blog</span>
+                                </div>
                             </Link>
-                        </Button>
-                        <Button variant="outline" className="w-full justify-start" asChild>
-                            <Link href="/admin/users">
-                                <Users className="mr-2 h-4 w-4" /> Manage Users
+
+                            <Link
+                                href="/admin/users"
+                                className="flex items-center gap-3 p-3 rounded-lg hover:bg-[#f0f2f5] transition-colors group"
+                            >
+                                <div className="h-10 w-10 rounded-full bg-purple-50 text-purple-600 flex items-center justify-center group-hover:bg-purple-100 transition-colors">
+                                    <Users className="h-5 w-5" />
+                                </div>
+                                <div>
+                                    <span className="block font-semibold text-[#050505]">Manage Users</span>
+                                    <span className="text-xs text-[#65676B]">View and edit user accounts</span>
+                                </div>
                             </Link>
-                        </Button>
-                        <Button variant="outline" className="w-full justify-start" asChild>
-                            <Link href="/blogs" target="_blank">
-                                <ArrowUpRight className="mr-2 h-4 w-4" /> View Live Site
-                            </Link>
-                        </Button>
-                    </CardContent>
-                </Card>
+
+                            <a
+                                href="/blogs"
+                                target="_blank"
+                                className="flex items-center gap-3 p-3 rounded-lg hover:bg-[#f0f2f5] transition-colors group"
+                            >
+                                <div className="h-10 w-10 rounded-full bg-green-50 text-green-600 flex items-center justify-center group-hover:bg-green-100 transition-colors">
+                                    <ArrowUpRight className="h-5 w-5" />
+                                </div>
+                                <div>
+                                    <span className="block font-semibold text-[#050505]">View Live Site</span>
+                                    <span className="text-xs text-[#65676B]">See how it looks publicly</span>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     )
