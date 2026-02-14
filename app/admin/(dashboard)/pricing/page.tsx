@@ -2,7 +2,7 @@ import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import PriceInputForm from "./PriceInputForm";
 import { format } from "date-fns";
-import { TrendingUp, History, DollarSign, Euro, IndianRupee } from "lucide-react";
+import { TrendingUp, History } from "lucide-react";
 
 export const dynamic = 'force-dynamic';
 
@@ -12,8 +12,6 @@ interface PriceRecord {
     createdAt: Date;
     goldPrice: number;
     silverPrice: number;
-    inrToUsd: number;
-    inrToEur: number;
 }
 
 export default async function AdminPricingPage() {
@@ -71,14 +69,12 @@ export default async function AdminPricingPage() {
                                         <th className="p-4 border-b border-gray-100">Date & Time</th>
                                         <th className="p-4 border-b border-gray-100 text-right text-primary">Gold (10g)</th>
                                         <th className="p-4 border-b border-gray-100 text-right text-[#050505]">Silver (1kg)</th>
-                                        <th className="p-4 border-b border-gray-100 text-right">USD</th>
-                                        <th className="p-4 border-b border-gray-100 text-right">EUR</th>
                                     </tr>
                                 </thead>
                                 <tbody className="divide-y divide-gray-50">
                                     {recentRecords.length === 0 ? (
                                         <tr>
-                                            <td colSpan={5} className="p-8 text-center text-[#65676B] font-medium">
+                                            <td colSpan={3} className="p-8 text-center text-[#65676B] font-medium">
                                                 No recent updates found.
                                             </td>
                                         </tr>
@@ -95,18 +91,6 @@ export default async function AdminPricingPage() {
                                                 </td>
                                                 <td className="p-4 text-right text-[#050505] font-bold text-sm">
                                                     ₹{record.silverPrice.toLocaleString()}
-                                                </td>
-                                                <td className="p-4 text-right text-[#65676B] font-medium text-sm">
-                                                    <span className="flex items-center justify-end gap-1">
-                                                        <DollarSign className="w-3 h-3" />
-                                                        {record.inrToUsd}
-                                                    </span>
-                                                </td>
-                                                <td className="p-4 text-right text-[#65676B] font-medium text-sm">
-                                                    <span className="flex items-center justify-end gap-1">
-                                                        <Euro className="w-3 h-3" />
-                                                        {record.inrToEur}
-                                                    </span>
                                                 </td>
                                             </tr>
                                         ))

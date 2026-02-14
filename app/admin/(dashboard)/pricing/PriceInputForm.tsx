@@ -89,40 +89,6 @@ export default function PriceInputForm() {
                                 />
                             </div>
                         </div>
-
-                        <div className="grid grid-cols-2 gap-4">
-                            <div className="space-y-2">
-                                <Label htmlFor="inrToUsd" className="text-[#65676B] font-semibold text-sm">USD Rate</Label>
-                                <div className="relative group">
-                                    <span className="absolute left-3 top-3 text-[#65676B] font-bold transition-colors group-focus-within:text-primary">$</span>
-                                    <Input
-                                        id="inrToUsd"
-                                        name="inrToUsd"
-                                        type="number"
-                                        step="0.0001"
-                                        placeholder="0.00"
-                                        className="pl-8 bg-[#F0F2F5] border-none focus:ring-2 focus:ring-primary/20 text-[#050505] font-bold h-12 rounded-lg transition-all"
-                                        required
-                                    />
-                                </div>
-                            </div>
-
-                            <div className="space-y-2">
-                                <Label htmlFor="inrToEur" className="text-[#65676B] font-semibold text-sm">EUR Rate</Label>
-                                <div className="relative group">
-                                    <span className="absolute left-3 top-3 text-[#65676B] font-bold transition-colors group-focus-within:text-primary">€</span>
-                                    <Input
-                                        id="inrToEur"
-                                        name="inrToEur"
-                                        type="number"
-                                        step="0.0001"
-                                        placeholder="0.00"
-                                        className="pl-8 bg-[#F0F2F5] border-none focus:ring-2 focus:ring-primary/20 text-[#050505] font-bold h-12 rounded-lg transition-all"
-                                        required
-                                    />
-                                </div>
-                            </div>
-                        </div>
                     </div>
 
                     <div className="pt-2">

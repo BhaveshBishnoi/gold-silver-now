@@ -9,7 +9,7 @@ const outfit = Outfit({ subsets: ['latin'], variable: '--font-outfit', display: 
 
 export const metadata: Metadata = {
   title: 'Gold Silver Now - Live Market Prices',
-  description: 'Track live Gold (XAU) and Silver (XAG) prices in INR, USD, and EUR. Get real-time charts and market updates.',
+  description: 'Track live Gold (XAU) and Silver (XAG) prices in INR. Get real-time charts and market updates.',
 };
 
 export default function RootLayout({
