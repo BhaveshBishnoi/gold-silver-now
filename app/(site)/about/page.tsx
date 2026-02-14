@@ -5,7 +5,7 @@ import { Badge } from "@/components/ui/badge"
 export const metadata: Metadata = {
     title: "About Us - Gold Silver Now",
     description:
-        "Learn about our mission to provide real-time precious metal tracking, accurate conversions, and multi-currency support.",
+        "Learn about our mission to provide real-time precious metal tracking and accurate INR market rates.",
 }
 
 export default function AboutPage() {
@@ -20,7 +20,7 @@ export default function AboutPage() {
                     </h1>
                     <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
                         Empowering investors, traders, jewelers, and enthusiasts with
-                        accurate real-time precious metal pricing and conversion tools.
+                        accurate real-time precious metal pricing in India.
                     </p>
                 </div>
 
@@ -40,7 +40,7 @@ export default function AboutPage() {
                                 information should be simple and universal. Whether you're
                                 tracking gold for jewelry purchases or monitoring silver for
                                 industrial demand, our mission is to deliver precise and
-                                up-to-date data in your preferred currency and weight unit.
+                                up-to-date market rates in INR.
                             </p>
                         </div>
                     </div>
@@ -58,18 +58,8 @@ export default function AboutPage() {
                                         Real-Time Market Updates
                                     </h4>
                                     <p className="text-sm text-muted-foreground">
-                                        Our pricing engine reflects live global commodity market
-                                        movements with minimal latency.
-                                    </p>
-                                </li>
-
-                                <li>
-                                    <h4 className="font-semibold mb-1">
-                                        Multi-Currency Support
-                                    </h4>
-                                    <p className="text-sm text-muted-foreground">
-                                        Switch between USD, INR, EUR, and more to see localized
-                                        pricing instantly.
+                                        Our pricing engine reflects live market movements
+                                        with minimal latency.
                                     </p>
                                 </li>
 
@@ -130,11 +120,11 @@ export default function AboutPage() {
                     <Card className="rounded-2xl border shadow-sm">
                         <CardContent className="p-6">
                             <h3 className="font-semibold mb-3">
-                                Real-Time Exchange Rates
+                                Verified Indian Rates
                             </h3>
                             <p className="text-sm text-muted-foreground">
-                                Currency conversions are powered by updated forex feeds,
-                                ensuring fair and precise localization.
+                                Rates are adjusted to reflect the standard Indian market price,
+                                ensuring relevance for local buyers and sellers.
                             </p>
                         </CardContent>
                     </Card>
@@ -158,7 +148,7 @@ export default function AboutPage() {
                         Trusted by Thousands
                     </h2>
                     <p className="text-muted-foreground max-w-2xl mx-auto mb-6">
-                        Join a growing global community that relies on Gold Silver Now
+                        Join a growing community that relies on Gold Silver Now
                         for daily market insights and accurate precious metal tracking.
                     </p>
                 </div>
