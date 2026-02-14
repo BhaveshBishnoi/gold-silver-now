@@ -1,103 +1,99 @@
 
 import { prisma } from "@/lib/prisma";
+/* @ts-ignore */
 import { type Post } from "@prisma/client";
 import { auth } from "@/lib/auth";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
 import {
-    Container,
-    Box,
-    Typography,
     Table,
     TableBody,
     TableCell,
-    TableContainer,
     TableHead,
+    TableHeader,
     TableRow,
-    Paper,
-    Chip,
-    IconButton
-} from "@mui/material";
-import { NextLinkButton, NextLinkIconButton } from '@/components/NextLink';
-import EditIcon from '@mui/icons-material/Edit';
-import DeleteIcon from '@mui/icons-material/Delete';
-import VisibilityIcon from '@mui/icons-material/Visibility';
-import AddIcon from '@mui/icons-material/Add';
+} from "@/components/ui/table";
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Plus, Edit, Eye, Trash2 } from 'lucide-react';
 import { revalidatePath } from 'next/cache';
 
 export default async function AdminBlogsPage() {
     const session = await auth();
-    if (!session) return <Typography>Access Denied</Typography>;
+    if (!session) return <div className="p-8 text-center text-muted-foreground">Access Denied</div>;
 
     const posts = await prisma.post.findMany({
         orderBy: { createdAt: 'desc' },
     });
 
-    async function deletePost(id: string) {
+    async function deletePost(formData: FormData) {
         'use server'
-        await prisma.post.delete({ where: { id } });
-        revalidatePath('/admin/blogs');
+        const id = formData.get('id') as string;
+        if (id) {
+            await prisma.post.delete({ where: { id } });
+            revalidatePath('/admin/blogs');
+        }
     }
 
     return (
-        <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 4 }}>
-                <Typography variant="h4" gutterBottom>
-                    All Blogs
-                </Typography>
-                <NextLinkButton
-                    variant="contained"
-                    color="primary"
-                    startIcon={<AddIcon />}
-                    href="/admin/blogs/create"
-                >
-                    Create New
-                </NextLinkButton>
-            </Box>
+        <div className="container mx-auto py-10">
+            <div className="flex justify-between items-center mb-8">
+                <h1 className="text-3xl font-bold tracking-tight">All Blogs</h1>
+                <Button asChild>
+                    <Link href="/admin/blogs/create">
+                        <Plus className="mr-2 h-4 w-4" /> Create New
+                    </Link>
+                </Button>
+            </div>
 
-            <TableContainer component={Paper}>
-                <Table sx={{ minWidth: 650 }} aria-label="simple table">
-                    <TableHead>
-                        <TableRow>
-                            <TableCell>Title</TableCell>
-                            <TableCell align="right">Slug</TableCell>
-                            <TableCell align="right">Status</TableCell>
-                            <TableCell align="right">Actions</TableCell>
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {posts.map((post: Post) => (
-                            <TableRow
-                                key={post.id}
-                                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                            >
-                                <TableCell component="th" scope="row">
-                                    {post.title}
-                                </TableCell>
-                                <TableCell align="right">{post.slug}</TableCell>
-                                <TableCell align="right">
-                                    <Chip
-                                        label={post.published ? "Published" : "Draft"}
-                                        color={post.published ? "success" : "default"}
-                                        size="small"
-                                    />
-                                </TableCell>
-                                <TableCell align="right">
-                                    <NextLinkIconButton href={`/admin/blogs/${post.id}/edit`} color="primary">
-                                        <EditIcon />
-                                    </NextLinkIconButton>
-                                    <NextLinkIconButton href={`/blogs/${post.slug}`} target="_blank" color="default">
-                                        <VisibilityIcon />
-                                    </NextLinkIconButton>
-                                    <form action={deletePost.bind(null, post.id)} style={{ display: 'inline' }}>
-                                        <IconButton type="submit" color="error">
-                                            <DeleteIcon />
-                                        </IconButton>
-                                    </form>
-                                </TableCell>
+            <Card>
+                <CardHeader>
+                    <CardTitle>Posts</CardTitle>
+                </CardHeader>
+                <CardContent>
+                    <Table>
+                        <TableHeader>
+                            <TableRow>
+                                <TableHead>Title</TableHead>
+                                <TableHead>Slug</TableHead>
+                                <TableHead>Status</TableHead>
+                                <TableHead className="text-right">Actions</TableHead>
                             </TableRow>
-                        ))}
-                    </TableBody>
-                </Table>
-            </TableContainer>
-        </Container>
+                        </TableHeader>
+                        <TableBody>
+                            {posts.map((post: any) => (
+                                <TableRow key={post.id}>
+                                    <TableCell className="font-medium">{post.title}</TableCell>
+                                    <TableCell>{post.slug}</TableCell>
+                                    <TableCell>
+                                        <Badge variant={post.published ? "default" : "secondary"}>
+                                            {post.published ? "Published" : "Draft"}
+                                        </Badge>
+                                    </TableCell>
+                                    <TableCell className="text-right flex justify-end gap-2">
+                                        <Button asChild variant="outline" size="icon">
+                                            <Link href={`/admin/blogs/${post.id}/edit`}>
+                                                <Edit className="h-4 w-4" />
+                                            </Link>
+                                        </Button>
+                                        <Button asChild variant="ghost" size="icon">
+                                            <Link href={`/blogs/${post.slug}`} target="_blank">
+                                                <Eye className="h-4 w-4" />
+                                            </Link>
+                                        </Button>
+                                        <form action={deletePost}>
+                                            <input type="hidden" name="id" value={post.id} />
+                                            <Button type="submit" variant="destructive" size="icon">
+                                                <Trash2 className="h-4 w-4" />
+                                            </Button>
+                                        </form>
+                                    </TableCell>
+                                </TableRow>
+                            ))}
+                        </TableBody>
+                    </Table>
+                </CardContent>
+            </Card>
+        </div>
     );
 }

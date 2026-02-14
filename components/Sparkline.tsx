@@ -2,7 +2,7 @@
 
 import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, Filler } from 'chart.js';
 import { Line } from 'react-chartjs-2';
-import { Box } from '@mui/material';
+
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, Filler);
 
@@ -41,11 +41,13 @@ const Sparkline = ({ data, color, bgColor }: SparklineProps) => {
         }
     };
 
+
     return (
-        <Box sx={{ height: 100, width: '100%' }}>
+        <div className="h-[100px] w-full">
             <Line data={chartData} options={options} />
-        </Box>
+        </div>
     );
 };
+
 
 export default Sparkline;

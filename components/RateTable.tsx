@@ -1,108 +1,93 @@
 'use client';
-import { useSettings } from '@/context/SettingsContext';
-import {
-    Box,
-    Card,
-    Grid,
-    Typography,
-    Table,
-    TableBody,
-    TableCell,
-    TableContainer,
-    TableHead,
-    TableRow,
-    Paper,
-    Chip
-} from '@mui/material';
+
+import { useSettings } from '@/components/layout/SettingsContext';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { MetalData } from '@/types';
 
 interface RateTableProps {
     data: {
-        gold: any; // Using any or specific MetalData type if imported
-        silver: any;
+        gold: MetalData;
+        silver: MetalData;
     };
 }
 
 const RateTable = ({ data }: RateTableProps) => {
     const { currency, unit, exchangeRates } = useSettings();
-    const currencySym = exchangeRates[currency].symbol;
-    // const rate = exchangeRates[currency].rate; // Removed
-    const unitLabel = unit === 1000 ? 'kg' : (unit === 1 ? 'g' : `${unit}g`);
 
-    // const convert = (price: number) => price * rate; // Removed
-    const format = (price: number) => `${currencySym}${price.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+    const renderTable = (metal: 'gold' | 'silver') => {
+        const metalData = data[metal][currency];
+        const basePrice = metalData.price; // Price per oz in current currency
+        const ozToGram = 31.1034768;
+        const pricePerGram = basePrice / ozToGram;
 
-    const ozToGram = 31.1034768;
+        const purities = metal === 'gold' ? [
+            { label: '24K (99.9%)', purity: 1.0 },
+            { label: '22K (91.6%)', purity: 0.916 },
+            { label: '21K (87.5%)', purity: 0.875 },
+            { label: '18K (75.0%)', purity: 0.750 },
+            { label: '14K (58.3%)', purity: 0.583 },
+        ] : [
+            { label: 'Fine Silver (99.9%)', purity: 1.0 },
+            { label: 'Sterling Silver (92.5%)', purity: 0.925 },
+            { label: 'Standard Silver (80.0%)', purity: 0.800 },
+        ];
 
-    // Get Currency Data
-    // @ts-ignore
-    const goldData = data.gold[currency];
-    // @ts-ignore
-    const silverData = data.silver[currency];
+        return (
+            <Table>
+                <TableHeader>
+                    <TableRow>
+                        <TableHead>Purity</TableHead>
+                        <TableHead className="text-right">Price per {unit === 1 ? '1g' : (unit === 1000 ? '1kg' : `${unit}g`)}</TableHead>
+                        <TableHead className="text-right">Change (24h)</TableHead>
+                    </TableRow>
+                </TableHeader>
+                <TableBody>
+                    {purities.map((item) => {
+                        const price = pricePerGram * item.purity * unit;
+                        const changeAmount = (price * metalData.change_percent) / 100;
 
-    // Gold Calcs
-    const goldPricePerGram = goldData.price / ozToGram;
-    const g24k = goldPricePerGram * unit;
-    const g22k = goldPricePerGram * 0.916 * unit;
-    const g21k = goldPricePerGram * 0.875 * unit;
-    const g18k = goldPricePerGram * 0.750 * unit;
-
-    // Silver Calcs
-    const silverPricePerGram = silverData.price / ozToGram;
-    const sFine = silverPricePerGram * unit;
-    const sSterling = silverPricePerGram * 0.925 * unit;
-
-    const RateCard = ({ title, type, rows }: any) => (
-        <Card sx={{ borderTop: `4px solid ${type === 'gold' ? '#d97706' : '#64748b'}`, borderRadius: 2 }}>
-            <Box sx={{ p: 2, display: 'flex', justifyContent: 'space-between', alignItems: 'center', bgcolor: 'background.default' }}>
-                <Typography variant="h6" fontWeight={600}>{title}</Typography>
-                <Chip label={`${currency}/${unitLabel}`} size="small" variant="outlined" />
-            </Box>
-            <TableContainer>
-                <Table size="small">
-                    <TableHead>
-                        <TableRow>
-                            <TableCell sx={{ color: 'text.secondary', fontWeight: 600 }}>Purity</TableCell>
-                            <TableCell align="right" sx={{ color: 'text.secondary', fontWeight: 600 }}>Price</TableCell>
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {rows.map((row: any) => (
-                            <TableRow key={row.name} hover>
-                                <TableCell component="th" scope="row" sx={{ fontWeight: 500 }}>
-                                    {row.name}
+                        return (
+                            <TableRow key={item.label}>
+                                <TableCell className="font-medium">{item.label}</TableCell>
+                                <TableCell className="text-right font-bold">
+                                    {exchangeRates[currency].symbol}{price.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                                 </TableCell>
-                                <TableCell align="right" sx={{ fontWeight: 600, fontFamily: 'var(--font-heading)' }}>
-                                    {row.price}
+                                <TableCell className={`text-right font-medium ${metalData.change_percent >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                                    {metalData.change_percent >= 0 ? '+' : ''}{changeAmount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} ({Math.abs(metalData.change_percent)}%)
                                 </TableCell>
                             </TableRow>
-                        ))}
-                    </TableBody>
-                </Table>
-            </TableContainer>
-        </Card>
-    );
-
-    const goldRows = [
-        { name: '24K (99.9%)', price: format(g24k) },
-        { name: '22K (91.6%)', price: format(g22k) },
-        { name: '21K (87.5%)', price: format(g21k) },
-        { name: '18K (75.0%)', price: format(g18k) },
-    ];
-
-    const silverRows = [
-        { name: 'Fine Silver (99.9%)', price: format(sFine) },
-        { name: 'Sterling (92.5%)', price: format(sSterling) },
-    ];
+                        );
+                    })}
+                </TableBody>
+            </Table>
+        );
+    };
 
     return (
-        <Grid container spacing={3} sx={{ mt: 2 }}>
-            <Grid size={{ xs: 12, md: 6 }}>
-                <RateCard title="Gold Rates" type="gold" rows={goldRows} />
-            </Grid>
-            <Grid size={{ xs: 12, md: 6 }}>
-                <RateCard title="Silver Rates" type="silver" rows={silverRows} />
-            </Grid>
-        </Grid>
+        <Card className="mt-8">
+            <CardHeader>
+                <CardTitle>Detailed Rate Table</CardTitle>
+                <CardDescription>
+                    Live rates for different purities in {currency}.
+                </CardDescription>
+            </CardHeader>
+            <CardContent>
+                <Tabs defaultValue="gold" className="w-full">
+                    <TabsList className="grid w-full grid-cols-2 mb-4">
+                        <TabsTrigger value="gold">Gold Rates</TabsTrigger>
+                        <TabsTrigger value="silver">Silver Rates</TabsTrigger>
+                    </TabsList>
+                    <TabsContent value="gold">
+                        {renderTable('gold')}
+                    </TabsContent>
+                    <TabsContent value="silver">
+                        {renderTable('silver')}
+                    </TabsContent>
+                </Tabs>
+            </CardContent>
+        </Card>
     );
 };
 

@@ -1,85 +1,144 @@
-import { Container, Typography, Box, Paper, TextField, Button, Grid } from '@mui/material';
-import type { Metadata } from 'next';
-import EmailIcon from '@mui/icons-material/Email';
-import LocationOnIcon from '@mui/icons-material/LocationOn';
+import type { Metadata } from "next"
+import { Card, CardContent } from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Textarea } from "@/components/ui/textarea"
+import { Label } from "@/components/ui/label"
+import { Mail, MapPin } from "lucide-react"
 
 export const metadata: Metadata = {
-    title: 'Contact Us - Gold Silver Now',
-    description: 'Get in touch with the Gold Silver Now team.',
-};
+    title: "Contact Us - Gold Silver Now",
+    description: "Get in touch with the Gold Silver Now team.",
+}
 
 export default function ContactPage() {
     return (
-        <Container maxWidth="lg" sx={{ py: 8 }}>
-            <Box sx={{ mb: 6, textAlign: 'center' }}>
-                <Typography variant="h3" component="h1" gutterBottom fontWeight={800}>
-                    Contact Us
-                </Typography>
-                <Typography variant="h6" color="text.secondary" sx={{ maxWidth: 600, mx: 'auto' }}>
-                    Have questions or suggestions? We'd love to hear from you.
-                </Typography>
-            </Box>
+        <section className="py-20">
+            <div className="container max-w-6xl mx-auto px-4">
 
-            <Grid container spacing={6}>
-                <Grid size={{ xs: 12, md: 5 }}>
-                    <Box sx={{ height: '100%', display: 'flex', flexDirection: 'column', gap: 4 }}>
-                        <Paper elevation={0} sx={{ p: 4, borderRadius: 3, border: '1px solid', borderColor: 'divider' }}>
-                            <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                                <EmailIcon color="primary" sx={{ mr: 2, fontSize: 28 }} />
-                                <Typography variant="h6" fontWeight={600}>Email Us</Typography>
-                            </Box>
-                            <Typography variant="body1" color="text.secondary" gutterBottom>
-                                For support and inquiries:
-                            </Typography>
-                            <Typography variant="body1" fontWeight={500} component="a" href="mailto:support@goldsilvernow.com" sx={{ color: 'primary.main', textDecoration: 'none' }}>
-                                support@goldsilvernow.com
-                            </Typography>
-                        </Paper>
+                {/* Header */}
+                <header className="mb-16 text-center">
+                    <h1 className="text-4xl font-extrabold tracking-tight mb-4">
+                        Contact Us
+                    </h1>
+                    <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+                        Have questions, feedback, or partnership ideas?
+                        We’d love to hear from you.
+                    </p>
+                </header>
 
-                        <Paper elevation={0} sx={{ p: 4, borderRadius: 3, border: '1px solid', borderColor: 'divider' }}>
-                            <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                                <LocationOnIcon color="primary" sx={{ mr: 2, fontSize: 28 }} />
-                                <Typography variant="h6" fontWeight={600}>Office</Typography>
-                            </Box>
-                            <Typography variant="body1" color="text.secondary">
-                                Gold Silver Now HQ<br />
-                                123 Financial District,<br />
-                                Mumbai, Maharashtra 400001
-                            </Typography>
-                        </Paper>
-                    </Box>
-                </Grid>
+                {/* Content */}
+                <div className="grid grid-cols-1 md:grid-cols-12 gap-10">
 
-                <Grid size={{ xs: 12, md: 7 }}>
-                    <Paper elevation={0} sx={{ p: 4, borderRadius: 3, bgcolor: 'background.paper', boxShadow: '0 4px 20px rgba(0,0,0,0.05)' }}>
-                        <Typography variant="h5" gutterBottom fontWeight={700} sx={{ mb: 3 }}>
-                            Send us a Message
-                        </Typography>
-                        <Grid container spacing={3}>
-                            <Grid size={{ xs: 12, sm: 6 }}>
-                                <TextField fullWidth label="First Name" variant="outlined" />
-                            </Grid>
-                            <Grid size={{ xs: 12, sm: 6 }}>
-                                <TextField fullWidth label="Last Name" variant="outlined" />
-                            </Grid>
-                            <Grid size={{ xs: 12 }}>
-                                <TextField fullWidth label="Email Address" type="email" variant="outlined" />
-                            </Grid>
-                            <Grid size={{ xs: 12 }}>
-                                <TextField fullWidth label="Subject" variant="outlined" />
-                            </Grid>
-                            <Grid size={{ xs: 12 }}>
-                                <TextField fullWidth label="Message" multiline rows={4} variant="outlined" />
-                            </Grid>
-                            <Grid size={{ xs: 12 }}>
-                                <Button variant="contained" size="large" fullWidth sx={{ py: 1.5, fontWeight: 700 }}>
-                                    Send Message
-                                </Button>
-                            </Grid>
-                        </Grid>
-                    </Paper>
-                </Grid>
-            </Grid>
-        </Container>
-    );
+                    {/* Contact Info */}
+                    <div className="md:col-span-5 space-y-6">
+
+                        <Card className="rounded-2xl border shadow-sm">
+                            <CardContent className="p-6">
+                                <div className="flex items-center gap-4 mb-3">
+                                    <Mail className="text-primary" />
+                                    <h3 className="text-lg font-semibold">
+                                        Email Us
+                                    </h3>
+                                </div>
+                                <p className="text-sm text-muted-foreground mb-2">
+                                    For support and general inquiries:
+                                </p>
+                                <a
+                                    href="mailto:support@goldsilvernow.com"
+                                    className="font-medium text-primary hover:underline"
+                                >
+                                    support@goldsilvernow.com
+                                </a>
+                            </CardContent>
+                        </Card>
+
+                        <Card className="rounded-2xl border shadow-sm">
+                            <CardContent className="p-6">
+                                <div className="flex items-center gap-4 mb-3">
+                                    <MapPin className="text-primary" />
+                                    <h3 className="text-lg font-semibold">
+                                        Office
+                                    </h3>
+                                </div>
+                                <p className="text-sm text-muted-foreground leading-7">
+                                    Gold Silver Now HQ<br />
+                                    123 Financial District,<br />
+                                    Mumbai, Maharashtra 400001
+                                </p>
+                            </CardContent>
+                        </Card>
+
+                        {/* Trust Note */}
+                        <p className="text-sm text-muted-foreground leading-6">
+                            We typically respond within <strong>24–48 hours</strong>.
+                            Your information is kept private and never shared.
+                        </p>
+                    </div>
+
+                    {/* Contact Form */}
+                    <div className="md:col-span-7">
+                        <Card className="rounded-2xl border shadow-md">
+                            <CardContent className="p-8">
+                                <h2 className="text-2xl font-bold mb-6">
+                                    Send Us a Message
+                                </h2>
+
+                                <form className="space-y-6">
+
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                                        <div className="space-y-2">
+                                            <Label htmlFor="firstName">First Name</Label>
+                                            <Input id="firstName" placeholder="John" />
+                                        </div>
+
+                                        <div className="space-y-2">
+                                            <Label htmlFor="lastName">Last Name</Label>
+                                            <Input id="lastName" placeholder="Doe" />
+                                        </div>
+                                    </div>
+
+                                    <div className="space-y-2">
+                                        <Label htmlFor="email">Email Address</Label>
+                                        <Input
+                                            id="email"
+                                            type="email"
+                                            placeholder="you@example.com"
+                                        />
+                                    </div>
+
+                                    <div className="space-y-2">
+                                        <Label htmlFor="subject">Subject</Label>
+                                        <Input
+                                            id="subject"
+                                            placeholder="How can we help you?"
+                                        />
+                                    </div>
+
+                                    <div className="space-y-2">
+                                        <Label htmlFor="message">Message</Label>
+                                        <Textarea
+                                            id="message"
+                                            rows={5}
+                                            placeholder="Write your message here..."
+                                        />
+                                    </div>
+
+                                    <Button
+                                        type="submit"
+                                        size="lg"
+                                        className="w-full font-semibold"
+                                    >
+                                        Send Message
+                                    </Button>
+
+                                </form>
+                            </CardContent>
+                        </Card>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+    )
 }

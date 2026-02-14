@@ -1,90 +1,130 @@
-import { prisma } from '@/lib/prisma';
-import { Container, Typography, Box, Button, Alert } from '@mui/material';
-import Link from 'next/link';
-import { notFound } from 'next/navigation';
-import { NextLinkButton } from '@/components/NextLink';
+import { prisma } from "@/lib/prisma"
+import Link from "next/link"
+import { notFound } from "next/navigation"
+import { Button } from "@/components/ui/button"
+import { Alert, AlertDescription } from "@/components/ui/alert"
+import type { Metadata } from "next"
+import Image from "next/image"
 
-export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
-    const { slug } = await params;
-    const post = await prisma.post.findUnique({
-        where: { slug: slug },
-        select: { title: true, excerpt: true },
-    });
-    if (!post) return;
-    return {
-        title: `${post.title} - Gold Silver Now`,
-        description: post.excerpt,
-    };
+interface PageProps {
+    params: {
+        slug: string
+    }
 }
 
-export const dynamic = 'force-dynamic';
+export async function generateMetadata({
+    params,
+}: PageProps): Promise<Metadata | undefined> {
+    const { slug } = await params
 
-export default async function BlogPostPage({ params }: { params: Promise<{ slug: string }> }) {
-    const { slug } = await params;
-    let post = null;
-    let error = null;
+    const post = await prisma.post.findUnique({
+        where: { slug },
+        select: { title: true, excerpt: true },
+    })
+
+    if (!post) return
+
+    return {
+        title: `${post.title} - Gold Silver Now`,
+        description: post.excerpt ?? undefined,
+    }
+}
+
+export const dynamic = "force-dynamic"
+
+export default async function BlogPostPage({
+    params,
+}: PageProps) {
+    const { slug } = await params
+
+    let post: any = null
+    let error: string | null = null
 
     try {
         post = await prisma.post.findUnique({
-            where: { slug: slug },
-        });
+            where: { slug },
+        })
     } catch (e) {
-        console.error("Failed to fetch post:", e);
-        error = "Failed to load blog post.";
+        console.error("Failed to fetch post:", e)
+        error = "Failed to load blog post."
     }
 
     if (error) {
         return (
-            <Container maxWidth="md" sx={{ py: 8 }}>
-                <Alert severity="error">{error}</Alert>
-                <NextLinkButton href="/blogs" sx={{ mt: 2 }}>
-                    Back to Blogs
-                </NextLinkButton>
-            </Container>
-        );
+            <section className="py-20">
+                <div className="container max-w-3xl mx-auto px-4">
+                    <Alert variant="destructive" className="mb-6">
+                        <AlertDescription>{error}</AlertDescription>
+                    </Alert>
+
+                    <Button asChild>
+                        <Link href="/blogs">Back to Blogs</Link>
+                    </Button>
+                </div>
+            </section>
+        )
     }
 
     if (!post || !post.published) {
-        notFound();
+        notFound()
     }
 
     return (
-        <Container maxWidth="md" sx={{ py: 8 }}>
-            <NextLinkButton href="/blogs" sx={{ mb: 4 }} variant="text">
-                &larr; Back to Blogs
-            </NextLinkButton>
+        <article className="py-20">
+            <div className="container max-w-3xl mx-auto px-4">
 
-            <Typography variant="h2" component="h1" gutterBottom sx={{ fontWeight: 800 }}>
-                {post.title}
-            </Typography>
+                {/* Back Button */}
+                <Button
+                    asChild
+                    variant="ghost"
+                    className="mb-8"
+                >
+                    <Link href="/blogs">← Back to Blogs</Link>
+                </Button>
 
-            <Typography variant="subtitle1" color="text.secondary" gutterBottom sx={{ mb: 4 }}>
-                Published on {new Date(post.createdAt).toLocaleDateString()}
-            </Typography>
+                {/* Title */}
+                <h1 className="text-4xl font-extrabold tracking-tight mb-4">
+                    {post.title}
+                </h1>
 
-            {post.coverImage && (
-                <Box component="img" src={post.coverImage} alt={post.title} sx={{ width: '100%', height: 'auto', borderRadius: 2, mb: 4 }} />
-            )}
+                {/* Date */}
+                <p className="text-muted-foreground mb-8">
+                    Published on{" "}
+                    {new Date(post.createdAt).toLocaleDateString()}
+                </p>
 
-            <Box
-                sx={{
-                    typography: 'body1',
-                    lineHeight: 1.8,
-                    '& img': {
-                        maxWidth: '100%',
-                        height: 'auto',
-                        borderRadius: 2,
-                        my: 2
-                    },
-                    '& h2': { mt: 4, mb: 2, fontWeight: 700 },
-                    '& h3': { mt: 3, mb: 1, fontWeight: 600 },
-                    '& p': { mb: 2 },
-                    '& ul, & ol': { mb: 2, pl: 4 },
-                    '& li': { mb: 1 },
-                    '& a': { color: 'primary.main', textDecoration: 'underline' }
-                }}
-                dangerouslySetInnerHTML={{ __html: post.content }}
-            />
-        </Container>
-    );
+                {/* Cover Image */}
+                {post.coverImage && (
+                    <div className="relative w-full h-[400px] mb-10 rounded-xl overflow-hidden">
+                        <Image
+                            src={post.coverImage}
+                            alt={post.title}
+                            fill
+                            className="object-cover"
+                            priority
+                        />
+                    </div>
+                )}
+
+                {/* Content */}
+                <div
+                    className="
+            prose 
+            prose-lg 
+            dark:prose-invert 
+            max-w-none
+            prose-headings:font-bold
+            prose-h2:mt-10
+            prose-h3:mt-6
+            prose-a:text-primary
+            prose-img:rounded-xl
+          "
+                    dangerouslySetInnerHTML={{
+                        __html: post.content,
+                    }}
+                />
+
+            </div>
+        </article>
+    )
 }

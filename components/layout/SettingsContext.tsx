@@ -15,8 +15,8 @@ interface SettingsContextType {
 
 const defaultExchangeRates = {
     USD: { rate: 1, symbol: '$' },
-    INR: { rate: 84.50, symbol: '₹' },
-    EUR: { rate: 0.92, symbol: '€' },
+    INR: { rate: 91.10, symbol: '₹' },
+    EUR: { rate: 0.89, symbol: '€' },
 };
 
 const SettingsContext = createContext<SettingsContextType | undefined>(undefined);

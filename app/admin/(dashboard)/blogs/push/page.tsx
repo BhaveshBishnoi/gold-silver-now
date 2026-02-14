@@ -1,8 +1,12 @@
 'use client';
 
 import { useState } from 'react';
-import { Box, Button, TextField, Typography, Container, Paper, Alert } from '@mui/material';
 import { useRouter } from 'next/navigation';
+import { Button } from '@/components/ui/button';
+import { Textarea } from '@/components/ui/textarea';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Loader2 } from 'lucide-react';
 
 export default function PushBlogPage() {
     const router = useRouter();
@@ -81,57 +85,58 @@ export default function PushBlogPage() {
     };
 
     return (
-        <Container maxWidth="md" sx={{ mt: 4, mb: 8 }}>
-            <Typography variant="h4" fontWeight={700} gutterBottom>
-                Push JSON Data
-            </Typography>
-            <Typography variant="body1" color="text.secondary" paragraph>
-                Directly push blog posts using raw JSON. Useful for bulk imports or programmatic content generation.
-            </Typography>
+        <div className="container max-w-4xl mx-auto py-10">
+            <div className="mb-8">
+                <h1 className="text-3xl font-bold tracking-tight mb-2">Push JSON Data</h1>
+                <p className="text-muted-foreground">
+                    Directly push blog posts using raw JSON. Useful for bulk imports or programmatic content generation.
+                </p>
+            </div>
 
-            <Paper sx={{ p: 4, borderRadius: 2 }}>
-                {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
-                {success && <Alert severity="success" sx={{ mb: 2 }}>{success}</Alert>}
+            <Card>
+                <CardHeader>
+                    <CardTitle>Paste JSON Payload</CardTitle>
+                    <CardDescription>Accepts a single object or an array of objects.</CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                    {error && (
+                        <Alert variant="destructive">
+                            <AlertTitle>Error</AlertTitle>
+                            <AlertDescription>{error}</AlertDescription>
+                        </Alert>
+                    )}
+                    {success && (
+                        <Alert className="bg-green-50 text-green-700 border-green-200">
+                            <AlertTitle>Success</AlertTitle>
+                            <AlertDescription>{success}</AlertDescription>
+                        </Alert>
+                    )}
 
-                <Box sx={{ mb: 3 }}>
-                    <Typography variant="subtitle2" gutterBottom>
-                        Paste JSON Payload
-                    </Typography>
-                    <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mb: 1 }}>
-                        Accepts a single object or an array of objects.
-                    </Typography>
-                    <TextField
-                        fullWidth
-                        multiline
-                        rows={15}
-                        variant="outlined"
+                    <Textarea
+                        className="font-mono text-sm min-h-[400px]"
                         placeholder={JSON.stringify(exampleJson, null, 2)}
                         value={jsonData}
                         onChange={(e) => setJsonData(e.target.value)}
-                        sx={{ fontFamily: 'monospace' }}
-                        InputProps={{
-                            sx: { fontFamily: 'monospace', fontSize: '0.875rem' }
-                        }}
                     />
-                </Box>
 
-                <Box sx={{ display: 'flex', gap: 2 }}>
-                    <Button
-                        variant="contained"
-                        size="large"
-                        onClick={handleSubmit}
-                        disabled={loading || !jsonData.trim()}
-                    >
-                        {loading ? 'Pushing...' : 'Push Data'}
-                    </Button>
-                    <Button
-                        variant="outlined"
-                        onClick={() => setJsonData(JSON.stringify(exampleJson, null, 2))}
-                    >
-                        Load Example
-                    </Button>
-                </Box>
-            </Paper>
-        </Container>
+                    <div className="flex gap-4">
+                        <Button
+                            size="lg"
+                            onClick={handleSubmit}
+                            disabled={loading || !jsonData.trim()}
+                        >
+                            {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                            {loading ? 'Pushing...' : 'Push Data'}
+                        </Button>
+                        <Button
+                            variant="outline"
+                            onClick={() => setJsonData(JSON.stringify(exampleJson, null, 2))}
+                        >
+                            Load Example
+                        </Button>
+                    </div>
+                </CardContent>
+            </Card>
+        </div>
     );
 }

@@ -1,123 +1,124 @@
 
 import { auth } from "@/lib/auth";
-import { Container, Box, Typography, Paper, TextField, Button, Grid, Avatar, Divider, Switch, FormControlLabel, Chip } from "@mui/material";
-import SaveIcon from '@mui/icons-material/Save';
-import LockIcon from '@mui/icons-material/Lock';
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
+import {
+    Card,
+    CardContent,
+    CardDescription,
+    CardHeader,
+    CardTitle,
+    CardFooter
+} from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
+import { Save, Lock, User, Shield } from 'lucide-react';
 
 export default async function AdminSettingsPage() {
     const session = await auth();
-    if (!session) return <Typography>Access Denied</Typography>;
+    if (!session) return <div className="p-8 text-center text-muted-foreground">Access Denied</div>;
+
+    const userInitial = session.user?.name?.[0] || 'A';
 
     return (
-        <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-            <Box sx={{ mb: 4 }}>
-                <Typography variant="h4" fontWeight={700} gutterBottom>
-                    Account Settings
-                </Typography>
-                <Typography variant="body1" color="text.secondary">
-                    Manage your profile, security, and application preferences.
-                </Typography>
-            </Box>
+        <div className="container mx-auto py-10">
+            <div className="mb-8">
+                <h1 className="text-3xl font-bold tracking-tight">Account Settings</h1>
+                <p className="text-muted-foreground">Manage your profile, security, and application preferences.</p>
+            </div>
 
-            <Grid container spacing={4}>
-                <Grid size={{ xs: 12, md: 4 }}>
-                    <Paper sx={{ p: 4, borderRadius: 4, textAlign: 'center', boxShadow: '0 4px 20px rgba(0,0,0,0.05)' }}>
-                        <Avatar
-                            sx={{ width: 100, height: 100, mx: 'auto', mb: 2, bgcolor: 'primary.main', fontSize: '2rem' }}
-                        >
-                            {session.user?.name?.[0] || 'A'}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                {/* Profile Card */}
+                <Card className="md:col-span-1 h-fit text-center">
+                    <CardHeader>
+                        <Avatar className="h-24 w-24 mx-auto mb-2">
+                            <AvatarImage src="/avatars/01.png" alt={session.user?.name || ''} />
+                            <AvatarFallback className="text-2xl bg-primary text-primary-foreground">
+                                {userInitial}
+                            </AvatarFallback>
                         </Avatar>
-                        <Typography variant="h6" fontWeight={700}>
-                            {session.user?.name || 'Admin User'}
-                        </Typography>
-                        <Typography variant="body2" color="text.secondary" gutterBottom>
-                            {session.user?.email}
-                        </Typography>
-                        <Chip label="Super Admin" color="primary" size="small" sx={{ mt: 1 }} />
-                    </Paper>
-                </Grid>
+                        <CardTitle>{session.user?.name || 'Admin User'}</CardTitle>
+                        <CardDescription>{session.user?.email}</CardDescription>
+                        <div className="pt-2">
+                            <Badge variant="secondary" className="bg-primary/10 text-primary hover:bg-primary/20">
+                                <Shield className="h-3 w-3 mr-1" /> Super Admin
+                            </Badge>
+                        </div>
+                    </CardHeader>
+                </Card>
 
-                <Grid size={{ xs: 12, md: 8 }}>
-                    <Paper sx={{ p: 4, borderRadius: 4, boxShadow: '0 4px 20px rgba(0,0,0,0.05)', mb: 4 }}>
-                        <Typography variant="h6" gutterBottom fontWeight={600} sx={{ mb: 3 }}>
-                            Profile Details
-                        </Typography>
-                        <Grid container spacing={3}>
-                            <Grid size={{ xs: 12, md: 6 }}>
-                                <TextField
-                                    fullWidth
-                                    label="Full Name"
-                                    defaultValue={session.user?.name}
-                                />
-                            </Grid>
-                            <Grid size={{ xs: 12, md: 6 }}>
-                                <TextField
-                                    fullWidth
-                                    label="Email Address"
-                                    defaultValue={session.user?.email}
-                                    disabled
-                                />
-                            </Grid>
-                            <Grid size={{ xs: 12 }}>
-                                <TextField
-                                    fullWidth
-                                    label="Bio"
-                                    multiline
-                                    rows={3}
+                <div className="md:col-span-2 space-y-6">
+                    {/* Profile Details */}
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>Profile Details</CardTitle>
+                            <CardDescription>Update your personal information.</CardDescription>
+                        </CardHeader>
+                        <CardContent className="space-y-4">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div className="space-y-2">
+                                    <Label htmlFor="fullName">Full Name</Label>
+                                    <Input id="fullName" name="name" defaultValue={session.user?.name || ''} />
+                                </div>
+                                <div className="space-y-2">
+                                    <Label htmlFor="email">Email Address</Label>
+                                    <Input id="email" name="email" defaultValue={session.user?.email || ''} disabled />
+                                </div>
+                            </div>
+                            <div className="space-y-2">
+                                <Label htmlFor="bio">Bio</Label>
+                                <Textarea
+                                    id="bio"
+                                    name="bio"
                                     placeholder="Tell us a little about yourself..."
+                                    className="min-h-[100px]"
                                 />
-                            </Grid>
-                        </Grid>
-                        <Box sx={{ mt: 3, display: 'flex', justifyContent: 'flex-end' }}>
-                            <Button variant="contained" startIcon={<SaveIcon />} sx={{ borderRadius: 2 }}>
-                                Save Profile
+                            </div>
+                        </CardContent>
+                        <CardFooter className="flex justify-end">
+                            <Button>
+                                <Save className="mr-2 h-4 w-4" /> Save Profile
                             </Button>
-                        </Box>
-                    </Paper>
+                        </CardFooter>
+                    </Card>
 
-                    <Paper sx={{ p: 4, borderRadius: 4, boxShadow: '0 4px 20px rgba(0,0,0,0.05)' }}>
-                        <Box sx={{ display: 'flex', alignItems: 'center', mb: 3, gap: 1 }}>
-                            <LockIcon color="action" />
-                            <Typography variant="h6" fontWeight={600}>
-                                Security
-                            </Typography>
-                        </Box>
+                    {/* Security */}
+                    <Card>
+                        <CardHeader>
+                            <CardTitle className="flex items-center gap-2">
+                                <Lock className="h-4 w-4" /> Security
+                            </CardTitle>
+                            <CardDescription>Update your password and security settings.</CardDescription>
+                        </CardHeader>
+                        <CardContent className="space-y-4">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div className="space-y-2">
+                                    <Label htmlFor="currentPassword">Current Password</Label>
+                                    <Input id="currentPassword" name="currentPassword" type="password" />
+                                </div>
+                                <div className="md:block hidden" /> {/* Spacer */}
 
-                        <Grid container spacing={3}>
-                            <Grid size={{ xs: 12, md: 6 }}>
-                                <TextField
-                                    fullWidth
-                                    label="Current Password"
-                                    type="password"
-                                />
-                            </Grid>
-                            <Grid size={{ xs: 12, md: 6 }}>
-                                {/* Spacer */}
-                            </Grid>
-                            <Grid size={{ xs: 12, md: 6 }}>
-                                <TextField
-                                    fullWidth
-                                    label="New Password"
-                                    type="password"
-                                />
-                            </Grid>
-                            <Grid size={{ xs: 12, md: 6 }}>
-                                <TextField
-                                    fullWidth
-                                    label="Confirm New Password"
-                                    type="password"
-                                />
-                            </Grid>
-                        </Grid>
-
-                        <Box sx={{ mt: 3 }}>
-                            <Button variant="outlined" color="primary" sx={{ borderRadius: 2 }}>
+                                <div className="space-y-2">
+                                    <Label htmlFor="newPassword">New Password</Label>
+                                    <Input id="newPassword" name="newPassword" type="password" />
+                                </div>
+                                <div className="space-y-2">
+                                    <Label htmlFor="confirmPassword">Confirm New Password</Label>
+                                    <Input id="confirmPassword" name="confirmPassword" type="password" />
+                                </div>
+                            </div>
+                        </CardContent>
+                        <CardFooter>
+                            <Button variant="outline">
                                 Update Password
                             </Button>
-                        </Box>
-                    </Paper>
-                </Grid>
-            </Grid>
-        </Container>
+                        </CardFooter>
+                    </Card>
+                </div>
+            </div>
+        </div>
     );
 }

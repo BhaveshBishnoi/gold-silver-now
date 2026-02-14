@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { Inter, Outfit } from 'next/font/google';
-import ThemeRegistry from '@/theme/ThemeRegistry';
-import { SettingsProvider } from '@/context/SettingsContext';
+import './globals.css';
+import { SettingsProvider } from '@/components/layout/SettingsContext';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter', display: 'swap' });
 const outfit = Outfit({ subsets: ['latin'], variable: '--font-outfit', display: 'swap' });
@@ -19,14 +19,11 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning={true}>
       <head>
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
       </head>
-      <body className={`${inter.variable} ${outfit.variable}`} suppressHydrationWarning={true} >
-        <ThemeRegistry>
-          <SettingsProvider>
-            {children}
-          </SettingsProvider>
-        </ThemeRegistry>
+      <body className={`${inter.variable} ${outfit.variable} font-sans antialiased`} suppressHydrationWarning={true} >
+        <SettingsProvider>
+          {children}
+        </SettingsProvider>
       </body>
     </html>
   );

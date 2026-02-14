@@ -1,97 +1,101 @@
-'use client';
-import { Box, Card, CardContent, CardMedia, Typography, Grid, Button, Chip } from '@mui/material';
-import Link from 'next/link';
-import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
-import { format } from 'date-fns';
+'use client'
+
+import Link from "next/link"
+import { Card, CardContent } from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
+import { ArrowRight } from "lucide-react"
+import { format } from "date-fns"
 
 interface BlogPost {
-    id: string;
-    title: string;
-    slug: string;
-    excerpt: string | null;
-    coverImage: string | null;
-    createdAt: string;
+    id: string
+    title: string
+    slug: string
+    excerpt: string | null
+    coverImage: string | null
+    createdAt: string
 }
 
 interface LatestBlogsProps {
-    blogs: BlogPost[];
+    blogs: BlogPost[]
 }
 
 const LatestBlogs = ({ blogs }: LatestBlogsProps) => {
-    if (!blogs || blogs.length === 0) return null;
+    if (!blogs || blogs.length === 0) return null
 
     return (
-        <Box sx={{ py: 8 }}>
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 4 }}>
-                <Typography variant="h4" component="h2" fontWeight={800}>
+        <section className="py-20">
+
+            {/* Header */}
+            <div className="flex items-center justify-between mb-10">
+                <h2 className="text-3xl font-extrabold tracking-tight">
                     Latest Updates
-                </Typography>
+                </h2>
+
                 <Button
-                    component={Link}
-                    href="/blogs"
-                    endIcon={<ArrowForwardIcon />}
-                    sx={{ fontWeight: 600 }}
+                    asChild
+                    variant="ghost"
+                    className="font-semibold flex items-center gap-2"
                 >
-                    View All
+                    <Link href="/blogs">
+                        View All
+                        <ArrowRight size={18} />
+                    </Link>
                 </Button>
-            </Box>
+            </div>
 
-            <Grid container spacing={4}>
+            {/* Blog Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                 {blogs.map((blog) => (
-                    <Grid size={{ xs: 12, md: 4 }} key={blog.id}>
-                        <Card sx={{
-                            height: '100%',
-                            display: 'flex',
-                            flexDirection: 'column',
-                            borderRadius: 4,
-                            overflow: 'hidden',
-                            boxShadow: '0 4px 20px rgba(0,0,0,0.05)',
-                            transition: 'transform 0.3s ease, box-shadow 0.3s ease',
-                            '&:hover': {
-                                transform: 'translateY(-5px)',
-                                boxShadow: '0 12px 30px rgba(0,0,0,0.1)'
-                            }
-                        }}>
-                            <Box sx={{ position: 'relative', height: 200, bgcolor: 'grey.100' }}>
-                                {blog.coverImage ? (
-                                    <CardMedia
-                                        component="img"
-                                        height="200"
-                                        image={blog.coverImage}
-                                        alt={blog.title}
-                                        sx={{ objectFit: 'cover' }}
-                                    />
-                                ) : (
-                                    <Box sx={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'text.disabled' }}>
-                                        <Typography variant="h3" fontWeight={700} sx={{ opacity: 0.2 }}>GSN</Typography>
-                                    </Box>
-                                )}
-                            </Box>
-                            <CardContent sx={{ flexGrow: 1, p: 3 }}>
-                                <Typography variant="caption" color="primary.main" fontWeight={700} sx={{ mb: 1, display: 'block' }}>
-                                    {format(new Date(blog.createdAt), 'MMMM d, yyyy')}
-                                </Typography>
-                                <Typography variant="h6" component="h3" fontWeight={700} sx={{ mb: 1, lineHeight: 1.3 }}>
-                                    <Link href={`/blogs/${blog.slug}`} style={{ color: 'inherit', textDecoration: 'none' }}>
-                                        {blog.title}
-                                    </Link>
-                                </Typography>
-                                <Typography variant="body2" color="text.secondary" sx={{
-                                    overflow: 'hidden',
-                                    textOverflow: 'ellipsis',
-                                    display: '-webkit-box',
-                                    WebkitLineClamp: 3,
-                                    WebkitBoxOrient: 'vertical',
-                                }}>
-                                    {blog.excerpt || 'Read the full article to learn more...'}
-                                </Typography>
-                            </CardContent>
-                        </Card>
-                    </Grid>
-                ))}
-            </Grid>
-        </Box>
-    );
-};
+                    <Card
+                        key={blog.id}
+                        className="h-full flex flex-col overflow-hidden rounded-2xl shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
+                    >
+                        {/* Image Section */}
+                        <div className="relative h-52 bg-muted">
+                            {blog.coverImage ? (
+                                <img
+                                    src={blog.coverImage}
+                                    alt={blog.title}
+                                    className="w-full h-full object-cover"
+                                />
+                            ) : (
+                                <div className="w-full h-full flex items-center justify-center text-muted-foreground">
+                                    <span className="text-5xl font-bold opacity-20">
+                                        GSN
+                                    </span>
+                                </div>
+                            )}
+                        </div>
 
-export default LatestBlogs;
+                        {/* Content */}
+                        <CardContent className="flex flex-col flex-grow p-6">
+
+                            {/* Date */}
+                            <span className="text-xs font-bold text-primary mb-2 block">
+                                {format(new Date(blog.createdAt), "MMMM d, yyyy")}
+                            </span>
+
+                            {/* Title */}
+                            <h3 className="text-lg font-bold leading-snug mb-2">
+                                <Link
+                                    href={`/blogs/${blog.slug}`}
+                                    className="hover:underline"
+                                >
+                                    {blog.title}
+                                </Link>
+                            </h3>
+
+                            {/* Excerpt */}
+                            <p className="text-sm text-muted-foreground line-clamp-3">
+                                {blog.excerpt || "Read the full article to learn more..."}
+                            </p>
+
+                        </CardContent>
+                    </Card>
+                ))}
+            </div>
+        </section>
+    )
+}
+
+export default LatestBlogs
