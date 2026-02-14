@@ -10,9 +10,7 @@ export interface CurrencyData {
 }
 
 export interface MetalData {
-    USD: CurrencyData;
     INR: CurrencyData;
-    EUR: CurrencyData;
 }
 
 export interface HistoryItem {
@@ -28,9 +26,7 @@ export interface PricesResponse {
         gold: MetalData;
         silver: MetalData;
         history: {
-            USD: HistoryItem[];
             INR: HistoryItem[];
-            EUR: HistoryItem[];
         };
     };
 }

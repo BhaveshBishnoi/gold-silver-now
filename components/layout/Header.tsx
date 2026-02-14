@@ -3,17 +3,8 @@
 import { useState } from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { useSettings } from "@/components/layout/SettingsContext"
 
 import { Button } from "@/components/ui/button"
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from "@/components/ui/select"
-
 import {
     Sheet,
     SheetContent,
@@ -21,11 +12,10 @@ import {
     SheetTitle,
 } from "@/components/ui/sheet"
 
-import { Menu, X } from "lucide-react"
+import { Menu } from "lucide-react"
 
 
 const Header = () => {
-    const { currency, setCurrency, exchangeRates } = useSettings()
     const pathname = usePathname()
     const [sheetOpen, setSheetOpen] = useState(false)
 
@@ -68,45 +58,10 @@ const Header = () => {
                                 )}
                             </Link>
                         ))}
-
-                        <div className="h-6 w-px bg-slate-200 mx-2" />
-
-                        {/* Currency Select */}
-                        <Select
-                            value={currency}
-                            onValueChange={(val: any) => setCurrency(val)}
-                        >
-                            <SelectTrigger className="w-[110px] h-9 font-medium bg-slate-50 border-slate-200 focus:ring-primary focus:border-primary shadow-sm hover:bg-slate-100 transition-colors">
-                                <SelectValue />
-                            </SelectTrigger>
-                            <SelectContent className="bg-white border text-slate-700 border-slate-100 shadow-xl z-[60]">
-                                {Object.keys(exchangeRates).map((curr) => (
-                                    <SelectItem key={curr} value={curr} className="cursor-pointer focus:bg-slate-50 focus:text-primary">
-                                        <span className="font-bold">{curr}</span> <span className="text-slate-400 text-xs ml-1">({exchangeRates[curr as keyof typeof exchangeRates].symbol})</span>
-                                    </SelectItem>
-                                ))}
-                            </SelectContent>
-                        </Select>
                     </nav>
 
                     {/* Mobile Nav */}
                     <div className="flex md:hidden items-center gap-3">
-                        <Select
-                            value={currency}
-                            onValueChange={(val: any) => setCurrency(val)}
-                        >
-                            <SelectTrigger className="w-[85px] h-9 text-xs font-bold bg-slate-50 border-slate-200">
-                                <SelectValue />
-                            </SelectTrigger>
-                            <SelectContent className="bg-white border border-slate-100 shadow-xl z-[60]">
-                                {Object.keys(exchangeRates).map((curr) => (
-                                    <SelectItem key={curr} value={curr}>
-                                        {curr}
-                                    </SelectItem>
-                                ))}
-                            </SelectContent>
-                        </Select>
-
                         <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
                             <SheetTrigger asChild>
                                 <Button variant="ghost" size="icon" className="text-slate-700 hover:bg-slate-50">

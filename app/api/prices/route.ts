@@ -20,8 +20,6 @@ export async function GET() {
         const defaultRecord = {
             goldPrice: 72000, // INR per 10g
             silverPrice: 85000, // INR per 1kg
-            inrToUsd: 0.012,
-            inrToEur: 0.011,
             createdAt: new Date()
         };
 
@@ -46,14 +44,6 @@ export async function GET() {
         const goldOunceINR = convertToOuncePrice(record.goldPrice, 'gold');
         const silverOunceINR = convertToOuncePrice(record.silverPrice, 'silver');
 
-        // USD Calculation
-        const goldOunceUSD = goldOunceINR * record.inrToUsd;
-        const silverOunceUSD = silverOunceINR * record.inrToUsd;
-
-        // EUR Calculation
-        const goldOunceEUR = goldOunceINR * record.inrToEur;
-        const silverOunceEUR = silverOunceINR * record.inrToEur;
-
         // Process History
         // We need to reverse it to be chronological for the chart
         const sortedHistory = [...historyRecords].reverse().map(rec => ({
@@ -73,19 +63,13 @@ export async function GET() {
 
         const responseData = {
             gold: {
-                INR: { price: goldOunceINR, change_percent: 0 }, // We could calc change vs yesterday
-                USD: { price: goldOunceUSD, change_percent: 0 },
-                EUR: { price: goldOunceEUR, change_percent: 0 }
+                INR: { price: goldOunceINR, change_percent: 0 },
             },
             silver: {
                 INR: { price: silverOunceINR, change_percent: 0 },
-                USD: { price: silverOunceUSD, change_percent: 0 },
-                EUR: { price: silverOunceEUR, change_percent: 0 }
             },
             history: {
                 INR: sortedHistory,
-                USD: sortedHistory.map(h => ({ ...h, gold: h.gold * record.inrToUsd, silver: h.silver * record.inrToUsd })),
-                EUR: sortedHistory.map(h => ({ ...h, gold: h.gold * record.inrToEur, silver: h.silver * record.inrToEur }))
             }
         };
 
