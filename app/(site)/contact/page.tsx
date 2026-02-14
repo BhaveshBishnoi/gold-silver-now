@@ -45,10 +45,10 @@ export default function ContactPage() {
                                     For support and general inquiries:
                                 </p>
                                 <a
-                                    href="mailto:support@goldsilvernow.com"
+                                    href="mailto:support@goldsilvernow.in"
                                     className="font-medium text-primary hover:underline"
                                 >
-                                    support@goldsilvernow.com
+                                    support@goldsilvernow.in
                                 </a>
                             </CardContent>
                         </Card>
