@@ -18,8 +18,8 @@ export async function GET() {
 
         // Default / Fallback values if no DB data exists
         const defaultRecord = {
-            goldPrice: 72000, // INR per 10g
-            silverPrice: 85000, // INR per 1kg
+            goldPrice: 154000, // INR per 10g
+            silverPrice: 278000, // INR per 1kg
             createdAt: new Date()
         };
 

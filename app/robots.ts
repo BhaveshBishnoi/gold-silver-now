@@ -9,6 +9,6 @@ export default function robots(): MetadataRoute.Robots {
                 disallow: ['/admin/', '/api/'],
             },
         ],
-        sitemap: 'https://goldsilvernow.com/sitemap.xml',
+        sitemap: 'https://goldsilvernow.in/sitemap.xml',
     }
 }

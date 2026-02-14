@@ -135,7 +135,7 @@ export default async function BlogPostPage({
     const wordCount = post.content.split(/\s+/).length
     const readingTime = Math.ceil(wordCount / 200)
 
-    const shareUrl = typeof window !== 'undefined' ? window.location.href : `https://goldsilvernow.com/blogs/${post.slug}`
+    const shareUrl = typeof window !== 'undefined' ? window.location.href : `https://goldsilvernow.in/blogs/${post.slug}`
 
     return (
         <>
