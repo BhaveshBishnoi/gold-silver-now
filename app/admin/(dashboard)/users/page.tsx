@@ -1,5 +1,6 @@
-
 import { auth } from "@/lib/auth";
+import { prisma } from "@/lib/prisma";
+import { redirect } from "next/navigation";
 import {
     Table,
     TableBody,
@@ -10,115 +11,159 @@ import {
 } from "@/components/ui/table";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuLabel,
-    DropdownMenuSeparator,
-    DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Search, MoreHorizontal, User, Shield, Mail } from 'lucide-react';
+import { Card, CardContent } from "@/components/ui/card";
+import { Users as UsersIcon, Shield, Mail } from 'lucide-react';
+import { CreateUserDialog, EditUserDialog, DeleteUserDialog } from "./UserDialogs";
+import { format } from "date-fns";
+
+export const dynamic = 'force-dynamic';
 
 export default async function AdminUsersPage() {
     const session = await auth();
-    if (!session) return <div className="p-8 text-center text-muted-foreground">Access Denied</div>;
+    if (!session) redirect("/admin/login");
 
-    // Mock users data
-    const users = [
-        { id: 1, name: 'Admin User', email: 'admin@bhaveshbishnoi.com', role: 'Admin', status: 'Active', lastActive: 'Just now' },
-        { id: 2, name: 'John Doe', email: 'john@example.com', role: 'Editor', status: 'Active', lastActive: '2 hours ago' },
-        { id: 3, name: 'Alice Smith', email: 'alice@example.com', role: 'Viewer', status: 'Inactive', lastActive: '5 days ago' },
-        { id: 4, name: 'Bob Wilson', email: 'bob@example.com', role: 'Viewer', status: 'Active', lastActive: '1 day ago' },
-    ];
+    const users = await prisma.user.findMany({
+        orderBy: { createdAt: 'desc' },
+        select: {
+            id: true,
+            name: true,
+            email: true,
+            role: true,
+            image: true,
+            createdAt: true,
+            _count: {
+                select: {
+                    posts: true,
+                }
+            }
+        }
+    });
+
+    const stats = {
+        total: users.length,
+        admins: users.filter((u: any) => u.role === 'admin').length,
+        editors: users.filter((u: any) => u.role === 'editor').length,
+    };
 
     return (
-        <div className="container mx-auto py-10">
+        <div className="container mx-auto py-8 max-w-7xl">
+            {/* Header */}
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
                 <div>
-                    <h1 className="text-3xl font-bold tracking-tight">Users Management</h1>
-                    <p className="text-muted-foreground">Manage user access and roles.</p>
+                    <h1 className="text-3xl font-bold text-[#050505]">Users Management</h1>
+                    <p className="text-[#65676B] text-lg mt-1">Manage user accounts and permissions</p>
                 </div>
-                <div className="relative w-full md:w-[300px]">
-                    <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
-                    <Input placeholder="Search users..." className="pl-8" />
-                </div>
+                <CreateUserDialog />
             </div>
 
-            <Card>
+            {/* Stats Cards */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+                <Card className="bg-white border border-gray-100 shadow-sm">
+                    <CardContent className="p-6">
+                        <div className="flex items-center justify-between">
+                            <div>
+                                <p className="text-sm font-medium text-[#65676B]">Total Users</p>
+                                <p className="text-3xl font-bold text-[#050505] mt-1">{stats.total}</p>
+                            </div>
+                            <div className="h-12 w-12 bg-primary/10 rounded-full flex items-center justify-center">
+                                <UsersIcon className="h-6 w-6 text-primary" />
+                            </div>
+                        </div>
+                    </CardContent>
+                </Card>
+
+                <Card className="bg-white border border-gray-100 shadow-sm">
+                    <CardContent className="p-6">
+                        <div className="flex items-center justify-between">
+                            <div>
+                                <p className="text-sm font-medium text-[#65676B]">Admins</p>
+                                <p className="text-3xl font-bold text-blue-600 mt-1">{stats.admins}</p>
+                            </div>
+                            <div className="h-12 w-12 bg-blue-100 rounded-full flex items-center justify-center">
+                                <Shield className="h-6 w-6 text-blue-600" />
+                            </div>
+                        </div>
+                    </CardContent>
+                </Card>
+
+                <Card className="bg-white border border-gray-100 shadow-sm">
+                    <CardContent className="p-6">
+                        <div className="flex items-center justify-between">
+                            <div>
+                                <p className="text-sm font-medium text-[#65676B]">Editors</p>
+                                <p className="text-3xl font-bold text-green-600 mt-1">{stats.editors}</p>
+                            </div>
+                            <div className="h-12 w-12 bg-green-100 rounded-full flex items-center justify-center">
+                                <Mail className="h-6 w-6 text-green-600" />
+                            </div>
+                        </div>
+                    </CardContent>
+                </Card>
+            </div>
+
+            {/* Users Table */}
+            <Card className="bg-white border border-gray-100 shadow-sm">
                 <CardContent className="p-0">
-                    <Table>
-                        <TableHeader>
-                            <TableRow>
-                                <TableHead>User</TableHead>
-                                <TableHead>Role</TableHead>
-                                <TableHead>Status</TableHead>
-                                <TableHead>Last Active</TableHead>
-                                <TableHead className="text-right">Actions</TableHead>
-                            </TableRow>
-                        </TableHeader>
-                        <TableBody>
-                            {users.map((user) => (
-                                <TableRow key={user.id}>
-                                    <TableCell>
-                                        <div className="flex items-center gap-3">
-                                            <Avatar className="h-9 w-9">
-                                                <AvatarImage src={`/avatars/${user.id}.png`} alt={user.name} />
-                                                <AvatarFallback className="bg-primary/10 text-primary font-medium">
-                                                    {user.name.charAt(0)}
-                                                </AvatarFallback>
-                                            </Avatar>
-                                            <div className="flex flex-col">
-                                                <span className="font-medium text-sm">{user.name}</span>
-                                                <span className="text-xs text-muted-foreground">{user.email}</span>
-                                            </div>
-                                        </div>
-                                    </TableCell>
-                                    <TableCell>
-                                        <Badge variant="default" className="flex w-fit items-center gap-1 font-normal">
-                                            <Shield className="h-3 w-3" />
-                                            {user.role}
-                                        </Badge>
-                                    </TableCell>
-                                    <TableCell>
-                                        <div className="flex items-center gap-2">
-                                            <span className={`h-2 w-2 rounded-full ${user.status === 'Active' ? 'bg-green-500' : 'bg-slate-300'}`} />
-                                            <span className="text-sm text-muted-foreground">{user.status}</span>
-                                        </div>
-                                    </TableCell>
-                                    <TableCell className="text-muted-foreground text-sm">
-                                        {user.lastActive}
-                                    </TableCell>
-                                    <TableCell className="text-right">
-                                        <DropdownMenu>
-                                            <DropdownMenuTrigger asChild>
-                                                <Button variant="default" className="h-8 w-8 p-0">
-                                                    <span className="sr-only">Open menu</span>
-                                                    <MoreHorizontal className="h-4 w-4" />
-                                                </Button>
-                                            </DropdownMenuTrigger>
-                                            <DropdownMenuContent align="end">
-                                                <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                                                <DropdownMenuItem>
-                                                    <User className="mr-2 h-4 w-4" /> View Profile
-                                                </DropdownMenuItem>
-                                                <DropdownMenuItem>
-                                                    <Mail className="mr-2 h-4 w-4" /> Email User
-                                                </DropdownMenuItem>
-                                                <DropdownMenuSeparator />
-                                                <DropdownMenuItem className="text-destructive focus:text-destructive">
-                                                    Delete User
-                                                </DropdownMenuItem>
-                                            </DropdownMenuContent>
-                                        </DropdownMenu>
-                                    </TableCell>
+                    <div className="overflow-x-auto">
+                        <Table>
+                            <TableHeader>
+                                <TableRow className="bg-[#f7f8fa] border-b border-gray-100">
+                                    <TableHead className="font-semibold text-[#65676B]">User</TableHead>
+                                    <TableHead className="font-semibold text-[#65676B]">Role</TableHead>
+                                    <TableHead className="font-semibold text-[#65676B]">Posts</TableHead>
+                                    <TableHead className="font-semibold text-[#65676B]">Joined</TableHead>
+                                    <TableHead className="text-right font-semibold text-[#65676B]">Actions</TableHead>
                                 </TableRow>
-                            ))}
-                        </TableBody>
-                    </Table>
+                            </TableHeader>
+                            <TableBody>
+                                {users.map((user: any) => (
+                                    <TableRow key={user.id} className="hover:bg-[#f0f2f5] transition-colors">
+                                        <TableCell>
+                                            <div className="flex items-center gap-3">
+                                                <Avatar className="h-10 w-10 border-2 border-white shadow-sm">
+                                                    <AvatarImage src={user.image || undefined} alt={user.name || ""} />
+                                                    <AvatarFallback className="bg-primary/10 text-primary font-bold">
+                                                        {user.name?.charAt(0)?.toUpperCase() || 'U'}
+                                                    </AvatarFallback>
+                                                </Avatar>
+                                                <div className="flex flex-col">
+                                                    <span className="font-semibold text-[#050505]">{user.name}</span>
+                                                    <span className="text-sm text-[#65676B]">{user.email}</span>
+                                                </div>
+                                            </div>
+                                        </TableCell>
+                                        <TableCell>
+                                            <Badge
+                                                variant="outline"
+                                                className={
+                                                    user.role === 'admin'
+                                                        ? 'bg-blue-100 text-blue-700 border-blue-200'
+                                                        : user.role === 'editor'
+                                                            ? 'bg-green-100 text-green-700 border-green-200'
+                                                            : 'bg-gray-100 text-gray-700 border-gray-200'
+                                                }
+                                            >
+                                                <Shield className="h-3 w-3 mr-1" />
+                                                {user.role}
+                                            </Badge>
+                                        </TableCell>
+                                        <TableCell className="text-[#65676B] font-medium">
+                                            {user._count.posts}
+                                        </TableCell>
+                                        <TableCell className="text-[#65676B] text-sm">
+                                            {format(new Date(user.createdAt), "MMM d, yyyy")}
+                                        </TableCell>
+                                        <TableCell className="text-right">
+                                            <div className="flex items-center justify-end gap-2">
+                                                <EditUserDialog user={user} />
+                                                <DeleteUserDialog userId={user.id} />
+                                            </div>
+                                        </TableCell>
+                                    </TableRow>
+                                ))}
+                            </TableBody>
+                        </Table>
+                    </div>
                 </CardContent>
             </Card>
         </div>

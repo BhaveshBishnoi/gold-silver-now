@@ -63,6 +63,7 @@ model User {
   accounts      Account[]
   sessions      Session[]
   posts         Post[]
+  createdAt     DateTime  @default(now())
 }
 
 model VerificationToken {
@@ -78,4 +79,15 @@ model PriceRecord {
   goldPrice   Float
   silverPrice Float
   createdAt   DateTime @default(now())
+}
+
+model ContactSubmission {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  subject   String?
+  message   String   @db.Text
+  status    String   @default("new") // new, read, replied, archived
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
