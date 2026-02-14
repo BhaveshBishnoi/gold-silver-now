@@ -1,6 +1,5 @@
 generator client {
   provider = "prisma-client-js"
-  previewFeatures = ["driverAdapters"]
 }
 
 datasource db {
@@ -72,4 +71,13 @@ model VerificationToken {
   expires    DateTime
 
   @@unique([identifier, token])
+}
+
+model PriceRecord {
+  id          String   @id @default(cuid())
+  goldPrice   Float
+  silverPrice Float
+  inrToUsd    Float
+  inrToEur    Float
+  createdAt   DateTime @default(now())
 }
