@@ -34,17 +34,20 @@ export default function AdminSidebar({ className }: { className?: string }) {
 
             <nav className="flex-1 space-y-1">
                 {menuItems.map((item) => {
-                    const active = pathname === item.path || pathname.startsWith(`${item.path}/`);
+                    const isActive = item.path === '/admin'
+                        ? pathname === '/admin'
+                        : pathname.startsWith(item.path);
+
                     return (
                         <Link
                             key={item.path}
                             href={item.path}
                             className={cn(
                                 "flex items-center justify-start gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground",
-                                active ? "bg-primary/10 text-primary hover:bg-primary/20" : "text-muted-foreground"
+                                isActive ? "bg-primary/10 text-primary font-bold shadow-sm" : "text-muted-foreground"
                             )}
                         >
-                            <item.icon className={cn("h-4 w-4", active && "text-primary")} />
+                            <item.icon className={cn("h-4 w-4", isActive && "text-primary")} />
                             {item.text}
                         </Link>
                     );

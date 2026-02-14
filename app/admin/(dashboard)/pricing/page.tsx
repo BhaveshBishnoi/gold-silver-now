@@ -50,8 +50,8 @@ export default async function AdminPricingPage() {
                             <CardDescription>Configure price margins and currency.</CardDescription>
                         </CardHeader>
                         <CardContent>
-                            <Alert className="mb-6 bg-blue-50 text-blue-800 border-blue-200">
-                                <Info className="h-4 w-4 text-blue-800" />
+                            <Alert className="mb-6 bg-primary/10 text-primary border-primary/20">
+                                <Info className="h-4 w-4 text-primary" />
                                 <AlertTitle>Note</AlertTitle>
                                 <AlertDescription>
                                     Margins are added on top of the live API market rates.
@@ -170,7 +170,7 @@ export default async function AdminPricingPage() {
                         </CardHeader>
                         <CardContent>
                             <div className="h-2 w-full bg-muted rounded-full overflow-hidden mb-2">
-                                <div className="h-full bg-amber-500 w-[45%]" />
+                                <div className="h-full bg-primary/80 w-[45%]" />
                             </div>
                             <div className="flex justify-between text-xs text-muted-foreground">
                                 <span>450 Requests</span>
