@@ -33,13 +33,13 @@ export default async function AdminSettingsPage() {
 
             <Tabs defaultValue="general" className="w-full">
                 <TabsList className="bg-white p-1 rounded-xl shadow-sm border border-slate-100 mb-8 h-auto w-full md:w-auto flex-col md:flex-row justify-start">
-                    <TabsTrigger value="general" className="rounded-lg px-6 py-2.5 data-[state=active]:bg-blue-50 data-[state=active]:text-blue-700 font-medium">
+                    <TabsTrigger value="general" className="rounded-lg px-6 py-2.5 data-[state=active]:bg-primary/10 data-[state=active]:text-primary font-medium">
                         <User className="mr-2 h-4 w-4" /> General
                     </TabsTrigger>
-                    <TabsTrigger value="security" className="rounded-lg px-6 py-2.5 data-[state=active]:bg-blue-50 data-[state=active]:text-blue-700 font-medium">
+                    <TabsTrigger value="security" className="rounded-lg px-6 py-2.5 data-[state=active]:bg-primary/10 data-[state=active]:text-primary font-medium">
                         <Lock className="mr-2 h-4 w-4" /> Security
                     </TabsTrigger>
-                    <TabsTrigger value="notifications" className="rounded-lg px-6 py-2.5 data-[state=active]:bg-blue-50 data-[state=active]:text-blue-700 font-medium">
+                    <TabsTrigger value="notifications" className="rounded-lg px-6 py-2.5 data-[state=active]:bg-primary/10 data-[state=active]:text-primary font-medium">
                         <Bell className="mr-2 h-4 w-4" /> Notifications
                     </TabsTrigger>
                 </TabsList>
@@ -48,11 +48,11 @@ export default async function AdminSettingsPage() {
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                         {/* Profile Card */}
                         <Card className="md:col-span-1 h-fit border-none shadow-sm bg-white rounded-xl overflow-hidden">
-                            <div className="h-24 bg-gradient-to-r from-blue-500 to-purple-600"></div>
+                            <div className="h-24 bg-gradient-to-r from-orange-400 to-red-500"></div>
                             <div className="px-6 pb-6 -mt-12 text-center">
                                 <Avatar className="h-24 w-24 mx-auto border-4 border-white shadow-sm">
                                     <AvatarImage src="/avatars/01.png" alt={session.user?.name || ''} />
-                                    <AvatarFallback className="text-3xl bg-blue-100 text-blue-600 font-bold">
+                                    <AvatarFallback className="text-3xl bg-primary/10 text-primary font-bold">
                                         {userInitial}
                                     </AvatarFallback>
                                 </Avatar>
@@ -61,7 +61,7 @@ export default async function AdminSettingsPage() {
                                     <p className="text-sm text-slate-500">{session.user?.email}</p>
                                 </div>
                                 <div className="mt-4 flex justify-center">
-                                    <Badge className="bg-blue-100 text-blue-700 hover:bg-blue-200 px-3 py-1 rounded-full border-none">
+                                    <Badge className="bg-primary/10 text-primary hover:bg-primary/20 px-3 py-1 rounded-full border-none">
                                         Super Admin
                                     </Badge>
                                 </div>
@@ -78,7 +78,7 @@ export default async function AdminSettingsPage() {
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                     <div className="space-y-2">
                                         <Label htmlFor="fullName" className="text-slate-600">Full Name</Label>
-                                        <Input id="fullName" name="name" defaultValue={session.user?.name || ''} className="bg-slate-50 border-slate-200" />
+                                        <Input id="fullName" name="name" defaultValue={session.user?.name || ''} className="bg-slate-50 border-slate-200 focus:border-primary focus:ring-primary" />
                                     </div>
                                     <div className="space-y-2">
                                         <Label htmlFor="email" className="text-slate-600">Email Address</Label>
@@ -91,12 +91,12 @@ export default async function AdminSettingsPage() {
                                         id="bio"
                                         name="bio"
                                         placeholder="Tell us a little about yourself..."
-                                        className="min-h-[120px] bg-slate-50 border-slate-200"
+                                        className="min-h-[120px] bg-slate-50 border-slate-200 focus:border-primary focus:ring-primary"
                                     />
                                 </div>
                             </CardContent>
                             <CardFooter className="flex justify-end border-t border-slate-50 pt-6">
-                                <Button className="bg-blue-600 hover:bg-blue-700 text-white shadow-sm rounded-lg">
+                                <Button className="bg-primary hover:bg-primary/90 text-primary-foreground shadow-sm rounded-lg">
                                     <Save className="mr-2 h-4 w-4" /> Save Changes
                                 </Button>
                             </CardFooter>
@@ -108,29 +108,29 @@ export default async function AdminSettingsPage() {
                     <Card className="border-none shadow-sm bg-white rounded-xl max-w-2xl">
                         <CardHeader>
                             <CardTitle className="flex items-center gap-2">
-                                <Key className="h-5 w-5 text-blue-600" /> Password & Security
+                                <Key className="h-5 w-5 text-primary" /> Password & Security
                             </CardTitle>
                             <CardDescription>Manage your password and security preferences.</CardDescription>
                         </CardHeader>
                         <CardContent className="space-y-4">
                             <div className="space-y-2">
                                 <Label htmlFor="currentPassword">Current Password</Label>
-                                <Input id="currentPassword" type="password" className="bg-slate-50 border-slate-200" />
+                                <Input id="currentPassword" type="password" className="bg-slate-50 border-slate-200 focus:border-primary focus:ring-primary" />
                             </div>
                             <Separator className="my-4" />
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div className="space-y-2">
                                     <Label htmlFor="newPassword">New Password</Label>
-                                    <Input id="newPassword" type="password" className="bg-slate-50 border-slate-200" />
+                                    <Input id="newPassword" type="password" className="bg-slate-50 border-slate-200 focus:border-primary focus:ring-primary" />
                                 </div>
                                 <div className="space-y-2">
                                     <Label htmlFor="confirmPassword">Confirm Password</Label>
-                                    <Input id="confirmPassword" type="password" className="bg-slate-50 border-slate-200" />
+                                    <Input id="confirmPassword" type="password" className="bg-slate-50 border-slate-200 focus:border-primary focus:ring-primary" />
                                 </div>
                             </div>
                         </CardContent>
                         <CardFooter className="flex justify-end border-t border-slate-50 pt-6">
-                            <Button variant="outline" className="text-blue-600 border-blue-200 hover:bg-blue-50">
+                            <Button variant="outline" className="text-primary border-primary/20 hover:bg-primary/10">
                                 Update Password
                             </Button>
                         </CardFooter>
