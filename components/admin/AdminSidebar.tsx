@@ -25,14 +25,14 @@ export default function AdminSidebar({ className }: { className?: string }) {
     const pathname = usePathname();
 
     return (
-        <aside className={cn("hidden h-screen w-64 flex-col border-r bg-card px-4 py-6 md:flex", className)}>
-            <div className="flex h-14 items-center justify-center border-b px-2 mb-4">
-                <Link href="/admin" className="flex items-center gap-2 font-bold text-xl">
+        <aside className={cn("hidden h-screen w-[280px] flex-col bg-white border-r border-slate-200 px-4 py-6 md:flex shadow-sm sticky top-0", className)}>
+            <div className="flex h-14 items-center px-4 mb-6">
+                <Link href="/admin" className="flex items-center gap-2 font-bold text-2xl tracking-tight text-slate-800">
                     <span className="text-primary">GS</span>Admin
                 </Link>
             </div>
 
-            <nav className="flex-1 space-y-1">
+            <nav className="flex-1 space-y-1.5 px-2">
                 {menuItems.map((item) => {
                     const isActive = item.path === '/admin'
                         ? pathname === '/admin'
@@ -43,26 +43,28 @@ export default function AdminSidebar({ className }: { className?: string }) {
                             key={item.path}
                             href={item.path}
                             className={cn(
-                                "flex items-center justify-start gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground",
-                                isActive ? "bg-primary/10 text-primary font-bold shadow-sm" : "text-muted-foreground"
+                                "flex items-center justify-start gap-4 rounded-xl px-4 py-3 text-[15px] font-medium transition-all duration-200",
+                                isActive
+                                    ? "bg-primary/10 text-primary shadow-sm"
+                                    : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
                             )}
                         >
-                            <item.icon className={cn("h-4 w-4", isActive && "text-primary")} />
+                            <item.icon className={cn("h-[20px] w-[20px]", isActive ? "text-primary fill-primary/20" : "text-slate-500")} />
                             {item.text}
                         </Link>
                     );
                 })}
             </nav>
 
-            <div className="mt-auto pt-4 border-t">
-                <div className="flex items-center gap-3 p-2 rounded-lg bg-muted/50">
-                    <Avatar className="h-8 w-8">
+            <div className="mt-auto pt-4 px-2 border-t border-slate-100">
+                <div className="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-50 transition-colors cursor-pointer group">
+                    <Avatar className="h-10 w-10 border-2 border-white shadow-sm group-hover:border-slate-200 transition-colors">
                         <AvatarImage src="/avatars/01.png" alt="@admin" />
-                        <AvatarFallback>AD</AvatarFallback>
+                        <AvatarFallback className="bg-primary text-primary-foreground font-bold">A</AvatarFallback>
                     </Avatar>
                     <div className="flex flex-col overflow-hidden">
-                        <span className="text-sm font-medium truncate">Admin User</span>
-                        <span className="text-xs text-muted-foreground truncate">admin@example.com</span>
+                        <span className="text-sm font-semibold text-slate-800 truncate">Admin User</span>
+                        <span className="text-xs text-slate-500 truncate">admin@example.com</span>
                     </div>
                 </div>
             </div>
