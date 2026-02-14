@@ -6,7 +6,9 @@ import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { Loader2 } from 'lucide-react';
+import { Loader2, Upload, Code, CheckCircle2, AlertCircle } from 'lucide-react';
+
+export const dynamic = 'force-dynamic';
 
 export default function PushBlogPage() {
     const router = useRouter();
@@ -36,9 +38,6 @@ export default function PushBlogPage() {
             if (!payload[0]?.title) {
                 throw new Error("JSON must contain at least a 'title' field.");
             }
-
-            // We'll process each post one by one to handle success/failures gracefully or just one batch
-            // For simplicity, let's just send the first one if it's an object, or loop through array
 
             let successCount = 0;
             let failCount = 0;
@@ -85,35 +84,44 @@ export default function PushBlogPage() {
     };
 
     return (
-        <div className="container max-w-4xl mx-auto py-10">
+        <div className="container max-w-5xl mx-auto py-8">
             <div className="mb-8">
-                <h1 className="text-3xl font-bold tracking-tight mb-2">Push JSON Data</h1>
-                <p className="text-muted-foreground">
+                <h1 className="text-3xl font-bold text-[#050505] mb-2">Push JSON Data</h1>
+                <p className="text-[#65676B] text-lg">
                     Directly push blog posts using raw JSON. Useful for bulk imports or programmatic content generation.
                 </p>
             </div>
 
-            <Card>
-                <CardHeader>
-                    <CardTitle>Paste JSON Payload</CardTitle>
-                    <CardDescription>Accepts a single object or an array of objects.</CardDescription>
+            <Card className="bg-white border border-gray-100 shadow-sm">
+                <CardHeader className="border-b border-gray-100 bg-[#f7f8fa]">
+                    <div className="flex items-center gap-2">
+                        <div className="h-10 w-10 bg-primary/10 rounded-full flex items-center justify-center">
+                            <Code className="h-5 w-5 text-primary" />
+                        </div>
+                        <div>
+                            <CardTitle className="text-[#050505]">Paste JSON Payload</CardTitle>
+                            <CardDescription className="text-[#65676B]">Accepts a single object or an array of objects.</CardDescription>
+                        </div>
+                    </div>
                 </CardHeader>
-                <CardContent className="space-y-4">
+                <CardContent className="space-y-4 p-6">
                     {error && (
-                        <Alert variant="destructive">
+                        <Alert variant="destructive" className="border-red-200 bg-red-50">
+                            <AlertCircle className="h-4 w-4" />
                             <AlertTitle>Error</AlertTitle>
                             <AlertDescription>{error}</AlertDescription>
                         </Alert>
                     )}
                     {success && (
                         <Alert className="bg-green-50 text-green-700 border-green-200">
+                            <CheckCircle2 className="h-4 w-4" />
                             <AlertTitle>Success</AlertTitle>
                             <AlertDescription>{success}</AlertDescription>
                         </Alert>
                     )}
 
                     <Textarea
-                        className="font-mono text-sm min-h-[400px]"
+                        className="font-mono text-sm min-h-[400px] bg-[#f7f8fa] border-gray-200 focus:border-primary focus:ring-primary"
                         placeholder={JSON.stringify(exampleJson, null, 2)}
                         value={jsonData}
                         onChange={(e) => setJsonData(e.target.value)}
@@ -124,13 +132,21 @@ export default function PushBlogPage() {
                             size="lg"
                             onClick={handleSubmit}
                             disabled={loading || !jsonData.trim()}
+                            className="bg-primary hover:bg-primary/90"
                         >
                             {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                            {loading ? 'Pushing...' : 'Push Data'}
+                            {loading ? 'Pushing...' : (
+                                <>
+                                    <Upload className="mr-2 h-4 w-4" />
+                                    Push Data
+                                </>
+                            )}
                         </Button>
                         <Button
                             variant="outline"
+                            size="lg"
                             onClick={() => setJsonData(JSON.stringify(exampleJson, null, 2))}
+                            className="border-gray-200"
                         >
                             Load Example
                         </Button>

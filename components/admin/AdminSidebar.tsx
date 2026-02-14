@@ -9,6 +9,7 @@ import {
     Users,
     Settings,
     DollarSign,
+    Mail,
     LogOut
 } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
@@ -17,6 +18,7 @@ const menuItems = [
     { text: 'Dashboard', icon: LayoutDashboard, path: '/admin' },
     { text: 'Blogs', icon: FileText, path: '/admin/blogs' },
     { text: 'Users', icon: Users, path: '/admin/users' },
+    { text: 'Contact Forms', icon: Mail, path: '/admin/contacts' },
     { text: 'Price Config', icon: DollarSign, path: '/admin/pricing' },
     { text: 'Settings', icon: Settings, path: '/admin/settings' },
 ];
