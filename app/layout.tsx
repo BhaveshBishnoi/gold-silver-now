@@ -20,6 +20,11 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning={true}>
       <head>
+        <script
+          async={true}
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1148548511620318"
+          crossOrigin="anonymous"
+        />
       </head>
       <body className={`${inter.variable} ${outfit.variable} font-sans antialiased`} suppressHydrationWarning={true} >
         <SettingsProvider>
