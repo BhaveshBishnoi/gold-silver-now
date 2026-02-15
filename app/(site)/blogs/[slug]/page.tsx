@@ -261,112 +261,145 @@ export default async function BlogPostPage({
             )}
 
             {/* Content */}
-            <article className="bg-white py-12">
+            <article className="bg-white py-16">
                 <div className="container max-w-4xl mx-auto px-4">
                     <div
                         className="
                             prose 
-                            prose-lg 
+                            prose-xl
                             max-w-none
                             
-                            /* Headings */
-                            prose-headings:text-[#050505]
-                            prose-headings:font-bold
+                            /* Headings - Enhanced with better spacing and sizing */
+                            prose-headings:text-[#1a1a1a]
+                            prose-headings:font-extrabold
                             prose-headings:tracking-tight
-                            prose-h1:text-4xl
-                            prose-h1:mt-12
-                            prose-h1:mb-6
-                            prose-h1:leading-tight
-                            prose-h2:text-3xl
-                            prose-h2:mt-12
-                            prose-h2:mb-6
-                            prose-h2:leading-snug
-                            prose-h2:border-b
+                            prose-headings:scroll-mt-20
+                            
+                            /* H1 Styling */
+                            prose-h1:text-5xl
+                            prose-h1:mt-16
+                            prose-h1:mb-8
+                            prose-h1:leading-[1.15]
+                            prose-h1:font-black
+                            
+                            /* H2 Styling - Major sections */
+                            prose-h2:text-4xl
+                            prose-h2:mt-16
+                            prose-h2:mb-8
+                            prose-h2:leading-[1.2]
+                            prose-h2:pb-4
+                            prose-h2:border-b-2
                             prose-h2:border-gray-200
-                            prose-h2:pb-3
-                            prose-h3:text-2xl
-                            prose-h3:mt-10
-                            prose-h3:mb-4
-                            prose-h3:leading-snug
-                            prose-h4:text-xl
-                            prose-h4:mt-8
-                            prose-h4:mb-3
-                            prose-h4:font-semibold
-                            prose-h5:text-lg
-                            prose-h5:mt-6
-                            prose-h5:mb-2
+                            prose-h2:font-black
+                            
+                            /* H3 Styling - Subsections */
+                            prose-h3:text-3xl
+                            prose-h3:mt-12
+                            prose-h3:mb-6
+                            prose-h3:leading-[1.3]
+                            prose-h3:font-bold
+                            
+                            /* H4 Styling */
+                            prose-h4:text-2xl
+                            prose-h4:mt-10
+                            prose-h4:mb-5
+                            prose-h4:leading-[1.4]
+                            prose-h4:font-bold
+                            
+                            /* H5 & H6 Styling */
+                            prose-h5:text-xl
+                            prose-h5:mt-8
+                            prose-h5:mb-4
                             prose-h5:font-semibold
-                            prose-h6:text-base
+                            prose-h6:text-lg
                             prose-h6:mt-6
-                            prose-h6:mb-2
+                            prose-h6:mb-3
                             prose-h6:font-semibold
                             prose-h6:text-gray-700
                             
-                            /* Paragraphs */
-                            prose-p:text-[#050505]
-                            prose-p:leading-relaxed
-                            prose-p:mb-6
-                            prose-p:text-lg
+                            /* Paragraphs - Enhanced readability */
+                            prose-p:text-[#2d2d2d]
+                            prose-p:text-xl
+                            prose-p:leading-[1.8]
+                            prose-p:mb-8
+                            prose-p:font-normal
+                            
+                            /* First paragraph after heading - special styling */
+                            prose-headings:prose-p:first-of-type:text-[1.15em]
+                            prose-headings:prose-p:first-of-type:leading-[1.7]
                             
                             /* Links */
                             prose-a:text-primary
                             prose-a:no-underline
-                            prose-a:font-medium
-                            prose-a:transition-colors
+                            prose-a:font-semibold
+                            prose-a:transition-all
+                            prose-a:duration-200
                             hover:prose-a:underline
                             hover:prose-a:text-primary/80
+                            hover:prose-a:underline-offset-4
                             
                             /* Strong and Emphasis */
-                            prose-strong:text-[#050505]
+                            prose-strong:text-[#1a1a1a]
                             prose-strong:font-bold
-                            prose-em:text-[#050505]
+                            prose-strong:font-semibold
+                            prose-em:text-[#2d2d2d]
                             prose-em:italic
                             
-                            /* Lists */
-                            prose-ul:my-8
+                            /* Lists - Better spacing and styling */
+                            prose-ul:my-10
                             prose-ul:list-disc
-                            prose-ul:pl-6
-                            prose-ol:my-8
+                            prose-ul:pl-8
+                            prose-ul:space-y-3
+                            prose-ol:my-10
                             prose-ol:list-decimal
-                            prose-ol:pl-6
-                            prose-li:text-[#050505]
+                            prose-ol:pl-8
+                            prose-ol:space-y-3
+                            prose-li:text-[#2d2d2d]
+                            prose-li:text-xl
+                            prose-li:leading-[1.8]
                             prose-li:my-3
-                            prose-li:leading-relaxed
-                            prose-li:text-lg
+                            prose-li:pl-2
                             prose-li:marker:text-primary
+                            prose-li:marker:font-bold
                             
                             /* Nested Lists */
-                            prose-li>prose-ul:mt-3
-                            prose-li>prose-ol:mt-3
+                            prose-li>prose-ul:mt-4
+                            prose-li>prose-ul:mb-2
+                            prose-li>prose-ol:mt-4
+                            prose-li>prose-ol:mb-2
                             
-                            /* Images */
-                            prose-img:rounded-xl
-                            prose-img:shadow-lg
-                            prose-img:my-10
+                            /* Images - Enhanced presentation */
+                            prose-img:rounded-2xl
+                            prose-img:shadow-2xl
+                            prose-img:my-12
                             prose-img:border
                             prose-img:border-gray-200
+                            prose-img:w-full
                             
-                            /* Blockquotes */
-                            prose-blockquote:border-l-4
+                            /* Blockquotes - More prominent */
+                            prose-blockquote:border-l-[6px]
                             prose-blockquote:border-primary
                             prose-blockquote:bg-gradient-to-r
                             prose-blockquote:from-gray-50
+                            prose-blockquote:via-gray-50/50
                             prose-blockquote:to-transparent
-                            prose-blockquote:py-4
-                            prose-blockquote:px-6
-                            prose-blockquote:my-8
-                            prose-blockquote:rounded-r-lg
+                            prose-blockquote:py-6
+                            prose-blockquote:px-8
+                            prose-blockquote:my-10
+                            prose-blockquote:rounded-r-xl
                             prose-blockquote:not-italic
-                            prose-blockquote:text-gray-700
+                            prose-blockquote:text-gray-800
+                            prose-blockquote:text-xl
                             prose-blockquote:font-medium
+                            prose-blockquote:leading-relaxed
                             
                             /* Code - Inline */
                             prose-code:text-primary
                             prose-code:bg-gray-100
-                            prose-code:px-2
+                            prose-code:px-2.5
                             prose-code:py-1
-                            prose-code:rounded
-                            prose-code:text-sm
+                            prose-code:rounded-md
+                            prose-code:text-[0.9em]
                             prose-code:font-mono
                             prose-code:font-semibold
                             prose-code:before:content-none
@@ -375,29 +408,32 @@ export default async function BlogPostPage({
                             /* Code Blocks - Pre */
                             prose-pre:bg-gray-900
                             prose-pre:text-gray-100
-                            prose-pre:rounded-xl
-                            prose-pre:p-6
-                            prose-pre:my-8
+                            prose-pre:rounded-2xl
+                            prose-pre:p-8
+                            prose-pre:my-10
                             prose-pre:overflow-x-auto
-                            prose-pre:shadow-lg
+                            prose-pre:shadow-2xl
                             prose-pre:border
                             prose-pre:border-gray-700
+                            prose-pre:text-base
+                            prose-pre:leading-relaxed
                             
-                            /* Tables */
+                            /* Tables - Professional styling */
                             prose-table:w-full
-                            prose-table:my-8
+                            prose-table:my-10
                             prose-table:border-collapse
-                            prose-table:shadow-md
-                            prose-table:rounded-lg
+                            prose-table:shadow-lg
+                            prose-table:rounded-xl
                             prose-table:overflow-hidden
+                            prose-table:text-base
                             prose-thead:bg-gray-100
                             prose-thead:border-b-2
                             prose-thead:border-gray-300
                             prose-th:px-6
-                            prose-th:py-4
+                            prose-th:py-5
                             prose-th:text-left
                             prose-th:font-bold
-                            prose-th:text-[#050505]
+                            prose-th:text-[#1a1a1a]
                             prose-th:text-sm
                             prose-th:uppercase
                             prose-th:tracking-wider
@@ -407,21 +443,23 @@ export default async function BlogPostPage({
                             prose-tr:transition-colors
                             hover:prose-tr:bg-gray-50
                             prose-td:px-6
-                            prose-td:py-4
-                            prose-td:text-[#050505]
+                            prose-td:py-5
+                            prose-td:text-[#2d2d2d]
+                            prose-td:text-base
                             
                             /* Horizontal Rule */
-                            prose-hr:my-12
+                            prose-hr:my-16
                             prose-hr:border-gray-300
                             prose-hr:border-t-2
                             
                             /* Figure and Figcaption */
-                            prose-figure:my-10
+                            prose-figure:my-12
                             prose-figcaption:text-center
-                            prose-figcaption:text-sm
+                            prose-figcaption:text-base
                             prose-figcaption:text-gray-600
-                            prose-figcaption:mt-3
+                            prose-figcaption:mt-4
                             prose-figcaption:italic
+                            prose-figcaption:font-medium
                         "
                         dangerouslySetInnerHTML={{
                             __html: post.content,
@@ -432,18 +470,18 @@ export default async function BlogPostPage({
 
             {/* Tags Section - Moved to Bottom */}
             {post.keywords && (
-                <section className="bg-gray-50 py-8 border-t border-gray-200">
+                <section className="bg-gradient-to-b from-gray-50 to-white py-10 border-t border-gray-200">
                     <div className="container max-w-4xl mx-auto px-4">
                         <div className="flex flex-wrap items-center gap-3">
-                            <span className="text-sm font-semibold text-gray-700 flex items-center gap-2">
-                                <Tag className="h-4 w-4" />
+                            <span className="text-base font-bold text-gray-800 flex items-center gap-2">
+                                <Tag className="h-5 w-5 text-primary" />
                                 Tags:
                             </span>
                             {post.keywords.split(',').map((keyword: string, index: number) => (
                                 <Badge
                                     key={index}
                                     variant="secondary"
-                                    className="bg-white border border-gray-300 text-gray-700 hover:bg-primary hover:text-white hover:border-primary transition-all duration-200 px-4 py-1.5 text-sm font-medium"
+                                    className="bg-white border-2 border-gray-300 text-gray-800 hover:bg-primary hover:text-white hover:border-primary transition-all duration-300 px-5 py-2 text-base font-semibold shadow-sm hover:shadow-md"
                                 >
                                     {keyword.trim()}
                                 </Badge>
