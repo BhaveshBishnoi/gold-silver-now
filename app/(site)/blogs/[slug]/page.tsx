@@ -154,24 +154,8 @@ export default async function BlogPostPage({
                         </Link>
                     </Button>
 
-                    {/* Keywords/Tags */}
-                    {post.keywords && (
-                        <div className="flex flex-wrap gap-2 mb-6">
-                            {post.keywords.split(',').map((keyword: string, index: number) => (
-                                <Badge
-                                    key={index}
-                                    variant="secondary"
-                                    className="bg-primary/10 text-primary hover:bg-primary/20"
-                                >
-                                    <Tag className="mr-1 h-3 w-3" />
-                                    {keyword.trim()}
-                                </Badge>
-                            ))}
-                        </div>
-                    )}
-
                     {/* Title */}
-                    <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight text-[#050505] mb-6 leading-tight">
+                    <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight text-[#050505] mb-6 leading-tight">
                         {post.title}
                     </h1>
 
@@ -284,44 +268,160 @@ export default async function BlogPostPage({
                             prose 
                             prose-lg 
                             max-w-none
+                            
+                            /* Headings */
                             prose-headings:text-[#050505]
                             prose-headings:font-bold
+                            prose-headings:tracking-tight
+                            prose-h1:text-4xl
+                            prose-h1:mt-12
+                            prose-h1:mb-6
+                            prose-h1:leading-tight
                             prose-h2:text-3xl
                             prose-h2:mt-12
                             prose-h2:mb-6
+                            prose-h2:leading-snug
+                            prose-h2:border-b
+                            prose-h2:border-gray-200
+                            prose-h2:pb-3
                             prose-h3:text-2xl
-                            prose-h3:mt-8
+                            prose-h3:mt-10
                             prose-h3:mb-4
+                            prose-h3:leading-snug
+                            prose-h4:text-xl
+                            prose-h4:mt-8
+                            prose-h4:mb-3
+                            prose-h4:font-semibold
+                            prose-h5:text-lg
+                            prose-h5:mt-6
+                            prose-h5:mb-2
+                            prose-h5:font-semibold
+                            prose-h6:text-base
+                            prose-h6:mt-6
+                            prose-h6:mb-2
+                            prose-h6:font-semibold
+                            prose-h6:text-gray-700
+                            
+                            /* Paragraphs */
                             prose-p:text-[#050505]
                             prose-p:leading-relaxed
                             prose-p:mb-6
+                            prose-p:text-lg
+                            
+                            /* Links */
                             prose-a:text-primary
                             prose-a:no-underline
                             prose-a:font-medium
+                            prose-a:transition-colors
                             hover:prose-a:underline
+                            hover:prose-a:text-primary/80
+                            
+                            /* Strong and Emphasis */
                             prose-strong:text-[#050505]
                             prose-strong:font-bold
-                            prose-ul:my-6
-                            prose-ol:my-6
+                            prose-em:text-[#050505]
+                            prose-em:italic
+                            
+                            /* Lists */
+                            prose-ul:my-8
+                            prose-ul:list-disc
+                            prose-ul:pl-6
+                            prose-ol:my-8
+                            prose-ol:list-decimal
+                            prose-ol:pl-6
                             prose-li:text-[#050505]
-                            prose-li:my-2
+                            prose-li:my-3
+                            prose-li:leading-relaxed
+                            prose-li:text-lg
+                            prose-li:marker:text-primary
+                            
+                            /* Nested Lists */
+                            prose-li>prose-ul:mt-3
+                            prose-li>prose-ol:mt-3
+                            
+                            /* Images */
                             prose-img:rounded-xl
-                            prose-img:shadow-md
-                            prose-img:my-8
+                            prose-img:shadow-lg
+                            prose-img:my-10
+                            prose-img:border
+                            prose-img:border-gray-200
+                            
+                            /* Blockquotes */
                             prose-blockquote:border-l-4
                             prose-blockquote:border-primary
-                            prose-blockquote:bg-gray-50
+                            prose-blockquote:bg-gradient-to-r
+                            prose-blockquote:from-gray-50
+                            prose-blockquote:to-transparent
                             prose-blockquote:py-4
                             prose-blockquote:px-6
+                            prose-blockquote:my-8
                             prose-blockquote:rounded-r-lg
                             prose-blockquote:not-italic
+                            prose-blockquote:text-gray-700
+                            prose-blockquote:font-medium
+                            
+                            /* Code - Inline */
                             prose-code:text-primary
                             prose-code:bg-gray-100
-                            prose-code:px-1.5
-                            prose-code:py-0.5
+                            prose-code:px-2
+                            prose-code:py-1
                             prose-code:rounded
+                            prose-code:text-sm
+                            prose-code:font-mono
+                            prose-code:font-semibold
                             prose-code:before:content-none
                             prose-code:after:content-none
+                            
+                            /* Code Blocks - Pre */
+                            prose-pre:bg-gray-900
+                            prose-pre:text-gray-100
+                            prose-pre:rounded-xl
+                            prose-pre:p-6
+                            prose-pre:my-8
+                            prose-pre:overflow-x-auto
+                            prose-pre:shadow-lg
+                            prose-pre:border
+                            prose-pre:border-gray-700
+                            
+                            /* Tables */
+                            prose-table:w-full
+                            prose-table:my-8
+                            prose-table:border-collapse
+                            prose-table:shadow-md
+                            prose-table:rounded-lg
+                            prose-table:overflow-hidden
+                            prose-thead:bg-gray-100
+                            prose-thead:border-b-2
+                            prose-thead:border-gray-300
+                            prose-th:px-6
+                            prose-th:py-4
+                            prose-th:text-left
+                            prose-th:font-bold
+                            prose-th:text-[#050505]
+                            prose-th:text-sm
+                            prose-th:uppercase
+                            prose-th:tracking-wider
+                            prose-tbody:bg-white
+                            prose-tr:border-b
+                            prose-tr:border-gray-200
+                            prose-tr:transition-colors
+                            hover:prose-tr:bg-gray-50
+                            prose-td:px-6
+                            prose-td:py-4
+                            prose-td:text-[#050505]
+                            
+                            /* Horizontal Rule */
+                            prose-hr:my-12
+                            prose-hr:border-gray-300
+                            prose-hr:border-t-2
+                            
+                            /* Figure and Figcaption */
+                            prose-figure:my-10
+                            prose-figcaption:text-center
+                            prose-figcaption:text-sm
+                            prose-figcaption:text-gray-600
+                            prose-figcaption:mt-3
+                            prose-figcaption:italic
                         "
                         dangerouslySetInnerHTML={{
                             __html: post.content,
@@ -329,6 +429,29 @@ export default async function BlogPostPage({
                     />
                 </div>
             </article>
+
+            {/* Tags Section - Moved to Bottom */}
+            {post.keywords && (
+                <section className="bg-gray-50 py-8 border-t border-gray-200">
+                    <div className="container max-w-4xl mx-auto px-4">
+                        <div className="flex flex-wrap items-center gap-3">
+                            <span className="text-sm font-semibold text-gray-700 flex items-center gap-2">
+                                <Tag className="h-4 w-4" />
+                                Tags:
+                            </span>
+                            {post.keywords.split(',').map((keyword: string, index: number) => (
+                                <Badge
+                                    key={index}
+                                    variant="secondary"
+                                    className="bg-white border border-gray-300 text-gray-700 hover:bg-primary hover:text-white hover:border-primary transition-all duration-200 px-4 py-1.5 text-sm font-medium"
+                                >
+                                    {keyword.trim()}
+                                </Badge>
+                            ))}
+                        </div>
+                    </div>
+                </section>
+            )}
 
             {/* Author Card */}
             {post.author && (
