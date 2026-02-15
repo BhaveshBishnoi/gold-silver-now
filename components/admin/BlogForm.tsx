@@ -4,6 +4,10 @@ import { useEditor, EditorContent } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import ImageExtension from '@tiptap/extension-image';
 import Link from '@tiptap/extension-link';
+import { Table } from '@tiptap/extension-table';
+import { TableRow } from '@tiptap/extension-table-row';
+import { TableCell } from '@tiptap/extension-table-cell';
+import { TableHeader } from '@tiptap/extension-table-header';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import CloudinaryUpload from '@/components/admin/CloudinaryUpload';
@@ -32,7 +36,10 @@ import {
     List,
     ListOrdered,
     Image as ImageIcon,
-    Loader2
+    Loader2,
+    Table as TableIcon,
+    Plus,
+    Minus
 } from 'lucide-react';
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 
@@ -139,6 +146,53 @@ const MenuBar = ({ editor }: { editor: any }) => {
             >
                 <ImageIcon className="h-4 w-4" />
             </Button>
+            <Separator orientation="vertical" className="h-8 mx-1" />
+            <TextButton
+                onClick={() => editor.chain().focus().insertTable({ rows: 3, cols: 3, withHeaderRow: true }).run()}
+                disabled={!editor.can().insertTable()}
+                title="Insert Table"
+            >
+                <TableIcon className="h-4 w-4" />
+            </TextButton>
+            {editor.isActive('table') && (
+                <>
+                    <TextButton
+                        onClick={() => editor.chain().focus().addRowAfter().run()}
+                        disabled={!editor.can().addRowAfter()}
+                        title="Add Row"
+                    >
+                        <Plus className="h-4 w-4" />
+                    </TextButton>
+                    <TextButton
+                        onClick={() => editor.chain().focus().deleteRow().run()}
+                        disabled={!editor.can().deleteRow()}
+                        title="Delete Row"
+                    >
+                        <Minus className="h-4 w-4" />
+                    </TextButton>
+                    <TextButton
+                        onClick={() => editor.chain().focus().addColumnAfter().run()}
+                        disabled={!editor.can().addColumnAfter()}
+                        title="Add Column"
+                    >
+                        <Plus className="h-4 w-4" />
+                    </TextButton>
+                    <TextButton
+                        onClick={() => editor.chain().focus().deleteColumn().run()}
+                        disabled={!editor.can().deleteColumn()}
+                        title="Delete Column"
+                    >
+                        <Minus className="h-4 w-4" />
+                    </TextButton>
+                    <TextButton
+                        onClick={() => editor.chain().focus().deleteTable().run()}
+                        disabled={!editor.can().deleteTable()}
+                        title="Delete Table"
+                    >
+                        <TableIcon className="h-4 w-4" />
+                    </TextButton>
+                </>
+            )}
         </div>
     );
 };
@@ -168,6 +222,12 @@ export default function BlogForm({ post }: { post?: any }) {
             Link.configure({
                 openOnClick: false,
             }),
+            Table.configure({
+                resizable: true,
+            }),
+            TableRow,
+            TableHeader,
+            TableCell,
         ],
         content: post?.content || '<p>Start writing your amazing blog post here...</p>',
         immediatelyRender: false,
