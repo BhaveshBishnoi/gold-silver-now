@@ -118,6 +118,40 @@ export default function ToolsPage() {
                         );
                     })}
                 </div>
+
+                {/* Educational Content Section - Added at Bottom */}
+                <div className="mt-24 max-w-4xl mx-auto border-t border-slate-200 pt-16">
+                    <div className="prose prose-slate lg:prose-lg mx-auto text-center mb-12">
+                        <h2 className="text-3xl font-bold text-slate-900 mb-4">Why Use Our Financial Calculators?</h2>
+                        <p className="text-slate-600 leading-relaxed">
+                            Financial planning shouldn't be complicated. Our suite of free, easy-to-use tools helps you make informed decisions about your money, whether you're planning a loan, investing for the future, or calculating taxes.
+                        </p>
+                    </div>
+
+                    <div className="grid md:grid-cols-3 gap-8">
+                        <div className="text-center p-6 bg-white rounded-2xl border border-slate-100 shadow-sm hover:shadow-md transition-shadow">
+                            <div className="w-12 h-12 bg-blue-50 rounded-full flex items-center justify-center mx-auto mb-4 text-blue-600">
+                                <Calculator className="w-6 h-6" />
+                            </div>
+                            <h3 className="text-lg font-bold text-slate-900 mb-2">Precision</h3>
+                            <p className="text-slate-500 text-sm">Accurate calculations based on the latest financial formulas and tax regimes.</p>
+                        </div>
+                        <div className="text-center p-6 bg-white rounded-2xl border border-slate-100 shadow-sm hover:shadow-md transition-shadow">
+                            <div className="w-12 h-12 bg-green-50 rounded-full flex items-center justify-center mx-auto mb-4 text-green-600">
+                                <TrendingUp className="w-6 h-6" />
+                            </div>
+                            <h3 className="text-lg font-bold text-slate-900 mb-2">Planning</h3>
+                            <p className="text-slate-500 text-sm">Visualize your wealth growth and loan repayments to plan your budget better.</p>
+                        </div>
+                        <div className="text-center p-6 bg-white rounded-2xl border border-slate-100 shadow-sm hover:shadow-md transition-shadow">
+                            <div className="w-12 h-12 bg-orange-50 rounded-full flex items-center justify-center mx-auto mb-4 text-orange-600">
+                                <Coins className="w-6 h-6" />
+                            </div>
+                            <h3 className="text-lg font-bold text-slate-900 mb-2">Free to Use</h3>
+                            <p className="text-slate-500 text-sm">Unlimited access to all premium calculators without any login or subscription.</p>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     );
