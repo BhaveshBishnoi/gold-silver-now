@@ -215,6 +215,59 @@ export default function GoldLoanCalculator() {
                         </Card>
                     </div>
                 </div>
+
+                {/* Educational Content Section */}
+                <div className="mt-20 max-w-4xl mx-auto">
+                    <div className="prose prose-slate lg:prose-lg mx-auto">
+                        <h2 className="text-3xl font-bold text-slate-900 mb-6">Understanding Gold Loans</h2>
+                        <p className="text-slate-600 mb-8 leading-relaxed">
+                            A gold loan is a secured loan where you pledge your gold ornaments as collateral with a bank or a non-banking financial company (NBFC). The lender in turn, gives you a loan amount as per the market value of your gold.
+                        </p>
+
+                        <div className="grid md:grid-cols-2 gap-8 mb-12">
+                            <div className="bg-white p-6 rounded-xl border border-slate-100 shadow-sm">
+                                <h3 className="text-xl font-bold text-slate-900 mb-3">Benefits of Gold Loan</h3>
+                                <ul className="space-y-3">
+                                    <li className="flex items-start gap-2 text-slate-600">
+                                        <div className="h-1.5 w-1.5 rounded-full bg-orange-500 mt-2 shrink-0" />
+                                        <span><strong>Quick Disbursal:</strong> Since it's a secured loan, processing is minimal and often cleared within hours.</span>
+                                    </li>
+                                    <li className="flex items-start gap-2 text-slate-600">
+                                        <div className="h-1.5 w-1.5 rounded-full bg-orange-500 mt-2 shrink-0" />
+                                        <span><strong>No Income Proof:</strong> Your credit score or income history is less critical as gold serves as security.</span>
+                                    </li>
+                                    <li className="flex items-start gap-2 text-slate-600">
+                                        <div className="h-1.5 w-1.5 rounded-full bg-orange-500 mt-2 shrink-0" />
+                                        <span><strong>Lower Interest Rates:</strong> Compared to personal loans, gold loans usually carry lower interest rates.</span>
+                                    </li>
+                                </ul>
+                            </div>
+
+                            <div className="bg-white p-6 rounded-xl border border-slate-100 shadow-sm">
+                                <h3 className="text-xl font-bold text-slate-900 mb-3">Required Documents</h3>
+                                <ul className="space-y-3">
+                                    <li className="flex items-start gap-2 text-slate-600">
+                                        <div className="h-1.5 w-1.5 rounded-full bg-slate-400 mt-2 shrink-0" />
+                                        <span>Identity Proof (Aadhaar, PAN, Voter ID)</span>
+                                    </li>
+                                    <li className="flex items-start gap-2 text-slate-600">
+                                        <div className="h-1.5 w-1.5 rounded-full bg-slate-400 mt-2 shrink-0" />
+                                        <span>Address Proof (Passport, Driver's License)</span>
+                                    </li>
+                                    <li className="flex items-start gap-2 text-slate-600">
+                                        <div className="h-1.5 w-1.5 rounded-full bg-slate-400 mt-2 shrink-0" />
+                                        <span>Passport size photographs</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <h3 className="text-2xl font-bold text-slate-900 mb-4">How is Gold Loan Interest Calculated?</h3>
+                        <p className="text-slate-600 mb-6">
+                            Interest rates for gold loans typically range from <strong>7% to 29%</strong> per annum depending on the lender and LTV ratio. The interest is calculated only on the amount disbursed, and you can choose to pay just the interest component monthly and the principal at the end of the tenure (Bullet Repayment).
+                        </p>
+                    </div>
+                </div>
             </div>
         </div>
     );
