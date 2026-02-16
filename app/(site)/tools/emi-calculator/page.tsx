@@ -171,6 +171,57 @@ export default function EMICalculator() {
                         </CardContent>
                     </Card>
                 </div>
+
+                {/* Educational Content Section */}
+                <div className="mt-20 max-w-4xl mx-auto">
+                    <div className="prose prose-slate lg:prose-lg mx-auto">
+                        <h2 className="text-3xl font-bold text-slate-900 mb-6">What is Equated Monthly Installment (EMI)?</h2>
+                        <p className="text-slate-600 mb-8 leading-relaxed">
+                            An Equated Monthly Installment (EMI) is a fixed payment amount made by a borrower to a lender at a specified date each calendar month. Equated monthly installments are used to pay off both interest and principal each month so that over a specified number of years, the loan is paid off in full.
+                        </p>
+
+                        <div className="bg-white p-8 rounded-2xl border border-slate-100 shadow-sm mb-12">
+                            <h3 className="text-xl font-bold text-slate-900 mb-4">The Formula for EMI Calculation</h3>
+                            <div className="p-6 bg-slate-50 rounded-xl mb-6 font-mono text-center text-slate-700 border border-slate-200">
+                                EMI = [P x R x (1+R)^N]/[(1+R)^N-1]
+                            </div>
+                            <div className="grid sm:grid-cols-3 gap-6 text-sm">
+                                <div>
+                                    <span className="font-bold text-slate-900 block mb-1">P = Principal</span>
+                                    <span className="text-slate-500">The amount of loan originally borrowed.</span>
+                                </div>
+                                <div>
+                                    <span className="font-bold text-slate-900 block mb-1">R = Rate of Interest</span>
+                                    <span className="text-slate-500">The rate of interest calculated on a monthly basis.</span>
+                                </div>
+                                <div>
+                                    <span className="font-bold text-slate-900 block mb-1">N = Tenure</span>
+                                    <span className="text-slate-500">The loan tenure in number of months.</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <h3 className="text-2xl font-bold text-slate-900 mb-4">Factors Affecting Your EMI</h3>
+                        <div className="grid md:grid-cols-2 gap-6 mb-12">
+                            {[
+                                { title: "Loan Amount", desc: "Higher the loan amount, higher will be your EMI." },
+                                { title: "Interest Rate", desc: "A lower interest rate reduces your EMI and total cost." },
+                                { title: "Loan Tenure", desc: "Longer tenure reduces EMI but increases total interest paid." },
+                                { title: "Processing Fees", desc: "One-time fee charged by banks, usually 0.5% - 2%." }
+                            ].map((item, i) => (
+                                <div key={i} className="flex gap-4">
+                                    <div className="h-10 w-10 rounded-full bg-blue-50 flex items-center justify-center shrink-0 text-blue-600 font-bold">
+                                        {i + 1}
+                                    </div>
+                                    <div>
+                                        <h4 className="font-bold text-slate-900">{item.title}</h4>
+                                        <p className="text-sm text-slate-500">{item.desc}</p>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     );
