@@ -43,7 +43,7 @@ const Sparkline = ({ data, color, bgColor }: SparklineProps) => {
 
 
     return (
-        <div className="h-[100px] w-full">
+        <div className="h-full w-full">
             <Line data={chartData} options={options} />
         </div>
     );

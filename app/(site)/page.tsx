@@ -91,30 +91,37 @@ export default function Home() {
         <div className="min-h-screen bg-slate-50/50">
             {/* Hero Section */}
             <section className="relative pt-32 pb-20 lg:pt-40 lg:pb-32 overflow-hidden bg-white border-b border-slate-100">
-                <div className="absolute top-0 left-0 w-full h-[500px] bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-orange-50/50 via-slate-50/20 to-transparent pointer-events-none" />
+                <div className="absolute inset-0 bg-grid-pattern opacity-[0.4] pointer-events-none" />
+                <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-orange-100/40 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3 pointer-events-none" />
+                <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-blue-50/40 rounded-full blur-3xl translate-y-1/3 -translate-x-1/4 pointer-events-none" />
 
                 <div className="container max-w-7xl mx-auto px-4 relative z-10">
-                    <div className="grid lg:grid-cols-2 gap-12 lg:gap-8 items-center">
+                    <div className="grid lg:grid-cols-2 gap-16 lg:gap-12 items-center">
 
                         {/* Hero Content */}
-                        <div className="max-w-2xl">
-                            <div className="inline-flex items-center rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-sm text-slate-600 mb-8 shadow-sm">
-                                <span className="flex h-2 w-2 rounded-full bg-green-500 mr-2 animate-pulse"></span>
+                        <div className="max-w-2xl relative">
+                            <div className="inline-flex items-center rounded-full border border-orange-100 bg-orange-50/50 backdrop-blur-sm px-4 py-1.5 text-sm font-medium text-orange-800 mb-8 shadow-sm">
+                                <span className="flex h-2 w-2 rounded-full bg-green-500 mr-2 animate-pulse shadow-[0_0_12px_rgba(34,197,94,0.6)]"></span>
                                 Live Market System Active
                             </div>
 
-                            <h1 className="text-5xl lg:text-7xl font-extrabold tracking-tight text-slate-900 mb-6 leading-[1.1]">
-                                The Gold Standard for <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-600 to-amber-600">Market Data</span>
+                            <h1 className="text-5xl lg:text-7xl font-extrabold tracking-tight text-slate-900 mb-8 leading-[1.1]">
+                                The Gold Standard for <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-600 to-amber-600 relative">
+                                    Market Data
+                                    <svg className="absolute w-full h-3 -bottom-1 left-0 text-orange-200 -z-10" viewBox="0 0 100 10" preserveAspectRatio="none">
+                                        <path d="M0 5 Q 50 10 100 5" stroke="currentColor" strokeWidth="8" fill="none" />
+                                    </svg>
+                                </span>
                             </h1>
 
-                            <p className="text-xl text-slate-600 mb-10 leading-relaxed max-w-lg">
+                            <p className="text-xl text-slate-600 mb-10 leading-relaxed max-w-lg font-medium">
                                 Access real-time gold and silver prices, historical trends, and premium market insights. Precision data for smart investors.
                             </p>
 
-                            <div className="flex flex-col sm:flex-row gap-4">
+                            <div className="flex flex-col sm:flex-row gap-4 mb-12">
                                 <Button
                                     size="lg"
-                                    className="h-14 px-8 text-base bg-slate-900 hover:bg-slate-800 text-white rounded-full transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5"
+                                    className="h-14 px-8 text-base bg-slate-900 hover:bg-slate-800 text-white rounded-full transition-all shadow-xl hover:shadow-2xl hover:-translate-y-1"
                                     asChild
                                 >
                                     <a href="#market-data">
@@ -125,7 +132,7 @@ export default function Home() {
                                 <Button
                                     size="lg"
                                     variant="outline"
-                                    className="h-14 px-8 text-base border-slate-200 hover:bg-slate-50 text-slate-700 rounded-full"
+                                    className="h-14 px-8 text-base border-slate-200 hover:bg-white hover:text-orange-600 hover:border-orange-200 text-slate-700 rounded-full transition-all duration-300"
                                     asChild
                                 >
                                     <Link href="/blogs">
@@ -134,35 +141,42 @@ export default function Home() {
                                 </Button>
                             </div>
 
-                            <div className="mt-12 flex items-center gap-6 text-sm text-slate-500">
-                                <div className="flex items-center gap-2">
-                                    <CheckCircle2 className="h-4 w-4 text-orange-600" />
+                            <div className="flex items-center gap-8 text-sm font-medium text-slate-500 border-t border-slate-100 pt-8 w-max">
+                                <div className="flex items-center gap-2.5">
+                                    <div className="p-1 bg-green-100 rounded-full text-green-600">
+                                        <CheckCircle2 className="h-4 w-4" />
+                                    </div>
                                     <span>Instant Updates</span>
                                 </div>
-                                <div className="flex items-center gap-2">
-                                    <CheckCircle2 className="h-4 w-4 text-orange-600" />
+                                <div className="flex items-center gap-2.5">
+                                    <div className="p-1 bg-green-100 rounded-full text-green-600">
+                                        <CheckCircle2 className="h-4 w-4" />
+                                    </div>
                                     <span>24/7 Monitoring</span>
-                                </div>
-                                <div className="flex items-center gap-2">
-                                    <CheckCircle2 className="h-4 w-4 text-orange-600" />
-                                    <span>Global Coverage</span>
                                 </div>
                             </div>
                         </div>
 
                         {/* Hero Dashboard / Floating Cards */}
                         <div className="relative lg:pl-10">
-                            <div className="absolute -inset-1 bg-gradient-to-r from-orange-100 to-slate-100 rounded-2xl blur-2xl opacity-50" />
-                            <div className="relative bg-white/80 backdrop-blur-sm rounded-2xl border border-slate-200/60 shadow-2xl p-6 lg:p-8">
-                                <div className="mb-6 flex items-center justify-between">
-                                    <h3 className="text-lg font-bold text-slate-900">Live Snapshot</h3>
-                                    <Badge variant="outline" className="bg-slate-50 text-slate-600 border-slate-200">
-                                        Usually responds in &lt;100ms
+                            {/* Glow Effect behind dashboard */}
+                            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] bg-gradient-to-tr from-orange-200/30 via-slate-200/30 to-blue-200/30 blur-3xl rounded-full opacity-60 pointer-events-none" />
+
+                            <div className="relative bg-white/60 backdrop-blur-xl rounded-3xl border border-white/50 shadow-2xl p-6 lg:p-8 ">
+                                <div className="mb-8 flex items-center justify-between">
+                                    <div>
+                                        <h3 className="text-xl font-bold text-slate-900">Live Snapshot</h3>
+                                        <p className="text-xs text-slate-500 font-medium mt-1">Real-time across all exchanges</p>
+                                    </div>
+                                    <Badge variant="outline" className="bg-emerald-50 text-emerald-700 border-emerald-200 px-3 py-1 shadow-sm">
+                                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 mr-2 animate-pulse"></span>
+                                        Connected
                                     </Badge>
                                 </div>
                                 <Dashboard data={data} loading={loading} />
-                                <div className="mt-6 pt-4 border-t border-slate-100 text-center text-xs text-slate-400">
-                                    Prices exclude GST and other local taxes.
+                                <div className="mt-6 pt-4 border-t border-slate-200/60 text-center flex justify-between items-center text-xs font-medium text-slate-400">
+                                    <span>Prices exclude GST and local taxes</span>
+                                    <span>Updated: {new Date().toLocaleTimeString()}</span>
                                 </div>
                             </div>
                         </div>
@@ -171,17 +185,25 @@ export default function Home() {
             </section>
 
             {/* Trusted/Features Strip */}
-            <section className="py-12 bg-white border-b border-slate-100">
+            <section className="py-20 bg-white border-b border-slate-100 relative">
                 <div className="container max-w-7xl mx-auto px-4">
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+                    <div className="text-center max-w-2xl mx-auto mb-16">
+                        <span className="text-orange-600 font-semibold tracking-wider uppercase text-xs mb-3 block">Why Choose Us</span>
+                        <h2 className="text-3xl font-bold text-slate-900">Built for Precision Investing</h2>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
                         {features.map((feature, index) => (
-                            <div key={index} className="flex flex-col items-center text-center p-4 hover:bg-slate-50 rounded-xl transition-colors duration-300">
-                                <div className="h-12 w-12 rounded-full bg-orange-50 flex items-center justify-center mb-4 text-orange-600">
-                                    <feature.icon className="h-6 w-6" />
-                                </div>
-                                <h3 className="font-bold text-slate-900 mb-1">{feature.title}</h3>
-                                <p className="text-sm text-slate-500">{feature.description}</p>
-                            </div>
+                            <Card key={index} className="border-none shadow-none hover:shadow-xl hover:-translate-y-1 transition-all duration-300 bg-slate-50/50 hover:bg-white group overflow-hidden relative">
+                                <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-orange-400 to-orange-600 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300" />
+                                <CardContent className="p-8 flex flex-col items-center text-center">
+                                    <div className="h-14 w-14 rounded-2xl bg-white shadow-sm border border-slate-100 flex items-center justify-center mb-6 text-orange-600 group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300">
+                                        <feature.icon className="h-7 w-7" />
+                                    </div>
+                                    <h3 className="font-bold text-lg text-slate-900 mb-2">{feature.title}</h3>
+                                    <p className="text-sm text-slate-500 leading-relaxed">{feature.description}</p>
+                                </CardContent>
+                            </Card>
                         ))}
                     </div>
                 </div>

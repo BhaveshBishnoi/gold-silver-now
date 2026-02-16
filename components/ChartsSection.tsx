@@ -84,64 +84,78 @@ const ChartsSection = ({ history, goldPrices, silverPrices }: ChartsSectionProps
 
 
     return (
-        <div className="mt-12 mb-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
-            <div className="flex flex-col sm:flex-row justify-between items-center sm:items-end gap-4 mb-6">
+        <div className="mt-16 mb-12 animate-in fade-in slide-in-from-bottom-6 duration-1000 ease-out">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-6 mb-8">
                 <div>
-                    <h2 className="text-2xl font-bold tracking-tight text-slate-800">Market Trends</h2>
-                    <p className="text-slate-500 text-sm mt-1">Historical performance analysis.</p>
+                    <h2 className="text-3xl font-bold tracking-tight text-slate-900 mb-2">Market Trends</h2>
+                    <p className="text-slate-600 text-base max-w-lg leading-relaxed">
+                        Visualize historical price performance and spot trends with our interactive charts.
+                    </p>
                 </div>
 
-                <ToggleGroup
-                    type="single"
-                    value={range}
-                    onValueChange={(val) => val && setRange(val)}
-                    className="bg-slate-100 p-1 rounded-lg border border-slate-200"
-                >
-                    {['1D', '7D', '1M', '1Y', '5Y'].map((r) => (
-                        <ToggleGroupItem
-                            key={r}
-                            value={r}
-                            className="px-3 py-1 text-sm font-semibold rounded-md data-[state=on]:bg-white data-[state=on]:text-primary data-[state=on]:shadow-sm text-slate-500 hover:text-slate-700 transition-all"
-                        >
-                            {r}
-                        </ToggleGroupItem>
-                    ))}
-                </ToggleGroup>
+                <div className="bg-slate-100/80 p-1.5 rounded-xl border border-slate-200/60 backdrop-blur-sm self-start sm:self-auto">
+                    <ToggleGroup
+                        type="single"
+                        value={range}
+                        onValueChange={(val) => val && setRange(val)}
+                        className="gap-1"
+                    >
+                        {['1D', '7D', '1M', '1Y', '5Y'].map((r) => (
+                            <ToggleGroupItem
+                                key={r}
+                                value={r}
+                                className="px-4 py-2 text-sm font-semibold rounded-lg data-[state=on]:bg-white data-[state=on]:text-orange-600 data-[state=on]:shadow-sm data-[state=on]:ring-1 data-[state=on]:ring-slate-200 text-slate-500 hover:text-slate-800 transition-all"
+                            >
+                                {r}
+                            </ToggleGroupItem>
+                        ))}
+                    </ToggleGroup>
+                </div>
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <Card className="h-full rounded-xl border-none shadow-sm bg-white overflow-hidden">
-                    <CardHeader className="pb-2 border-b border-slate-50">
-                        <CardTitle className="text-lg font-bold text-slate-700 flex items-center">
-                            <span className="w-2 h-8 bg-primary rounded-full mr-3"></span>
-                            Gold Price Trend
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <Card className="h-full rounded-2xl border border-slate-100 shadow-xl shadow-slate-200/40 bg-white overflow-hidden hover:shadow-2xl transition-shadow duration-300">
+                    <CardHeader className="pb-4 pt-6 px-6 border-b border-slate-50 bg-gradient-to-r from-orange-50/30 to-transparent">
+                        <CardTitle className="text-xl font-bold text-slate-800 flex items-center justify-between">
+                            <span className="flex items-center">
+                                <span className="w-1.5 h-6 bg-orange-500 rounded-full mr-3 shadow-sm shadow-orange-200"></span>
+                                Gold Price Trend
+                            </span>
+                            <span className="text-xs font-semibold px-2 py-1 bg-orange-100 text-orange-700 rounded-md uppercase tracking-wider opacity-0 group-hover:opacity-100 transition-opacity">
+                                {range} View
+                            </span>
                         </CardTitle>
                     </CardHeader>
-                    <CardContent className="h-[320px] relative p-4">
+                    <CardContent className="h-[360px] relative p-6">
                         <ChartComponent
                             data={processData.goldData}
                             labels={processData.labels}
                             type="gold"
                             range={range}
-                            color="#d36700" // Primary Orange
+                            color="#d97706"
                         />
                     </CardContent>
                 </Card>
 
-                <Card className="h-full rounded-xl border-none shadow-sm bg-white overflow-hidden">
-                    <CardHeader className="pb-2 border-b border-slate-50">
-                        <CardTitle className="text-lg font-bold text-slate-700 flex items-center">
-                            <span className="w-2 h-8 bg-slate-400 rounded-full mr-3"></span>
-                            Silver Price Trend
+                <Card className="h-full rounded-2xl border border-slate-100 shadow-xl shadow-slate-200/40 bg-white overflow-hidden hover:shadow-2xl transition-shadow duration-300">
+                    <CardHeader className="pb-4 pt-6 px-6 border-b border-slate-50 bg-gradient-to-r from-slate-50/50 to-transparent">
+                        <CardTitle className="text-xl font-bold text-slate-800 flex items-center justify-between">
+                            <span className="flex items-center">
+                                <span className="w-1.5 h-6 bg-slate-500 rounded-full mr-3 shadow-sm shadow-slate-200"></span>
+                                Silver Price Trend
+                            </span>
+                            <span className="text-xs font-semibold px-2 py-1 bg-slate-100 text-slate-600 rounded-md uppercase tracking-wider opacity-0 group-hover:opacity-100 transition-opacity">
+                                {range} View
+                            </span>
                         </CardTitle>
                     </CardHeader>
-                    <CardContent className="h-[320px] relative p-4">
+                    <CardContent className="h-[360px] relative p-6">
                         <ChartComponent
                             data={processData.silverData}
                             labels={processData.labels}
                             type="silver"
                             range={range}
-                            color="#94a3b8" // Slate 400
+                            color="#64748b"
                         />
                     </CardContent>
                 </Card>
