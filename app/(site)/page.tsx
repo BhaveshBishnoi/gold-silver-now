@@ -58,7 +58,7 @@ export default function Home() {
     useEffect(() => {
         fetchPrices()
         fetchBlogs()
-        
+
         // Refresh prices every minute
         const interval = setInterval(fetchPrices, 60000)
         return () => clearInterval(interval)
@@ -88,29 +88,29 @@ export default function Home() {
     ]
 
     return (
-        <main className="min-h-screen bg-slate-50/50">
+        <div className="min-h-screen bg-slate-50/50">
             {/* Hero Section */}
             <section className="relative pt-32 pb-20 lg:pt-40 lg:pb-32 overflow-hidden bg-white border-b border-slate-100">
                 <div className="absolute top-0 left-0 w-full h-[500px] bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-orange-50/50 via-slate-50/20 to-transparent pointer-events-none" />
-                
+
                 <div className="container max-w-7xl mx-auto px-4 relative z-10">
                     <div className="grid lg:grid-cols-2 gap-12 lg:gap-8 items-center">
-                        
+
                         {/* Hero Content */}
                         <div className="max-w-2xl">
                             <div className="inline-flex items-center rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-sm text-slate-600 mb-8 shadow-sm">
                                 <span className="flex h-2 w-2 rounded-full bg-green-500 mr-2 animate-pulse"></span>
                                 Live Market System Active
                             </div>
-                            
+
                             <h1 className="text-5xl lg:text-7xl font-extrabold tracking-tight text-slate-900 mb-6 leading-[1.1]">
                                 The Gold Standard for <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-600 to-amber-600">Market Data</span>
                             </h1>
-                            
+
                             <p className="text-xl text-slate-600 mb-10 leading-relaxed max-w-lg">
                                 Access real-time gold and silver prices, historical trends, and premium market insights. Precision data for smart investors.
                             </p>
-                            
+
                             <div className="flex flex-col sm:flex-row gap-4">
                                 <Button
                                     size="lg"
@@ -190,14 +190,14 @@ export default function Home() {
             {/* Market Data Deep Dive */}
             <section id="market-data" className="py-24 bg-slate-50/50">
                 <div className="container max-w-7xl mx-auto px-4 space-y-20">
-                    
+
                     {/* Rate Tables */}
                     <div className="space-y-8">
                         <div className="text-center max-w-3xl mx-auto">
                             <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">Comprehensive Rate Tables</h2>
                             <p className="text-lg text-slate-600">Detailed price breakdown across different purities and karats.</p>
                         </div>
-                         
+
                         {!loading && data ? (
                             <div className="animate-in fade-in slide-in-from-bottom-4 duration-700">
                                 <RateTable data={data} />
@@ -211,7 +211,7 @@ export default function Home() {
 
                     {/* Charts */}
                     <div className="space-y-8">
-                         <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
+                        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
                             <div>
                                 <h2 className="text-3xl font-bold text-slate-900 mb-2">Market Trends</h2>
                                 <p className="text-slate-600">Visualize price movements over time.</p>
@@ -261,7 +261,7 @@ export default function Home() {
             <section className="py-24 bg-slate-900 text-white relative overflow-hidden">
                 <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff05_1px,transparent_1px),linear-gradient(to_bottom,#ffffff05_1px,transparent_1px)] bg-[size:24px_24px]" />
                 <div className="absolute top-0 left-0 w-full h-full bg-radial-gradient from-orange-500/10 to-transparent pointer-events-none" />
-                
+
                 <div className="container max-w-4xl mx-auto px-4 text-center relative z-10">
                     <h2 className="text-4xl md:text-5xl font-bold mb-6 tracking-tight">
                         Ready to make <span className="text-orange-500">smarter</span> decisions?
@@ -280,6 +280,6 @@ export default function Home() {
                     </Button>
                 </div>
             </section>
-        </main>
+        </div>
     )
 }
