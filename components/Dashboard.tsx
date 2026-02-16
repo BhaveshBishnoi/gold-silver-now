@@ -115,7 +115,7 @@ const Dashboard = ({ data, loading }: DashboardProps) => {
     );
 
     return (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <StatCard
                 title="Gold"
                 price={goldDisplayPrice}
