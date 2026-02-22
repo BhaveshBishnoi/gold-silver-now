@@ -44,6 +44,26 @@ import {
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 
 
+const TextButton = ({ onClick, disabled, isActive, children, title }: {
+    onClick: () => void;
+    disabled?: boolean;
+    isActive?: boolean;
+    children: React.ReactNode;
+    title: string;
+}) => (
+    <Button
+        type="button"
+        variant={isActive ? "secondary" : "ghost"}
+        size="sm"
+        onClick={onClick}
+        disabled={disabled}
+        className="h-8 w-8 p-0"
+        title={title}
+    >
+        {children}
+    </Button>
+);
+
 const MenuBar = ({ editor }: { editor: any }) => {
     if (!editor) {
         return null;
@@ -52,20 +72,6 @@ const MenuBar = ({ editor }: { editor: any }) => {
     // ToggleGroup works for exclusive options, but here we have multiple separate commands.
     // So we'll use individual Buttons or separate groups.
     // Let's use simple icon buttons.
-
-    const TextButton = ({ onClick, disabled, isActive, children, title }: any) => (
-        <Button
-            type="button"
-            variant={isActive ? "secondary" : "ghost"}
-            size="sm"
-            onClick={onClick}
-            disabled={disabled}
-            className="h-8 w-8 p-0"
-            title={title}
-        >
-            {children}
-        </Button>
-    )
 
     return (
         <div className="flex flex-wrap gap-1 p-2 border-b bg-muted/20">

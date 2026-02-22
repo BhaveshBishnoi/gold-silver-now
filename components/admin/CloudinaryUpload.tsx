@@ -9,6 +9,12 @@ interface CloudinaryUploadProps {
     currentImage?: string;
 }
 
+interface CloudinaryResult {
+    info?: {
+        secure_url?: string;
+    };
+}
+
 export default function CloudinaryUpload({ onUpload, currentImage }: CloudinaryUploadProps) {
     const uploadPreset = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET;
 
@@ -25,7 +31,7 @@ export default function CloudinaryUpload({ onUpload, currentImage }: CloudinaryU
             <CldUploadWidget
                 uploadPreset={uploadPreset}
                 onSuccess={(result) => {
-                    const info = result.info as any; // Cast to access secure_url
+                    const info = (result as CloudinaryResult).info;
                     if (info?.secure_url) {
                         onUpload(info.secure_url);
                     }
