@@ -1,9 +1,10 @@
 'use client'
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useMemo } from "react"
 import Dashboard from "@/components/Dashboard"
 import RateTable from "@/components/RateTable"
 import ChartsSection from "@/components/ChartsSection"
+import ChartComponent from "@/components/Charts" // Added ChartComponent import
 import InfoSection from "@/components/InfoSection"
 import LatestBlogs from "@/components/LatestBlogs"
 import { Button } from "@/components/ui/button"
@@ -21,7 +22,8 @@ import {
     MoveRight,
     Calculator,
     Coins,
-    Percent
+    Percent,
+    LineChart
 } from "lucide-react"
 import Link from "next/link"
 
@@ -29,6 +31,7 @@ export default function Home() {
     const [data, setData] = useState<any>(null)
     const [blogData, setBlogData] = useState<any[]>([])
     const [loading, setLoading] = useState(true)
+    const [heroChartType, setHeroChartType] = useState<'gold' | 'silver'>('gold')
 
     const fetchPrices = async () => {
         try {
@@ -67,7 +70,30 @@ export default function Home() {
         return () => clearInterval(interval)
     }, [])
 
+    // Process data for Hero Chart
+    const heroChartData = useMemo(() => {
+        if (!data || !data.history) return null;
+
+        const currency = 'INR'; // Default to INR for Hero
+        const historyData = data.history[currency] || [];
+        const sortedHistory = [...historyData].sort((a, b) => a.timestamp - b.timestamp);
+
+        const labels = sortedHistory.map(item => {
+            const d = new Date(item.timestamp * 1000);
+            return d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        });
+
+        const ozToGram = 31.1034768;
+        const unit = 10; // 10g for Hero chart normally
+
+        return {
+            labels,
+            data: sortedHistory.map(h => (h[heroChartType] / ozToGram) * unit)
+        };
+    }, [data, heroChartType]);
+
     const features = [
+        // ... (features logic remains same)
         {
             icon: Zap,
             title: "Live Updates",
@@ -127,89 +153,125 @@ export default function Home() {
                 <div className="absolute bottom-0 left-0 w-[800px] h-[800px] bg-blue-50/30 rounded-full blur-[120px] translate-y-1/3 -translate-x-1/4 pointer-events-none" />
 
                 <div className="container max-w-7xl mx-auto px-4 relative z-10">
-                    <div className="grid lg:grid-cols-2 gap-16 lg:gap-24 items-center">
+                    <div className="flex flex-col gap-16 lg:gap-24 items-center">
 
-                        {/* Hero Content */}
-                        <div className="max-w-2xl relative">
-                            <div className="inline-flex items-center rounded-full border border-orange-100 bg-orange-50/50 backdrop-blur-md px-4 py-1.5 text-sm font-semibold text-orange-800 mb-8 shadow-sm">
-                                <span className="flex h-2 w-2 rounded-full bg-green-500 mr-2 animate-pulse shadow-[0_0_12px_rgba(34,197,94,0.6)]"></span>
-                                Live Market System Active
+                        {/* Hero Header & Taglines */}
+                        <div className="max-w-4xl text-center relative">
+                            <div className="inline-flex items-center rounded-full border border-orange-100 bg-orange-50/80 backdrop-blur-md px-5 py-2 text-xs font-black tracking-[0.3em] uppercase text-orange-800 mb-10 shadow-sm animate-in fade-in slide-in-from-top-4 duration-700">
+                                <span className="flex h-2 w-2 rounded-full bg-green-500 mr-3 animate-pulse shadow-[0_0_12px_rgba(34,197,94,0.6)]"></span>
+                                Market Intelligence Engine
                             </div>
 
-                            <h1 className="text-6xl lg:text-8xl font-black tracking-tighter text-slate-900 mb-8 leading-[0.95]">
-                                The Gold Standard for <span className="text-transparent bg-clip-text bg-gradient-to-br from-orange-600 via-amber-600 to-orange-700 relative">
-                                    Market Data
-                                    <svg className="absolute w-full h-4 -bottom-2 left-0 text-orange-200/60 -z-10" viewBox="0 0 100 10" preserveAspectRatio="none">
+                            <h1 className="text-6xl lg:text-[100px] font-black tracking-tighter text-slate-900 mb-10 leading-[0.85] animate-in fade-in slide-in-from-bottom-6 duration-1000">
+                                Precision Data for <br className="hidden lg:block" />
+                                <span className="text-transparent bg-clip-text bg-gradient-to-br from-orange-600 via-amber-600 to-orange-700 relative">
+                                    Smart Investors
+                                    <svg className="absolute w-full h-5 -bottom-3 left-0 text-orange-200/60 -z-10" viewBox="0 0 100 10" preserveAspectRatio="none">
                                         <path d="M0 5 Q 50 10 100 5" stroke="currentColor" strokeWidth="8" fill="none" />
                                     </svg>
                                 </span>
                             </h1>
 
-                            <p className="text-xl text-slate-600 mb-12 leading-relaxed max-w-lg font-medium opacity-90">
-                                Access real-time gold and silver prices, historical trends, and premium market insights. Precision data for smart investors.
+                            <p className="text-xl lg:text-2xl text-slate-600 mb-14 leading-relaxed max-w-3xl mx-auto font-medium opacity-90 animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-200">
+                                Access real-time gold and silver prices with historical depth. <br className="hidden md:block" />
+                                The gold standard for global market tracking and precision analysis.
                             </p>
 
-                            <div className="flex flex-col sm:flex-row gap-5 mb-14">
+                            <div className="flex flex-col sm:flex-row justify-center gap-6 animate-in fade-in slide-in-from-bottom-10 duration-1000 delay-300">
                                 <Button
                                     size="lg"
-                                    className="h-16 px-10 text-lg bg-slate-900 hover:bg-slate-800 text-white rounded-full transition-all shadow-xl hover:shadow-2xl hover:-translate-y-1 ring-offset-2 focus:ring-2 focus:ring-slate-900"
+                                    className="h-20 px-12 text-xl bg-slate-950 hover:bg-slate-800 text-white rounded-full transition-all shadow-2xl hover:shadow-slate-900/20 hover:-translate-y-1 font-black"
                                     asChild
                                 >
                                     <a href="#market-data">
-                                        View Live Rates
-                                        <ArrowRight className="ml-2 h-5 w-5" />
+                                        Monitor Live Rates
+                                        <ArrowRight className="ml-3 h-6 w-6" />
                                     </a>
                                 </Button>
                                 <Button
                                     size="lg"
                                     variant="outline"
-                                    className="h-16 px-10 text-lg border-slate-200 bg-white hover:bg-slate-50 hover:text-orange-600 hover:border-orange-200 text-slate-700 rounded-full transition-all duration-300"
+                                    className="h-20 px-12 text-xl border-slate-200 bg-white/50 backdrop-blur-sm hover:bg-white hover:text-orange-600 hover:border-orange-200 text-slate-700 rounded-full transition-all duration-300 font-bold"
                                     asChild
                                 >
-                                    <Link href="/blogs">
-                                        Market Insights
+                                    <Link href="/tools">
+                                        Financial Tools
                                     </Link>
                                 </Button>
                             </div>
-
-                            <div className="flex items-center gap-10 text-sm font-bold text-slate-400 border-t border-slate-100 pt-10 w-max">
-                                <div className="flex items-center gap-3">
-                                    <div className="p-1 bgColor-green-50 rounded-full text-green-600">
-                                        <CheckCircle2 className="h-4 w-4" />
-                                    </div>
-                                    <span>Instant Updates</span>
-                                </div>
-                                <div className="flex items-center gap-3">
-                                    <div className="p-1 bgColor-green-50 rounded-full text-green-600">
-                                        <CheckCircle2 className="h-4 w-4" />
-                                    </div>
-                                    <span>24/7 Monitoring</span>
-                                </div>
-                            </div>
                         </div>
 
-                        {/* Hero Dashboard / Floating Cards */}
-                        <div className="relative lg:pl-10 group">
-                            {/* Glow Effect behind dashboard */}
-                            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[130%] h-[130%] bg-gradient-to-tr from-orange-200/20 via-slate-200/20 to-blue-200/20 blur-3xl rounded-full opacity-60 pointer-events-none group-hover:opacity-80 transition-opacity duration-700" />
+                        {/* Hero Graph Section */}
+                        <div className="w-full relative group animate-in fade-in slide-in-from-bottom-12 duration-1000 delay-500">
+                            {/* Inner Glow Effect */}
+                            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] bg-gradient-to-tr from-orange-200/10 via-slate-200/10 to-blue-200/10 blur-[120px] rounded-full opacity-60 pointer-events-none group-hover:opacity-80 transition-opacity duration-1000" />
 
-                            <div className="relative bg-white/40 backdrop-blur-2xl rounded-[2.5rem] border border-white/60 shadow-[0_32px_64px_-12px_rgba(0,0,0,0.1)] p-8 lg:p-10 ">
-                                <div className="mb-10 flex items-center justify-between">
-                                    <div>
-                                        <h3 className="text-2xl font-black text-slate-900 tracking-tight">Live Snapshot</h3>
-                                        <p className="text-xs text-slate-500 font-bold uppercase tracking-widest mt-1.5 opacity-70">Global Exchange Rates</p>
+                            <Card className="relative bg-white/40 backdrop-blur-3xl rounded-[3rem] border border-white/60 shadow-[0_48px_96px_-12px_rgba(0,0,0,0.12)] overflow-hidden">
+                                <div className="grid lg:grid-cols-12 max-h-[700px]">
+                                    {/* Snapshot Stats Side */}
+                                    <div className="lg:col-span-4 p-10 lg:p-14 border-b lg:border-b-0 lg:border-r border-slate-200/60 flex flex-col justify-between">
+                                        <div>
+                                            <div className="flex items-center justify-between mb-12">
+                                                <Badge variant="outline" className="bg-emerald-50/80 backdrop-blur-sm text-emerald-700 border-emerald-200 px-5 py-2 shadow-sm rounded-full font-black text-[10px] uppercase tracking-widest">
+                                                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 mr-2.5 animate-pulse"></span>
+                                                    System Live
+                                                </Badge>
+                                                <div className="flex gap-2">
+                                                    <button
+                                                        onClick={() => setHeroChartType('gold')}
+                                                        className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all ${heroChartType === 'gold' ? 'bg-orange-600 text-white shadow-lg shadow-orange-200' : 'bg-slate-100 text-slate-500 hover:bg-slate-200'}`}
+                                                    >
+                                                        Au
+                                                    </button>
+                                                    <button
+                                                        onClick={() => setHeroChartType('silver')}
+                                                        className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all ${heroChartType === 'silver' ? 'bg-slate-600 text-white shadow-lg shadow-slate-200' : 'bg-slate-100 text-slate-500 hover:bg-slate-200'}`}
+                                                    >
+                                                        Ag
+                                                    </button>
+                                                </div>
+                                            </div>
+
+                                            <div className="space-y-10">
+                                                <Dashboard data={data} loading={loading} />
+                                            </div>
+                                        </div>
+
+                                        <div className="mt-14 pt-8 border-t border-slate-200/60 flex items-center gap-4 text-[10px] font-black uppercase tracking-widest text-slate-400">
+                                            <LineChart className="w-5 h-5 text-orange-500" />
+                                            <span>Real-time Volatility Tracking Active</span>
+                                        </div>
                                     </div>
-                                    <Badge variant="outline" className="bg-emerald-50/80 backdrop-blur-sm text-emerald-700 border-emerald-200 px-4 py-1.5 shadow-sm rounded-full font-bold">
-                                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 mr-2.5 animate-pulse"></span>
-                                        Connected
-                                    </Badge>
+
+                                    {/* Main Large Graph */}
+                                    <div className="lg:col-span-8 p-10 lg:p-14 bg-slate-50/30">
+                                        <div className="flex items-center justify-between mb-10">
+                                            <h3 className="text-2xl font-black text-slate-900 tracking-tight flex items-center gap-3">
+                                                Performance Stream
+                                                <span className="text-xs font-bold text-slate-400 lowercase tracking-normal bg-slate-100 px-3 py-1 rounded-lg">live 1d</span>
+                                            </h3>
+                                            <div className="text-[10px] font-black uppercase tracking-tighter text-slate-400">
+                                                Updated {new Date().toLocaleTimeString()}
+                                            </div>
+                                        </div>
+
+                                        <div className="h-[400px] lg:h-[450px]">
+                                            {!loading && heroChartData ? (
+                                                <ChartComponent
+                                                    data={heroChartData.data}
+                                                    labels={heroChartData.labels}
+                                                    type={heroChartType}
+                                                    range="1D"
+                                                />
+                                            ) : (
+                                                <div className="w-full h-full bg-slate-100/50 rounded-[2rem] animate-pulse flex items-center justify-center text-slate-300 font-bold">
+                                                    Calibrating Engine...
+                                                </div>
+                                            )}
+                                        </div>
+                                    </div>
                                 </div>
-                                <Dashboard data={data} loading={loading} />
-                                <div className="mt-8 pt-6 border-t border-slate-200/60 flex justify-between items-center text-[10px] font-black uppercase tracking-widest text-slate-400">
-                                    <span>Prices exclude GST</span>
-                                    <span>Refreshed: {new Date().toLocaleTimeString()}</span>
-                                </div>
-                            </div>
+                            </Card>
                         </div>
                     </div>
                 </div>
