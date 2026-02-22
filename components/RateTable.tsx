@@ -16,7 +16,7 @@ interface RateTableProps {
 const RateTable = ({ data }: RateTableProps) => {
     const { currency, unit, exchangeRates } = useSettings();
 
-    const renderTable = (metal: 'gold' | 'silver', metalData: any) => {
+    const renderTable = (metal: 'gold' | 'silver', metalData: { price: number; change_percent: number }) => {
         const basePrice = metalData.price;
         const ozToGram = 31.1034768;
         const pricePerGram = basePrice / ozToGram;
@@ -44,7 +44,7 @@ const RateTable = ({ data }: RateTableProps) => {
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                        {purities.map((item, index) => {
+                        {purities.map((item) => {
                             const price = pricePerGram * item.purity * unit;
                             const changeAmount = (price * metalData.change_percent) / 100;
                             const isPositive = metalData.change_percent >= 0;
