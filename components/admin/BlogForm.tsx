@@ -1,6 +1,6 @@
 'use client';
 
-import { useEditor, EditorContent } from '@tiptap/react';
+import { Editor, useEditor, EditorContent } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import ImageExtension from '@tiptap/extension-image';
 import Link from '@tiptap/extension-link';
@@ -41,8 +41,19 @@ import {
     Plus,
     Minus
 } from 'lucide-react';
-import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 
+interface BlogPost {
+    id: string;
+    title: string;
+    slug: string;
+    content: string;
+    excerpt?: string;
+    coverImage?: string;
+    published: boolean;
+    metaTitle?: string;
+    metaDescription?: string;
+    keywords?: string;
+}
 
 const TextButton = ({ onClick, disabled, isActive, children, title }: {
     onClick: () => void;
@@ -64,7 +75,7 @@ const TextButton = ({ onClick, disabled, isActive, children, title }: {
     </Button>
 );
 
-const MenuBar = ({ editor }: { editor: any }) => {
+const MenuBar = ({ editor }: { editor: Editor | null }) => {
     if (!editor) {
         return null;
     }
@@ -204,7 +215,7 @@ const MenuBar = ({ editor }: { editor: any }) => {
 };
 
 
-export default function BlogForm({ post }: { post?: any }) {
+export default function BlogForm({ post }: { post?: BlogPost }) {
     const router = useRouter();
 
     // Content Fields
