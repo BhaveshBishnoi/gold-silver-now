@@ -8,11 +8,11 @@ async function main() {
     const hashedPassword = await bcrypt.hash(password, 10)
 
     // Using upsert to avoid error if user exists
-    const user = await (prisma as any).user.upsert({
-        where: { email },
+    const user = await prisma.user.upsert({
+        where: { email: email || '' },
         update: {},
         create: {
-            email,
+            email: email || '',
             name: 'Admin User',
             password: hashedPassword,
             role: 'admin',
@@ -28,7 +28,6 @@ async function main() {
     // await prisma.priceRecord.deleteMany({})
 
     const daysToSeed = 365;
-    const recordsPerDay = 3; // Morning, Afternoon, Evening
     const data = [];
 
     // Base prices (approximate starting point for a year ago)

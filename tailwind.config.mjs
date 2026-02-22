@@ -1,7 +1,8 @@
-const { fontFamily } = require("tailwindcss/defaultTheme")
+import animate from "tailwindcss-animate";
+import typography from "@tailwindcss/typography";
 
 /** @type {import('tailwindcss').Config} */
-module.exports = {
+export default {
     darkMode: ["class"],
     content: ["app/**/*.{ts,tsx}", "components/**/*.{ts,tsx}"],
     theme: {
@@ -54,7 +55,7 @@ module.exports = {
                 sm: "calc(var(--radius) - 4px)",
             },
             fontFamily: {
-                sans: ["var(--font-sans)", ...fontFamily.sans],
+                sans: ["var(--font-sans)", "ui-sans-serif", "system-ui", "sans-serif"],
             },
             keyframes: {
                 "accordion-down": {
@@ -72,5 +73,5 @@ module.exports = {
             },
         },
     },
-    plugins: [require("tailwindcss-animate"), require("@tailwindcss/typography")],
+    plugins: [animate, typography],
 }

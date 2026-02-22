@@ -24,9 +24,10 @@ export default function CloudinaryUpload({ onUpload, currentImage }: CloudinaryU
         <div>
             <CldUploadWidget
                 uploadPreset={uploadPreset}
-                onSuccess={(result: any) => {
-                    if (result.info?.secure_url) {
-                        onUpload(result.info.secure_url);
+                onSuccess={(result) => {
+                    const info = result.info as any; // Cast to access secure_url
+                    if (info?.secure_url) {
+                        onUpload(info.secure_url);
                     }
                 }}
             >
