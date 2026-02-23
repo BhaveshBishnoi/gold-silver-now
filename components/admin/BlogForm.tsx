@@ -47,12 +47,12 @@ interface BlogPost {
     title: string;
     slug: string;
     content: string;
-    excerpt?: string;
-    coverImage?: string;
+    excerpt?: string | null;
+    coverImage?: string | null;
     published: boolean;
-    metaTitle?: string;
-    metaDescription?: string;
-    keywords?: string;
+    metaTitle?: string | null;
+    metaDescription?: string | null;
+    keywords?: string | null;
 }
 
 const TextButton = ({ onClick, disabled, isActive, children, title }: {
