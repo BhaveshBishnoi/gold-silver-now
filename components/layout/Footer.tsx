@@ -3,57 +3,59 @@
 import Link from "next/link"
 
 export default function Footer() {
-    const links = [
-        { label: "Blogs", href: "/blogs" },
-        { label: "Privacy Policy", href: "/privacy-policy" },
-        { label: "Disclaimer", href: "/disclaimer" },
-        { label: "Contact Us", href: "/contact" },
-    ]
-
-
     return (
-        <footer className="bg-slate-950 text-slate-200 mt-auto border-t border-slate-900">
-            <div className="container max-w-7xl mx-auto px-4 md:px-6 py-12 md:py-16">
+        <footer className="w-full border-t bg-background">
+            <div className="container max-w-7xl mx-auto px-4 py-12 md:py-16">
+                <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8 lg:gap-12">
 
-                {/* Top Section */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center md:items-start">
-
-                    {/* Brand */}
-                    <div className="text-center md:text-left">
-                        <Link href="/" className="inline-block">
-                            <h3 className="text-2xl font-bold mb-2 tracking-tight text-white">
-                                <span className="text-primary">GS</span>Update
-                            </h3>
+                    {/* Brand Column */}
+                    <div className="col-span-2 lg:col-span-2">
+                        <Link href="/" className="flex items-center space-x-2 mb-4">
+                            <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-primary text-primary-foreground font-bold text-lg">
+                                G
+                            </span>
+                            <span className="text-lg font-bold tracking-tight">
+                                GoldSilverNow<span className="text-primary">.in</span>
+                            </span>
                         </Link>
-                        <p className="text-sm text-slate-400 max-w-sm mx-auto md:mx-0 leading-relaxed">
-                            Your trusted source for real-time gold and silver updates. Track live prices and market trends in your local currency.
+                        <p className="text-sm text-muted-foreground max-w-xs leading-relaxed">
+                            A premier platform for real-time precious metals tracking, financial tools, and market analysis. Stay ahead with precision data.
                         </p>
                     </div>
 
-                    {/* Links */}
-                    <div className="flex flex-wrap gap-x-8 gap-y-4 md:justify-end justify-center">
-                        {links.map((link) => (
-                            <Link
-                                key={link.label}
-                                href={link.href}
-                                className="text-sm font-medium text-slate-400 hover:text-primary transition-colors duration-200"
-                            >
-                                {link.label}
-                            </Link>
-                        ))}
+                    {/* Services */}
+                    <div className="flex flex-col space-y-4 text-sm font-medium">
+                        <span className="font-bold">Calculators</span>
+                        <Link href="/tools/emi-calculator" className="text-muted-foreground hover:text-primary transition-colors">EMI Calculator</Link>
+                        <Link href="/tools/sip-calculator" className="text-muted-foreground hover:text-primary transition-colors">SIP Calculator</Link>
+                        <Link href="/tools/gold-loan-calculator" className="text-muted-foreground hover:text-primary transition-colors">Gold Loan</Link>
+                        <Link href="/tools/gst-calculator" className="text-muted-foreground hover:text-primary transition-colors">GST Tax</Link>
+                    </div>
+
+                    {/* Resources */}
+                    <div className="flex flex-col space-y-4 text-sm font-medium">
+                        <span className="font-bold">Resources</span>
+                        <Link href="/blogs" className="text-muted-foreground hover:text-primary transition-colors">Market Blog</Link>
+                        <Link href="/tools" className="text-muted-foreground hover:text-primary transition-colors">All Tools</Link>
+                        <Link href="/about" className="text-muted-foreground hover:text-primary transition-colors">Our Mission</Link>
+                    </div>
+
+                    {/* Legal */}
+                    <div className="flex flex-col space-y-4 text-sm font-medium">
+                        <span className="font-bold">Legal</span>
+                        <Link href="/privacy-policy" className="text-muted-foreground hover:text-primary transition-colors">Privacy Policy</Link>
+                        <Link href="/disclaimer" className="text-muted-foreground hover:text-primary transition-colors">Disclaimer</Link>
+                        <Link href="/contact" className="text-muted-foreground hover:text-primary transition-colors">Contact</Link>
                     </div>
 
                 </div>
 
-                {/* Bottom Section */}
-                <div className="mt-12 pt-8 border-t border-slate-900 text-center flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-slate-600">
-                    <p>
-                        © {new Date().getFullYear()} GSUpdate. All rights reserved.
-                    </p>
-                    <p className="flex gap-4">
-                        <Link href="/terms" className="hover:text-slate-400 transition-colors">Terms</Link>
-                        <Link href="/privacy" className="hover:text-slate-400 transition-colors">Privacy</Link>
-                    </p>
+                <div className="mt-12 pt-8 border-t flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-muted-foreground">
+                    <p>© {new Date().getFullYear()} GoldSilverNow. All rights reserved.</p>
+                    <div className="flex items-center space-x-4">
+                        <Link href="/privacy-policy" className="hover:text-primary">Privacy</Link>
+                        <Link href="/disclaimer" className="hover:text-primary">Terms</Link>
+                    </div>
                 </div>
             </div>
         </footer>

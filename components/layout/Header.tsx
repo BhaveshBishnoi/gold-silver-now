@@ -22,6 +22,7 @@ const Header = () => {
     const navItems = [
         { name: "Home", path: "/" },
         { name: "Blogs", path: "/blogs" },
+        { name: "Tools", path: "/tools" },
         { name: "About", path: "/about" },
         { name: "Contact", path: "/contact" },
     ]
@@ -29,72 +30,81 @@ const Header = () => {
     const isActive = (path: string) => pathname === path
 
     return (
-        <header className="sticky top-0 z-50 border-b border-slate-200 bg-white/95 backdrop-blur-md shadow-sm transition-all duration-300">
-            <div className="container max-w-7xl mx-auto px-4 md:px-6">
-                <div className="flex h-16 items-center justify-between">
+        <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+            <div className="container max-w-7xl mx-auto flex h-16 items-center justify-between px-4 md:px-6">
 
-                    {/* Logo */}
-                    <Link
-                        href="/"
-                        className="text-2xl font-bold tracking-tight flex items-center gap-1 text-slate-900 hover:opacity-90 transition-opacity"
-                    >
-                        <span className="text-primary">GoldSilverNow</span>.in
-                    </Link>
+                {/* Logo */}
+                <Link
+                    href="/"
+                    className="flex items-center space-x-2 transition-opacity hover:opacity-90"
+                >
+                    <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground font-bold text-xl">
+                        G
+                    </span>
+                    <span className="text-xl font-bold tracking-tight hidden sm:inline-block">
+                        GoldSilverNow<span className="text-primary">.in</span>
+                    </span>
+                </Link>
 
-                    {/* Desktop Nav */}
-                    <nav className="hidden md:flex items-center gap-8">
-                        {navItems.map((item) => (
-                            <Link
-                                key={item.name}
-                                href={item.path}
-                                className={`text-[15px] font-medium transition-all duration-200 relative py-1 ${isActive(item.path)
-                                    ? "text-primary font-bold"
-                                    : "text-slate-600 hover:text-slate-900"
-                                    }`}
-                            >
-                                {item.name}
-                                {isActive(item.path) && (
-                                    <span className="absolute bottom-0 left-0 w-full h-0.5 bg-primary rounded-full" />
-                                )}
-                            </Link>
-                        ))}
-                    </nav>
+                {/* Desktop Nav */}
+                <nav className="hidden md:flex items-center space-x-6 text-sm font-medium">
+                    {navItems.map((item) => (
+                        <Link
+                            key={item.name}
+                            href={item.path}
+                            className={`transition-colors hover:text-primary ${isActive(item.path)
+                                ? "text-foreground"
+                                : "text-muted-foreground"
+                                }`}
+                        >
+                            {item.name}
+                        </Link>
+                    ))}
+                </nav>
 
-                    {/* Mobile Nav */}
-                    <div className="flex md:hidden items-center gap-3">
+                {/* Actions / Mobile Menu */}
+                <div className="flex items-center space-x-4">
+                    <div className="md:hidden">
                         <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
                             <SheetTrigger asChild>
-                                <Button variant="ghost" size="icon" className="text-slate-700 hover:bg-slate-50">
-                                    <Menu className="h-6 w-6" />
+                                <Button variant="ghost" size="icon" className="h-9 w-9">
+                                    <Menu className="h-5 w-5" />
+                                    <span className="sr-only">Toggle menu</span>
                                 </Button>
                             </SheetTrigger>
-                            <SheetContent side="right" className="w-[300px] border-l-slate-200 bg-white">
-                                <SheetTitle className="sr-only">Navigation Menu</SheetTitle>
-                                <div className="flex flex-col gap-8 mt-8">
-                                    <Link href="/" onClick={() => setSheetOpen(false)} className="text-2xl font-bold tracking-tight text-slate-800">
-                                        <span className="text-primary">GoldSilverNow</span>.in
-                                    </Link>
-                                    <nav className="flex flex-col gap-2">
-                                        {navItems.map((item) => (
-                                            <Link
-                                                key={item.name}
-                                                href={item.path}
-                                                onClick={() => setSheetOpen(false)}
-                                                className={`px-4 py-3 rounded-xl text-base font-medium transition-colors ${isActive(item.path)
-                                                    ? "bg-primary/10 text-primary font-bold"
-                                                    : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
-                                                    }`}
-                                            >
-                                                {item.name}
-                                            </Link>
-                                        ))}
-                                    </nav>
-                                </div>
+                            <SheetContent side="right" className="pr-0">
+                                <Link
+                                    href="/"
+                                    className="flex items-center space-x-2"
+                                    onClick={() => setSheetOpen(false)}
+                                >
+                                    <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground font-bold text-xl">
+                                        G
+                                    </span>
+                                    <span className="text-xl font-bold tracking-tight">
+                                        GoldSilverNow
+                                    </span>
+                                </Link>
+                                <nav className="flex flex-col space-y-4 mt-8">
+                                    {navItems.map((item) => (
+                                        <Link
+                                            key={item.name}
+                                            href={item.path}
+                                            onClick={() => setSheetOpen(false)}
+                                            className={`text-lg font-medium transition-colors hover:text-primary ${isActive(item.path)
+                                                ? "text-foreground"
+                                                : "text-muted-foreground"
+                                                }`}
+                                        >
+                                            {item.name}
+                                        </Link>
+                                    ))}
+                                </nav>
                             </SheetContent>
                         </Sheet>
                     </div>
-
                 </div>
+
             </div>
         </header>
     )

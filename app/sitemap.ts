@@ -20,73 +20,38 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         priority: 0.7,
     }))
 
+    const staticUrls = [
+        { url: baseUrl, changeFrequency: 'daily', priority: 1 },
+        { url: `${baseUrl}/blogs`, changeFrequency: 'daily', priority: 0.8 },
+        { url: `${baseUrl}/about`, changeFrequency: 'monthly', priority: 0.5 },
+        { url: `${baseUrl}/contact`, changeFrequency: 'monthly', priority: 0.5 },
+        { url: `${baseUrl}/privacy-policy`, changeFrequency: 'yearly', priority: 0.3 },
+        { url: `${baseUrl}/disclaimer`, changeFrequency: 'yearly', priority: 0.3 },
+        { url: `${baseUrl}/tools`, changeFrequency: 'weekly', priority: 0.8 },
+    ];
+
+    const calculators = [
+        'emi-calculator',
+        'sip-calculator',
+        'gold-loan-calculator',
+        'gst-calculator',
+        'fd-calculator',
+        'inflation-calculator',
+        'mortgage-calculator',
+        'retirement-calculator',
+        'budget-planner'
+    ];
+
+    const calculatorUrls = calculators.map(calc => ({
+        url: `${baseUrl}/tools/${calc}`,
+        lastModified: new Date(),
+        changeFrequency: 'monthly' as const,
+        priority: 0.7,
+    }));
+
     return [
-        {
-            url: baseUrl,
-            lastModified: new Date(),
-            changeFrequency: 'daily',
-            priority: 1,
-        },
-        {
-            url: `${baseUrl}/blogs`,
-            lastModified: new Date(),
-            changeFrequency: 'daily',
-            priority: 0.8,
-        },
-        {
-            url: `${baseUrl}/about`,
-            lastModified: new Date(),
-            changeFrequency: 'monthly',
-            priority: 0.5,
-        },
-        {
-            url: `${baseUrl}/contact`,
-            lastModified: new Date(),
-            changeFrequency: 'monthly',
-            priority: 0.5,
-        },
-        {
-            url: `${baseUrl}/privacy-policy`,
-            lastModified: new Date(),
-            changeFrequency: 'yearly',
-            priority: 0.3,
-        },
-        {
-            url: `${baseUrl}/disclaimer`,
-            lastModified: new Date(),
-            changeFrequency: 'yearly',
-            priority: 0.3,
-        },
-        {
-            url: `${baseUrl}/tools`,
-            lastModified: new Date(),
-            changeFrequency: 'weekly',
-            priority: 0.8,
-        },
-        {
-            url: `${baseUrl}/tools/emi-calculator`,
-            lastModified: new Date(),
-            changeFrequency: 'monthly',
-            priority: 0.7,
-        },
-        {
-            url: `${baseUrl}/tools/sip-calculator`,
-            lastModified: new Date(),
-            changeFrequency: 'monthly',
-            priority: 0.7,
-        },
-        {
-            url: `${baseUrl}/tools/gold-loan-calculator`,
-            lastModified: new Date(),
-            changeFrequency: 'monthly',
-            priority: 0.7,
-        },
-        {
-            url: `${baseUrl}/tools/gst-calculator`,
-            lastModified: new Date(),
-            changeFrequency: 'monthly',
-            priority: 0.7,
-        },
+        ...staticUrls.map(s => ({ ...s, lastModified: new Date(), changeFrequency: s.changeFrequency as any })),
+        ...calculatorUrls,
         ...blogUrls,
     ]
 }
