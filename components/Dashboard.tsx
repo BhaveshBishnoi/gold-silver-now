@@ -2,11 +2,10 @@
 import { useSettings } from '@/components/layout/SettingsContext';
 import { MetalData, HistoryItem } from '@/types';
 import Sparkline from './Sparkline';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Skeleton } from '@/components/ui/skeleton';
-import { TrendingUp, TrendingDown, Clock } from 'lucide-react';
+import { Card, CardContent } from '@/components/ui/card';
+import { TrendingUp, TrendingDown } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { Skeleton } from './ui/skeleton';
 
 interface DashboardProps {
     data: {
