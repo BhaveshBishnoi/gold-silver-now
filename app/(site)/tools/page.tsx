@@ -10,6 +10,9 @@ import {
     Landmark,
     TrendingUp,
     PiggyBank,
+    Home,
+    Target,
+    Wallet,
     ArrowRight
 } from 'lucide-react';
 
@@ -20,6 +23,48 @@ export default function ToolsPage() {
             description: "Calculate your monthly EMI for home, car, or personal loans with visual breakdown.",
             icon: Calculator,
             href: "/tools/emi-calculator",
+            status: "Popular"
+        },
+        {
+            title: "GST Calculator",
+            description: "Quickly calculate Goods and Service Tax (GST) for different tax slabs.",
+            icon: Percent,
+            href: "/tools/gst-calculator",
+            status: "Essential"
+        },
+        {
+            title: "FD Calculator",
+            description: "Calculate maturity amount and interest earned on your Fixed Deposits.",
+            icon: Landmark,
+            href: "/tools/fd-calculator",
+            status: "New"
+        },
+        {
+            title: "Inflation Calculator",
+            description: "Understand the future value of your money adjusted for inflation.",
+            icon: PiggyBank,
+            href: "/tools/inflation-calculator",
+            status: "New"
+        },
+        {
+            title: "Mortgage Calculator",
+            description: "Calculate mortgage payments, inclusive of taxes and insurance.",
+            icon: Home,
+            href: "/tools/mortgage-calculator",
+            status: "New"
+        },
+        {
+            title: "Retirement Calculator",
+            description: "Plan your retirement corpus and monthly savings needed for financial freedom.",
+            icon: Target,
+            href: "/tools/retirement-calculator",
+            status: "Important"
+        },
+        {
+            title: "Budget Planner",
+            description: "Organize your expenses and savings with our advanced budget planning tool.",
+            icon: Wallet,
+            href: "/tools/budget-planner",
             status: "New"
         },
         {
@@ -35,27 +80,6 @@ export default function ToolsPage() {
             icon: Coins,
             href: "/tools/gold-loan-calculator",
             status: "Exclusive"
-        },
-        {
-            title: "GST Calculator",
-            description: "Quickly calculate Goods and Service Tax (GST) for different tax slabs.",
-            icon: Percent,
-            href: "/tools/gst-calculator",
-            status: "Essential"
-        },
-        {
-            title: "FD Calculator",
-            description: "Calculate maturity amount and interest earned on your Fixed Deposits.",
-            icon: Landmark,
-            href: "/tools/fd-calculator",
-            status: "Coming Soon"
-        },
-        {
-            title: "Inflation Calculator",
-            description: "Understand the future value of your money adjusted for inflation.",
-            icon: PiggyBank,
-            href: "/tools/inflation-calculator",
-            status: "Coming Soon"
         }
     ];
 
