@@ -84,16 +84,16 @@ const ChartsSection = ({ history, goldPrices, silverPrices }: ChartsSectionProps
 
 
     return (
-        <div className="mt-16 mb-12 animate-in fade-in slide-in-from-bottom-6 duration-1000 ease-out">
-            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-6 mb-8">
-                <div>
-                    <h2 className="text-3xl font-bold tracking-tight text-slate-900 mb-2">Market Trends</h2>
-                    <p className="text-slate-600 text-base max-w-lg leading-relaxed">
+        <div className="mt-12 mb-10 animate-in fade-in slide-in-from-bottom-6 duration-1000 ease-out">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-6 mb-8 md:mb-10">
+                <div className="max-w-xl">
+                    <h2 className="text-2xl md:text-3xl font-black tracking-tight text-slate-900 mb-2.5">Market Trends</h2>
+                    <p className="text-slate-500 text-sm md:text-base leading-relaxed font-medium">
                         Visualize historical price performance and spot trends with our interactive charts.
                     </p>
                 </div>
 
-                <div className="bg-slate-100/80 p-1.5 rounded-xl border border-slate-200/60 backdrop-blur-sm self-start sm:self-auto">
+                <div className="bg-slate-100/70 p-1.5 rounded-2xl border border-slate-200/50 backdrop-blur-sm self-start sm:self-auto">
                     <ToggleGroup
                         type="single"
                         value={range}
@@ -104,7 +104,7 @@ const ChartsSection = ({ history, goldPrices, silverPrices }: ChartsSectionProps
                             <ToggleGroupItem
                                 key={r}
                                 value={r}
-                                className="px-4 py-2 text-sm font-semibold rounded-lg data-[state=on]:bg-white data-[state=on]:text-orange-600 data-[state=on]:shadow-sm data-[state=on]:ring-1 data-[state=on]:ring-slate-200 text-slate-500 hover:text-slate-800 transition-all"
+                                className="px-3.5 py-1.5 text-xs font-black rounded-xl data-[state=on]:bg-white data-[state=on]:text-orange-600 data-[state=on]:shadow-sm data-[state=on]:ring-1 data-[state=on]:ring-slate-100 text-slate-500 hover:text-slate-800 transition-all uppercase tracking-wider"
                             >
                                 {r}
                             </ToggleGroupItem>
